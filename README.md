@@ -16,11 +16,11 @@ GeoSignal AI answers the real planning question: **"Can people in this location 
 
 ## MVP Demo Region
 
-**Primary:** NTT (Kabupaten Kupang) — ~700 remaining blank-spot points, a 2026 "Kampung Internet" priority area.
+**Primary:** NTT Province — ~700 remaining blank-spot points across the province, a 2026 "Kampung Internet" priority area.
 
 **Secondary Validation:**
-- NTB/Bima — arid/elevation terrain profile
-- Lamandau, Central Kalimantan — dense forest canopy terrain profile
+- NTB Province — arid/elevation terrain profile
+- Central Kalimantan Province — dense forest canopy terrain profile
 
 ---
 
@@ -150,7 +150,7 @@ cp .env.example .env
 ### Run the Data Pipeline
 
 ```bash
-python pipeline/run_pipeline.py --region ntt_kupang --resolutions 100 250
+python pipeline/run_pipeline.py --region ntt --resolutions 100 250
 ```
 
 ### Run the App
@@ -173,9 +173,9 @@ npm run dev
 
 ## Roadmap
 
-- [x] NTT Kupang MVP demo
-- [x] NTB/Bima validation
-- [x] Lamandau (Central Kalimantan) validation
+- [x] NTT Province MVP demo
+- [x] NTB Province validation
+- [x] Central Kalimantan Province validation
 - [ ] Weather-aware propagation adjustments
 - [ ] Drone imagery integration for micro-level planning
 - [ ] Graph Neural Networks for national-scale spatial topology (Phase 3)

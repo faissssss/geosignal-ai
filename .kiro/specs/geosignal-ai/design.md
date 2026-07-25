@@ -89,7 +89,7 @@ Indonesia's 3T regions. The system fuses multi-source geospatial data to answer:
 │  • Layer toggles (BTS, villages, contours, land cover, heatmap)    │
 │  • Side panel: Coverage Score, Confidence Tag, SHAP top-3          │
 │  • Simulation controls (Simulate New BTS, Drag-and-Drop)           │
-│  • Region selector (Kupang MVP, NTB/Bima, Lamandau validation)     │
+│  • Region selector (NTT Province MVP, NTB Province, Central Kalimantan validation)     │
 │  • Target-area selector (draw polygon / kecamatan dropdown)        │
 │  • Low-confidence acknowledgement gate                              │
 └─────────────────────────────────────────────────────────────────────┘
@@ -274,7 +274,7 @@ consumed by the backend:
 @dataclass
 class TargetArea:
     target_area_id: str
-    region_id: str                     # e.g. "ntt_kupang"
+    region_id: str                     # e.g. "ntt"
     selection_method: Literal["drawn_polygon", "kecamatan"]
     boundary: GeoJSON                  # drawn polygon geometry, OR the selected
                                         # kecamatan's boundary geometry looked up
@@ -328,14 +328,14 @@ normalised AHP weight vector as a linear model; each feature's SHAP value equals
 in all regions regardless of data availability.
 
 **Baseline definition:** `baseline_i` is the **regional mean of feature `i` across all
-scored grid cells within the same `region_id`** (e.g., all Kupang cells, computed once
+scored grid cells within the same `region_id`** (e.g., all NTT Province cells, computed once
 per scoring run and cached for that run's duration), not a national mean and not a
 per-kecamatan mean. This choice is deliberate:
 - A per-cell or per-kecamatan baseline would make SHAP values incomparable between
   neighbouring cells within the same region, defeating the purpose of "why is this cell
   worse than that one" explanations.
 - A national baseline would dilute the comparison for regions with systematically
-  different terrain profiles (e.g., Lamandau's canopy-driven scores vs. NTT's
+  different terrain profiles (e.g., Central Kalimantan's canopy-driven scores vs. NTT's
   elevation-driven scores), making cross-region SHAP values misleading if compared.
 - The regional mean is recomputed and versioned alongside each scoring run (stored in
   `scoring_runs.input_checksums` metadata) so a stale baseline is never silently reused
@@ -496,8 +496,8 @@ specific sub-area that `rank_bts_candidates` and `simulate_bts_placement` operat
 - **Draw mode:** a MapLibre GL Draw polygon tool lets the Planner sketch a bounding
   area directly on the map. On completion, the polygon GeoJSON is posted to
   `resolve_target_area(region_id, "drawn_polygon", polygon_geojson)`.
-- **Kecamatan mode:** a dropdown, scoped to the currently active region (Kupang /
-  NTB-Bima / Lamandau), lists kecamatan names sourced from GADM Level 2 boundaries. On
+- **Kecamatan mode:** a dropdown, scoped to the currently active region (NTT Province /
+  NTB Province / Central Kalimantan Province), lists kecamatan names sourced from GADM Level 2 boundaries. On
   selection, `resolve_target_area(region_id, "kecamatan", kecamatan_id)` is called.
 - In both modes, the resolved `TargetArea.boundary` is rendered as a highlighted outline
   on the map (per Requirement 10.8) before the Planner can submit a recommendation or
@@ -525,8 +525,8 @@ modal that must be explicitly dismissed before the action proceeds. This is non-
 **WebGL fallback:** If WebGL is unavailable, a static error page is shown with browser
 requirements and recommended alternatives (Chrome, Firefox, Edge current versions).
 
-**Region selector:** Switches active analysis region among Kupang (MVP), NTB/Bima
-(validation), and Lamandau (validation) without reloading the application.
+**Region selector:** Switches active analysis region among NTT Province (MVP), NTB Province
+(validation), and Central Kalimantan Province (validation) without reloading the application.
 
 ---
 
@@ -540,7 +540,7 @@ Stores Coverage Scores and confidence tags for every cell in every region.
 | Column | Type | Notes |
 |---|---|---|
 | cell_id | UUID PK | |
-| region_id | VARCHAR | e.g., `ntt_kupang`, `ntb_bima`, `lamandau` |
+| region_id | VARCHAR | e.g., `ntt`, `ntb`, `central_kalimantan` |
 | lat | DOUBLE PRECISION | Cell centroid |
 | lon | DOUBLE PRECISION | Cell centroid |
 | resolution_m | INT | Grid resolution |
@@ -1181,7 +1181,7 @@ Before publishing recommendations for any region, the following acceptance gates
 
 1. Spatial CV across all available kecamatans completes without data leakage (Property 7).
 2. Per-kecamatan accuracy report contains entries for all kecamatans (Property 18).
-3. At least one kecamatan per terrain type (elevation-driven: NTT; canopy-driven: Lamandau)
+3. At least one kecamatan per terrain type (elevation-driven: NTT Province; canopy-driven: Central Kalimantan Province)
    shows generalisation to unseen terrain.
 4. No kecamatan's accuracy is hidden behind a passing aggregate metric.
 

@@ -9,8 +9,8 @@ including elevation, land cover, canopy height, population density, and crowd-so
 quality data — to answer the core planning question: *"Can people in this location actually
 receive a usable signal?"*
 
-The MVP targets **NTT (Kabupaten Kupang)** as the primary live demo region, with
-**NTB/Bima** and **Lamandau, Central Kalimantan** used as secondary generalization
+The MVP targets **NTT Province** as the primary live demo region, with
+**NTB Province** and **Central Kalimantan Province** used as secondary generalization
 validation. Every recommendation is framed explicitly as decision-support for a human planner,
 backed by SHAP explainability and a Low/Med/High confidence tag system.
 
@@ -101,8 +101,8 @@ by noisy or misaligned source data.
 5. WHEN harmonisation is complete, THE Data_Pipeline SHALL export a data quality report
    that records the input record count, the number of records removed or repaired, and the
    chosen analysis grid resolution, so that a Planner can review data provenance.
-6. THE Data_Pipeline SHALL process the MVP demo region (Kabupaten Kupang, NTT) as the
-   primary dataset, with NTB/Bima and Lamandau (Central Kalimantan) available as secondary
+6. THE Data_Pipeline SHALL process the MVP demo region (NTT Province) as the
+   primary dataset, with NTB Province and Central Kalimantan Province available as secondary
    validation datasets using the same pipeline configuration.
 
 ---
@@ -382,16 +382,16 @@ switching between separate tools.
    the candidate's Coverage Score, Confidence Tag, rank among all candidates, and top
    three SHAP feature contributions in a side panel.
 5. THE Interactive_Map SHALL provide region-selector controls that allow a Planner to
-   switch the active analysis region between Kabupaten Kupang (MVP demo), NTB/Bima
-   (validation), and Lamandau (validation) without reloading the application.
+   switch the active analysis region between NTT Province (MVP demo), NTB Province
+   (validation), and Central Kalimantan Province (validation) without reloading the application.
 6. IF the Planner's browser cannot render the interactive map (e.g., WebGL unsupported),
    THEN THE Interactive_Map SHALL display a clear error message explaining the requirement
    and suggesting an alternative browser.
 7. THE Interactive_Map SHALL allow a Planner to specify a target area for BTS placement
    recommendations (Requirement 4) and Before/After simulation (Requirement 5) by either
    drawing a bounding polygon directly on the map or selecting a kecamatan from a
-   dropdown list scoped to the currently active region (Kabupaten Kupang, NTB/Bima, or
-   Lamandau, per Requirement 10.5).
+   dropdown list scoped to the currently active region (NTT Province, NTB Province, or
+   Central Kalimantan Province, per Requirement 10.5).
 8. WHEN a Planner selects a target area by either method in Requirement 10.7, THE
    Interactive_Map SHALL visually highlight the selected boundary on the map before the
    Planner requests recommendations, so the Planner can confirm the intended area prior

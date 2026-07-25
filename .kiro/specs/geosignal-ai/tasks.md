@@ -13,8 +13,7 @@ Indonesia's 3T regions.
 - What-if grid must be precomputed before Simulation_Engine queries it
 - All offline data loads for 3 regions must complete before the final demo checkpoint
 
-**Three target regions:** Kupang (NTT — MVP demo), NTB/Bima (validation), Lamandau
-(Central Kalimantan — canopy-driven validation)
+**Three target regions:** NTT Province (MVP demo), NTB Province (validation), Central Kalimantan Province (canopy-driven validation)
 
 **Tech stack:** Python 3.11+, Next.js, MapLibre GL JS, Supabase (PostgreSQL + Storage),
 Google Earth Engine, XGBoost/LightGBM, scikit-learn BallTree, SHAP, Hypothesis (PBT),
@@ -143,7 +142,7 @@ px create-next-app@latest frontend --typescript and install MapLibre GL JS and @
             st.integers(min_value=10, max_value=1000), min_size=2, max_size=5, unique=True
         ))
         def test_multi_resolution_output(resolution_lists):
-            report = run_pipeline(kupang_boundary, resolution_lists, "test_bucket")
+            report = run_pipeline(ntt_boundary, resolution_lists, "test_bucket")
             assert len(report.output_resolutions) >= 2
             # All resolution outputs share same CRS and extent
             crses = set(r.crs for r in report.output_resolutions.values())
@@ -189,12 +188,12 @@ px create-next-app@latest frontend --typescript and install MapLibre GL JS and @
 - [ ] 5. GADM Level 2 Boundary Ingestion
   - [ ] 5.1 Download GADM Level 2 GeoPackage for Indonesia from gadm.org (gadm41_IDN_2.gpkg). Document the source URL and SHA-256 checksum in docs/data_sources.md.
   - [ ] 5.2 Implement ackend/geosignal/pipeline/boundaries.py:
-        - load_gadm_level2(gpkg_path: str, region_filter: dict[str, list[str]]) -> GeoDataFrame — reads the GeoPackage and filters to the specified kabupaten/kecamatan units. egion_filter maps kabupaten name to a list of kecamatan names; pass {} to load all. For MVP, filter to kecamatan units within Kabupaten Kupang (NTT), Kabupaten Bima (NTB), and Kabupaten Lamandau (Central Kalimantan).
+        - load_gadm_level2(gpkg_path: str, region_filter: dict[str, list[str]]) -> GeoDataFrame — reads the GeoPackage and filters to the specified kabupaten/kecamatan units. egion_filter maps kabupaten name to a list of kecamatan names; pass {} to load all. For MVP, filter to kecamatan units within NTT Province, NTB Province, and Central Kalimantan Province.
         - insert_kecamatan_boundaries(gdf: GeoDataFrame, supabase_client) -> int — upserts rows into kecamatan_boundaries table (columns: kecamatan_id, kecamatan_name, kabupaten_name, province_name, egion_id, oundary_geojson); returns the count of rows upserted.
         - get_kecamatan_boundary(kecamatan_id: str, supabase_client) -> GeoJSON | None — queries kecamatan_boundaries by kecamatan_id; returns the oundary_geojson or None if not found.
-  - [ ] 5.3 Write a runner script scripts/load_boundaries.py that calls load_gadm_level2 and insert_kecamatan_boundaries for all three regions (Kupang, Bima, Lamandau) and prints a summary of rows loaded per region.
+  - [ ] 5.3 Write a runner script scripts/load_boundaries.py that calls load_gadm_level2 and insert_kecamatan_boundaries for all three regions (NTT Province, NTB Province, Central Kalimantan Province) and prints a summary of rows loaded per region.
   - [ ] 5.4 Write unit tests in 	ests/test_boundaries.py:
-        - load_gadm_level2 with a Kupang filter returns only Kupang kecamatan units.
+        - load_gadm_level2 with an NTT Province filter returns only NTT kecamatan units.
         - get_kecamatan_boundary returns a valid GeoJSON for a known kecamatan_id.
         - get_kecamatan_boundary returns None for an unknown kecamatan_id.
         - Each row in kecamatan_boundaries has a non-null oundary_geojson that is a valid GeoJSON polygon or multipolygon.
@@ -227,7 +226,7 @@ px create-next-app@latest frontend --typescript and install MapLibre GL JS and @
 
 ## Task 7: Data Pipeline Checkpoint
 
-- [ ] 7. Data Pipeline Checkpoint — all pipeline tests pass, QC + harmonisation + feature engineering for Kupang MVP region produce a valid DataQualityReport and a populated grid_cells table with FeatureVector fields (Coverage Score columns left null until Task 9). GADM boundary table is populated for all three regions. No geometrically invalid features remain in any harmonised output. All property tests P3, P4, P5, P6, P22 pass.
+- [ ] 7. Data Pipeline Checkpoint — all pipeline tests pass, QC + harmonisation + feature engineering for NTT Province MVP region produce a valid DataQualityReport and a populated grid_cells table with FeatureVector fields (Coverage Score columns left null until Task 9). GADM boundary table is populated for all three regions. No geometrically invalid features remain in any harmonised output. All property tests P3, P4, P5, P6, P22 pass.
 
   _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
@@ -601,7 +600,7 @@ egative). Sorted by absolute value descending.
 
 ## Task 16: Recommendation Engine Checkpoint
 
-- [ ] 16. Recommendation Engine Checkpoint — all Recommendation_Engine tests pass. Coverage Scores are populated in grid_cells for Kupang MVP. ts_candidates table is populated for Kupang. SHAP values are attached to all candidates and cells. Spatial CV result exists with per-kecamatan breakdown. Equity weighting is active in AHPAdapter. Deforestation constraint (is_high_canopy) is applied by default. scoring_runs audit log contains at least one complete entry. All property tests P1, P2, P7, P8, P9, P10, P15, P16, P17, P18, P20, P21 pass.
+- [ ] 16. Recommendation Engine Checkpoint — all Recommendation_Engine tests pass. Coverage Scores are populated in grid_cells for NTT Province MVP. ts_candidates table is populated for NTT Province. SHAP values are attached to all candidates and cells. Spatial CV result exists with per-kecamatan breakdown. Equity weighting is active in AHPAdapter. Deforestation constraint (is_high_canopy) is applied by default. scoring_runs audit log contains at least one complete entry. All property tests P1, P2, P7, P8, P9, P10, P15, P16, P17, P18, P20, P21 pass.
 
   _Requirements: 2.1, 2.2, 2.3, 2.4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 7.1, 8.1, 8.3, 9.1, 9.2, 9.4, 9.7, 11.1, 11.2, 11.5_
 
@@ -708,24 +707,24 @@ ew_coverage_score.
         - esolve_target_area with drawn_polygon method and a self-intersecting polygon raises ValidationError (not auto-repaired).
         - ilter_grid_cells_to_target_area returns only cells inside the boundary.
         - ilter_grid_cells_to_target_area returns no cells outside the boundary.
-        - Switching region in the selector resets the target-area selection — verify that a TargetArea resolved for egion_id="ntt_kupang" is not reused for egion_id="ntb_bima".
+        - Switching region in the selector resets the target-area selection — verify that a TargetArea resolved for egion_id="ntt" is not reused for egion_id="ntb".
   - [ ]* 20.3 Property test — Target Area Resolution Correctness (Property 25):
         `python
         # Feature: geosignal-ai, Property 25: Target Area Resolution Correctness
         @settings(max_examples=50)
         @given(
-            kecamatan_id=st.sampled_from(KUPANG_KECAMATAN_IDS),
+            kecamatan_id=st.sampled_from(NTT_KECAMATAN_IDS),
             drawn_polygon=valid_polygon_geojson_strategy(),
         )
         def test_target_area_resolution_correctness(kecamatan_id, drawn_polygon):
             # Kecamatan selection
-            ta_kec = resolve_target_area("ntt_kupang", "kecamatan", kecamatan_id)
+            ta_kec = resolve_target_area("ntt", "kecamatan", kecamatan_id)
             expected_boundary = get_kecamatan_boundary(kecamatan_id, mock_supabase)
             assert ta_kec.boundary == expected_boundary
             assert ta_kec.kecamatan_id == kecamatan_id
 
             # Drawn polygon selection
-            ta_poly = resolve_target_area("ntt_kupang", "drawn_polygon", drawn_polygon)
+            ta_poly = resolve_target_area("ntt", "drawn_polygon", drawn_polygon)
             assert ta_poly.boundary == drawn_polygon
             assert ta_poly.kecamatan_id is None
 
@@ -758,7 +757,7 @@ ew_coverage_score.
         @settings(max_examples=100)
         @given(
             candidate_id=st.uuids().map(str),
-            region_id=st.sampled_from(["ntt_kupang", "ntb_bima", "lamandau"]),
+            region_id=st.sampled_from(["ntt", "ntb", "central_kalimantan"]),
         )
         def test_simulation_unavailability_contract(candidate_id, region_id):
             # Use a blank whatif_grid that definitely doesn't contain this candidate
@@ -810,7 +809,7 @@ ew_coverage_score.
             grid=whatif_grid_strategy(),
         )
         def test_dragdrop_boundary_and_snap(coord, grid):
-            result = drag_drop_lookup(coord[0], coord[1], "ntt_kupang", grid)
+            result = drag_drop_lookup(coord[0], coord[1], "ntt", grid)
             if not grid.contains(coord):
                 assert isinstance(result, OutsideExtentError)
             else:
@@ -830,8 +829,8 @@ ew_coverage_score.
             grid=whatif_grid_strategy(),
         )
         def test_power_overlay_non_interference(coord, grid):
-            result_on = drag_drop_lookup(coord[0], coord[1], "ntt_kupang", grid, overlay_enabled=True)
-            result_off = drag_drop_lookup(coord[0], coord[1], "ntt_kupang", grid, overlay_enabled=False)
+            result_on = drag_drop_lookup(coord[0], coord[1], "ntt", grid, overlay_enabled=True)
+            result_off = drag_drop_lookup(coord[0], coord[1], "ntt", grid, overlay_enabled=False)
             if isinstance(result_on, DragDropResult) and isinstance(result_off, DragDropResult):
                 assert result_on.coverage_score == result_off.coverage_score
         `
@@ -857,7 +856,7 @@ ew_coverage_score.
 
 ## Task 23: Simulation Engine Checkpoint
 
-- [ ] 23. Simulation Engine Checkpoint — simulate_bts_placement returns a SimulationResult (not UnavailableScenario) for all precomputed Kupang candidates. drag_drop_lookup returns DragDropResult for coordinates within the Kupang extent, and OutsideExtentError for coordinates outside. Power overlay does not change Coverage Score. manual_wins flag is correct in all comparison panels. All property tests P12, P13, P14, P23, P24 pass.
+- [ ] 23. Simulation Engine Checkpoint — simulate_bts_placement returns a SimulationResult (not UnavailableScenario) for all precomputed NTT Province candidates. drag_drop_lookup returns DragDropResult for coordinates within the NTT Province extent, and OutsideExtentError for coordinates outside. Power overlay does not change Coverage Score. manual_wins flag is correct in all comparison panels. All property tests P12, P13, P14, P23, P24 pass.
 
   _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
 
@@ -919,7 +918,7 @@ ew_coverage_score.
         - SHAP Top 3: feature name, direction arrow, plain-language label
         - "GeoAI-assisted estimate" label (always visible, per Requirement 9.3)
         SHAP panel must be co-located with the Coverage Score panel (no separate navigation).
-  - [ ] 25.3 Implement region selector in rontend/components/RegionSelector.tsx — dropdown with three options: Kupang (NTT), NTB/Bima, Lamandau. Switching region triggers new grid_cells query and heatmap re-render. Switching region RESETS the target-area selection (clears any drawn polygon or selected kecamatan). No page reload on switch.
+  - [ ] 25.3 Implement region selector in rontend/components/RegionSelector.tsx — dropdown with three options: NTT Province, NTB Province, Central Kalimantan Province. Switching region triggers new grid_cells query and heatmap re-render. Switching region RESETS the target-area selection (clears any drawn polygon or selected kecamatan). No page reload on switch.
   - [ ] 25.4 Implement WebGL fallback in rontend/components/MapFallback.tsx — if WebGL is unsupported, renders a static error page with browser requirements and alternative browser suggestions (Chrome, Firefox, Edge current versions). Does NOT attempt non-WebGL rendering.
   - [ ] 25.5 Write unit/component tests in 	ests/test_map_components.tsx:
         - Side panel renders Coverage Score, Confidence Tag, model version, scoring run timestamp, and SHAP Top 3 from a mock BTSCandidate.
@@ -956,7 +955,7 @@ ew_coverage_score.
         - Target-area selection resets on region switch.
         - Low-confidence modal appears for a Low-confidence candidate.
         - Low-confidence modal cannot be bypassed — mock a programmatic bypass and verify the gate re-appears.
-        - Kecamatan dropdown for egion_id="ntt_kupang" contains only Kupang kecamatan names.
+        - Kecamatan dropdown for region_id="ntt" contains only NTT Province kecamatan names.
 
   _Requirements: 5.1, 5.2, 5.5, 6.1, 6.2, 6.3, 6.4, 7.4, 9.5, 10.7, 10.8_
 
@@ -980,7 +979,7 @@ ew_coverage_score.
 
 ## Task 28: Interactive Map and API Checkpoint
 
-- [ ] 28. Interactive Map and API Checkpoint — all 8 map layers render simultaneously in Kupang region. Layer toggles update within 2 seconds. Side panel shows Coverage Score, Confidence Tag, SHAP Top 3, model version, scoring run timestamp, and "GeoAI-assisted estimate" label on cell/candidate click. Region selector switches among Kupang/Bima/Lamandau without reload. Target-area selector works in both draw-polygon and kecamatan-dropdown modes. Low-confidence gate is non-bypassable. All API routes respond within SLA. Colour tier property test P11 passes.
+- [ ] 28. Interactive Map and API Checkpoint — all 8 map layers render simultaneously in NTT Province region. Layer toggles update within 2 seconds. Side panel shows Coverage Score, Confidence Tag, SHAP Top 3, model version, scoring run timestamp, and "GeoAI-assisted estimate" label on cell/candidate click. Region selector switches among NTT Province / NTB Province / Central Kalimantan Province without reload. Target-area selector works in both draw-polygon and kecamatan-dropdown modes. Low-confidence gate is non-bypassable. All API routes respond within SLA. Colour tier property test P11 passes.
 
   _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 7.3, 7.4, 8.2, 8.4, 9.3, 9.5, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 11.3_
 
@@ -994,16 +993,16 @@ ew_coverage_score.
         4. ank_bts_candidates(...) — populate ts_candidates
         5. precompute_los.py — run LOS precomputation for all candidates in ts_candidates
         6. precompute_whatif.py — run what-if grid precomputation for all candidates
-        Accepts --region argument with valid values: kupang, ima, lamandau.
-  - [ ] 29.2 Run scripts/load_region.py --region kupang and verify:
-        - grid_cells has non-null coverage_score for all Kupang cells.
-        - ts_candidates has = 2 ranked candidates for Kupang.
-        - los_results has an entry for every Kupang candidate.
-        - whatif_grid has entries for every Kupang candidate.
+        Accepts --region argument with valid values: ntt, ntb, central_kalimantan.
+  - [ ] 29.2 Run scripts/load_region.py --region ntt and verify:
+        - grid_cells has non-null coverage_score for all NTT Province cells.
+        - ts_candidates has >= 2 ranked candidates for NTT Province.
+        - los_results has an entry for every NTT Province candidate.
+        - whatif_grid has entries for every NTT Province candidate.
         - DataQualityReport JSON is present in output_bucket.
-        - scoring_runs has at least one complete Kupang entry.
-  - [ ] 29.3 Run scripts/load_region.py --region bima and apply the same verification checks as 29.2 for Bima.
-  - [ ] 29.4 Run scripts/load_region.py --region lamandau and apply the same verification checks as 29.2 for Lamandau.
+        - scoring_runs has at least one complete NTT Province entry.
+  - [ ] 29.3 Run scripts/load_region.py --region ntb and apply the same verification checks as 29.2 for NTB Province.
+  - [ ] 29.4 Run scripts/load_region.py --region central_kalimantan and apply the same verification checks as 29.2 for Central Kalimantan Province.
   - [ ] 29.5 Document actual run times per region and per step in docs/offline_load_log.md. If any step exceeds 30 minutes, flag it and propose an optimisation.
 
   _Requirements: 1.6, 2.1, 4.4, 5.1, 13.1, 13.3_
@@ -1016,14 +1015,14 @@ ew_coverage_score.
         - log_scoring_run ? scoring_runs table insert ? UI retrieval via /api/score. Assert model version and timestamp are correct.
         - write_whatif_grid ? simulate_bts_placement ? SimulationResult round-trip.
   - [ ] 30.2 Write E2E tests using Playwright in 	ests/e2e/:
-        - 	est_region_selector_flow.spec.ts — switch from Kupang to Bima; assert new grid_cells query fires with egion_id="ntb_bima" and heatmap re-renders.
+        - 	est_region_selector_flow.spec.ts — switch from NTT Province to NTB Province; assert new grid_cells query fires with egion_id="ntb" and heatmap re-renders.
         - 	est_target_area_kecamatan_flow.spec.ts — select a kecamatan from dropdown ? boundary highlighted ? submit recommendation ? ts_candidates displayed.
         - 	est_target_area_polygon_flow.spec.ts — draw polygon ? boundary highlighted ? submit recommendation.
         - 	est_simulation_flow.spec.ts — click a candidate ? "Simulate New BTS" ? heatmap updates ? Before/After panel shows pct_good_change.
         - 	est_dragdrop_flow.spec.ts — drag candidate marker ? drop within extent ? side panel updates with coverage_score and grid_resolution_m.
         - 	est_low_confidence_gate.spec.ts — select Low-confidence candidate ? attempt action ? modal appears ? dismiss ? action proceeds.
         - 	est_webgl_fallback.spec.ts — disable WebGL in browser ? assert fallback page renders.
-        - 	est_target_area_reset_on_region_switch.spec.ts — select kecamatan in Kupang ? switch to Bima ? assert target-area selection is null.
+        - 	est_target_area_reset_on_region_switch.spec.ts — select kecamatan in NTT Province ? switch to NTB Province ? assert target-area selection is null.
   - [ ] 30.3 Performance assertions in E2E tests (Playwright expect with timeout):
         - Layer toggle: display updates within 2 000 ms.
         - Cell click ? side panel: within 1 000 ms.
@@ -1036,14 +1035,14 @@ ew_coverage_score.
 ## Task 31: Spatial CV Acceptance Gates
 
 - [ ] 31. Spatial CV Acceptance Gates
-  - [ ] 31.1 Run spatial_cv for Kupang (NTT) and verify all four acceptance gates from the Testing Strategy:
-        1. Spatial CV across all available Kupang kecamatans completes without data leakage (P7 passes).
-        2. CVResult.per_kecamatan_metrics contains entries for all Kupang kecamatans (P18 passes).
+  - [ ] 31.1 Run spatial_cv for NTT Province and verify all four acceptance gates from the Testing Strategy:
+        1. Spatial CV across all available NTT Province kecamatans completes without data leakage (P7 passes).
+        2. CVResult.per_kecamatan_metrics contains entries for all NTT Province kecamatans (P18 passes).
         3. At least one elevation-driven kecamatan (NTT terrain) shows generalisation to unseen terrain (RMSE on held-out fold not worse than 1.5× training RMSE).
         4. No kecamatan's accuracy is hidden behind a passing aggregate metric — individual per-kecamatan RMSE values are logged.
-  - [ ] 31.2 Run spatial_cv for Lamandau and verify:
+  - [ ] 31.2 Run spatial_cv for Central Kalimantan Province and verify:
         1. At least one canopy-driven kecamatan shows generalisation to unseen terrain.
-        2. All four acceptance gates pass for Lamandau.
+        2. All four acceptance gates pass for Central Kalimantan Province.
   - [ ] 31.3 Document CV results (per-kecamatan RMSE, R²) in docs/spatial_cv_results.md. Flag any kecamatan with unusually high RMSE for review.
 
   _Requirements: 2.4, 9.4, 13.5_
@@ -1070,11 +1069,11 @@ ew_coverage_score.
   - All unit tests pass.
   - All E2E tests pass (Playwright, all flows).
   - All API route SLAs met (layer toggle = 2 s, simulation = 3 s, drag-drop = 2 s, target-area = 1 s).
-  - grid_cells, ts_candidates, los_results, whatif_grid are populated for all three regions (Kupang, Bima, Lamandau) — produced by Task 29, not by this task.
+  - grid_cells, ts_candidates, los_results, whatif_grid are populated for all three regions (NTT Province, NTB Province, Central Kalimantan Province) — produced by Task 29, not by this task.
   - scoring_runs audit log has at least one complete entry per region.
   - ethical_risk_register has all 5 required entries.
   - DataQualityReport JSON is present for all three regions in Supabase Storage.
-  - Spatial CV acceptance gates pass for Kupang (elevation-driven) and Lamandau (canopy-driven).
+  - Spatial CV acceptance gates pass for NTT Province (elevation-driven) and Central Kalimantan Province (canopy-driven).
   - Ethical safeguard checklist from Task 32 is fully signed off.
   - Docker image builds cleanly: docker build -f infra/docker/Dockerfile.pipeline .
   - Next.js frontend builds cleanly: 
