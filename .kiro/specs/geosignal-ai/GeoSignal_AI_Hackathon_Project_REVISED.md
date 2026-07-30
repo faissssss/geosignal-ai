@@ -8,7 +8,7 @@ Core Themes: Connectivity, Efficiency, Innovation, Sustainability, and Security.
 
 The most common pitfall in hackathons is scope creep. GeoSignal AI avoids this by deliberately shrinking the scope while maintaining technical credibility and ethical rigor. Our vision is to provide a decision-support system that is not only accurate but also transparent and responsible by design.
 
-**The National Vision:** GeoSignal AI is designed as a province-by-province deployable framework, not a one-off analysis. The hackathon MVP validates the approach in **NTT Province** as the primary demo, with NTB Province and Central Kalimantan Province presented as secondary validation evidence that the underlying method generalizes across different terrain profiles (mountainous/valley vs. forest canopy). Phase 3 (Section 14) is explicitly the pathway from single-province proof-of-concept to nationwide coverage across all of Indonesia's 3T regions, including eventual generalization to Papua and Maluku.
+**The National Vision:** GeoSignal AI is designed as a province-by-province deployable framework, not a one-off analysis. The hackathon MVP validates the approach in **NTT Province** as the primary demo, with **NTB Province** and **Central Kalimantan Province** presented as secondary validation evidence that the underlying method generalizes across different terrain profiles (mountainous/valley vs. forest canopy). Phase 3 (Section 14) is explicitly the pathway from single-province proof-of-concept to nationwide coverage across all of Indonesia's 3T regions, including eventual generalization to Papua and Maluku.
 
 **The MVP Goal:** Help telecom planners identify hidden coverage gaps in 3T regions and recommend exactly where a new BTS would have the greatest impact, backed by an ethical risk framework.
 
@@ -45,11 +45,11 @@ The most common pitfall in hackathons is scope creep. GeoSignal AI avoids this b
 
 ### **5. Use Case Illustration**
 
-**MVP Demo Focus — NTT Province:** ~700 blank-spot points remain as of April 2026. NTT Province is a 2026 "Kampung Internet" priority, piloting Oelpuah, Kuanheun, and Tuatuka. Telkomsel activated new BTS in Desa Sanleo, Uabau, and Barang in April 2025. Resident Merry (Desa Sanleo) noted significant improvements in communication access. Network disruptions have severely impacted public safety, such as police (Polsek) operations in Malaka Timur. A DPR Komisi I delegation also visited Manggarai Barat in Nov 2025 to highlight urgent infrastructure needs. This is the region our live hackathon demo runs against.
+**MVP Demo Focus — NTT Province:** ~700 blank-spot points remain as of April 2026. Within NTT Province, Kabupaten Kupang is a 2026 "Kampung Internet" priority, piloting Oelpuah, Kuanheun, and Tuatuka. Telkomsel activated new BTS in Desa Sanleo, Uabau, and Barang in April 2025. Resident Merry (Desa Sanleo) noted significant improvements in communication access. Network disruptions have severely impacted public safety, such as police (Polsek) operations in Malaka Timur. A DPR Komisi I delegation also visited Manggarai Barat in Nov 2025 to highlight urgent infrastructure needs. This is the region our live hackathon demo runs against.
 
 **Secondary Validation Evidence (generalization, not live demo):**
-* **NTB Province:** As of May 2026, NTB Province has one remaining true blank-spot (Desa Kalodu, Langgudu) and ~40 locations with weak signals. Province-wide, NTB reported 103 blank-spot/weak-signal locations as of 2024. Used to sanity-check the model against a second, drier terrain profile.
-* **Central Kalimantan Province:** 38 of 85 villages remain blank-spot or inadequately served as of mid-2026. Used to sanity-check the model against dense-canopy terrain, distinct from NTT's elevation-driven attenuation.
+* **NTB Province:** As of May 2026, Bima Regency (within NTB Province) has one remaining true blank-spot (Desa Kalodu, Langgudu) and ~40 locations with weak signals. Province-wide, NTB reported 103 blank-spot/weak-signal locations as of 2024. Used to sanity-check the model against a second, drier terrain profile.
+* **Central Kalimantan Province:** Within Central Kalimantan Province, Kabupaten Lamandau has 38 of 85 villages remaining blank-spot or inadequately served as of mid-2026. Used to sanity-check the model against dense-canopy terrain, distinct from NTT's elevation-driven attenuation.
 
 **Sources:**
 4. [RRI Kupang](https://rri.co.id/kupang/daerah-3t/2366449/menjembatani-kesenjangan-digital-program-kampung-internet-hadir-di-ntt)
@@ -59,13 +59,13 @@ The most common pitfall in hackathons is scope creep. GeoSignal AI avoids this b
 8. [E-Media DPR RI](https://emedia.dpr.go.id/news/2025/12/01/komisi-i-tekankan-pemerataan-akses-internet-di-ntt-tak-boleh-ada-daerah-blank-spot)
 9. [Suara NTB](https://suarantb.com/2026/05/20/tinggal-satu-desa-di-bima-blank-spot/)
 10. [ANTARA Mataram](https://mataram.antaranews.com/berita/350703/dprd-ntb-atensi-keluhan-warga-terkait-blank-spot-di-langgudu-bima)
-11. [Ini Kalteng](https://www.inikalteng.com/puluhan-desa-di-Central Kalimantan Province-masih-blank-spot-pemkab-dorong-perluasan-jaringan-telekomunikasi/)
+11. [Ini Kalteng](https://www.inikalteng.com/puluhan-desa-di-lamandau-masih-blank-spot-pemkab-dorong-perluasan-jaringan-telekomunikasi/)
 
-| Regency/Village | Tower Data | Terrain Driver | Target Context | Recommendation |
-| :---- | :---- | :---- | :---- | :---- |
-| **NTT Province (Oelpuah)** — MVP demo | OpenCellID Only | High Elevation | 2026 Pilot Point | **High Priority Placement** |
-| **NTB Province (Kalodu, Langgudu)** — validation | OpenCellID Only | Arid/Elevation Mix | Last remaining true blank-spot | **Confirmatory Check** |
-| **Central Kalimantan Province (38 Vills)** — validation | OpenCellID Only | Forest Canopy | 45% Blank-spots | **Blank-spot Optimization** |
+| Province | Illustrative Kabupaten/Village | Tower Data | Terrain Driver | Target Context | Recommendation |
+| :---- | :---- | :---- | :---- | :---- | :---- |
+| **NTT Province** — MVP demo | Kupang (Oelpuah) | OpenCellID Only | High Elevation | 2026 Pilot Point | **High Priority Placement** |
+| **NTB Province** — validation | Bima (Kalodu, Langgudu) | OpenCellID Only | Arid/Elevation Mix | Last remaining true blank-spot | **Confirmatory Check** |
+| **Central Kalimantan Province** — validation | Lamandau (38 Vills) | OpenCellID Only | Forest Canopy | 45% Blank-spots | **Blank-spot Optimization** |
 
 ### **6. Core Workflow Pipeline**
 
@@ -100,7 +100,7 @@ The most common pitfall in hackathons is scope creep. GeoSignal AI avoids this b
 4. **BTS Placement Suggestion:** GeoAI automatically suggests specific candidate coordinates (e.g., Candidate #1, Candidate #2), scored using the same consolidated feature set (Section 8.1) via BallTree-indexed candidate search.
 5. **Confidence Tagging:** Every suggested site and heatmap cell is tagged Low/Med/High confidence, based on proximity to the nearest OpenCellID tower and nearest Ookla tile (see Section 9).
 6. **Before / After Simulation:** A "wow" factor for judges. Users can click "Simulate New BTS" to instantly see the coverage heatmap update and metric improvements (e.g., jumping from 48% to 74% coverage), using precomputed what-if scenarios (see Section 8 note on live vs. precomputed).
-7. **Drag-and-Drop Simulation:** Users can drag a candidate marker to any point on the map. The system recomputes a terrain-deformed coverage ring for that position, displays a live Coverage Score and confidence panel, and shows a side-by-side comparison against the model's own top-ranked suggestion for that area — including cases where the user's manual placement outperforms the model's recommendation. A secondary, optional **"power/energy feasibility"** toggle checks proximity to power grids or solar potential; this is a low-priority overlay that does not affect the core Coverage Score.
+7. **Drag-and-Drop Simulation:** Users can drag a candidate marker to any point on the map. The system **looks up a precomputed terrain-deformed coverage ring** for the nearest grid cell to that position, displays a live Coverage Score and confidence panel, and shows a side-by-side comparison against the model's own top-ranked suggestion for that area — including cases where the user's manual placement outperforms the model's recommendation. A secondary, optional **"power/energy feasibility"** toggle checks proximity to power grids or solar potential; this is a low-priority overlay that does not affect the core Coverage Score.
 
 ### **8. Technical Architecture: Two-Tier Modeling Design**
 
@@ -114,6 +114,8 @@ The backend backbone is powered by a Google Earth Engine (GEE) pipeline for mult
 * **Validation:** Spatially-blocked cross-validation by kecamatan (see Section 2, Success Criteria) — never a random point-wise split.
 
 #### **8.1 Consolidated Feature Reference Table**
+
+> **Note on row count:** The table below contains **8 scoring features** (rows 1–8) plus **1 label-only row** (Ookla) = 9 rows total. Ookla is not a scoring input — it is the Tier 2 training label and Confidence Tagger input only. The "eight geospatial input features" referenced throughout this document refers to rows 1–8 exclusively.
 
 | Feature | Data Source | Resolution | Used in (AHP / XGBoost / LOS / Confidence) |
 | :---- | :---- | :---- | :---- |
@@ -153,7 +155,7 @@ To build trust with government stakeholders, we use SHAP (SHapley Additive exPla
 
 | Dimension | Status/Commitment |
 | :---- | :---- |
-| Fairness | Coverage Score is evaluated per-region, not only in aggregate, so accuracy in low-data areas (e.g., Central Kalimantan Province's dense canopy) is checked separately rather than masked by strong performance in well-mapped areas. |
+| Fairness | Coverage Score is evaluated per-region, not only in aggregate, so accuracy in low-data areas (e.g., Central Kalimantan Province's dense canopy, illustrated by Kabupaten Lamandau) is checked separately rather than masked by strong performance in well-mapped areas. |
 | Privacy | Aggregated, non-PII data used throughout (WorldPop density grids, not individual records; no household-level location data collected or stored). |
 | Transparency | SHAP explainability integrated — every recommendation shows its top contributing factors in plain language, not just a bare score. |
 | Accountability | Each risk in the Ethical Risk Register (10.1) has a named owner role; no recommendation is presented as fully automated or free of a responsible human reviewer. |
@@ -184,9 +186,9 @@ To build trust with government stakeholders, we use SHAP (SHapley Additive exPla
 * **Signal Propagation Complexity:** Real RF models are incredibly dense. *Mitigation:* Frame output as "GeoAI-assisted coverage potential estimates" rather than pretending to replace commercial radio-planning software like Okumura-Hata.
 * **Validation:** Validating signal quality without operator measurements is tough. *Mitigation:* Compare recommendations against known underserved regions or government reports, using spatially-blocked cross-validation (Section 2) rather than in-sample fit.
 
-**Terrain Differentiator:** In NTT, signal difficulty is primarily driven by sharp elevation and valley blocking. In Central Kalimantan Province, the primary barrier is dense forest canopy attenuation. This contrast is exactly why Central Kalimantan Province is retained as validation evidence even though NTT is the live demo — it proves the model isn't overfit to one terrain type.
+**Terrain Differentiator:** In NTT Province, signal difficulty is primarily driven by sharp elevation and valley blocking. In Central Kalimantan Province, the primary barrier is dense forest canopy attenuation. This contrast is exactly why Central Kalimantan Province is retained as validation evidence even though NTT Province is the live demo — it proves the model isn't overfit to one terrain type.
 
-**Validation Approach:** We use named village-level targets (Oelpuah, the 38 Central Kalimantan Province blank-spots, Desa Kalodu in Bima) as comparison points for model output. **Caveat:** Low/zero tower data in OpenCellID signifies unknown status, not necessarily zero coverage — this caveat is enforced directly in the Confidence Tagging feature (Section 7) and the Ethical Risk Register (Section 10.1), not just stated here.
+**Validation Approach:** We use named village-level targets (Oelpuah in NTT Province, the 38 Lamandau blank-spots in Central Kalimantan Province, Desa Kalodu in NTB Province) as comparison points for model output. **Caveat:** Low/zero tower data in OpenCellID signifies unknown status, not necessarily zero coverage — this caveat is enforced directly in the Confidence Tagging feature (Section 7) and the Ethical Risk Register (Section 10.1), not just stated here.
 
 ### **14. Future Enhancements**
 

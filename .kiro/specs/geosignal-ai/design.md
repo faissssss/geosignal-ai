@@ -89,7 +89,8 @@ Indonesia's 3T regions. The system fuses multi-source geospatial data to answer:
 │  • Layer toggles (BTS, villages, contours, land cover, heatmap)    │
 │  • Side panel: Coverage Score, Confidence Tag, SHAP top-3          │
 │  • Simulation controls (Simulate New BTS, Drag-and-Drop)           │
-│  • Region selector (NTT Province MVP, NTB Province, Central Kalimantan validation)     │
+│  • Region selector (NTT MVP, NTB validation, Central Kalimantan    │
+│    validation)                                                      │
 │  • Target-area selector (draw polygon / kecamatan dropdown)        │
 │  • Low-confidence acknowledgement gate                              │
 └─────────────────────────────────────────────────────────────────────┘
@@ -307,6 +308,35 @@ class ScoringAdapter(Protocol):
 # Concrete implementations: AHPAdapter, XGBoostAdapter, LightGBMAdapter, GNNAdapter (future)
 ```
 
+**Distributed scoring adapter (Phase 3 design skeleton — Requirement 13.2):**
+
+The `ScoringAdapter` protocol above is designed to be wrappable without modification.
+A `DistributedScoringAdapter` would implement the same protocol, delegating
+`predict` and `shap_values` to distributed workers via Spark or Dask:
+
+```python
+class DistributedScoringAdapter:
+    """Phase 3 stub — wraps any ScoringAdapter for distributed execution.
+    Implements the same ScoringAdapter Protocol so rank_bts_candidates and
+    compute_coverage_score require no changes to support distributed compute."""
+
+    def __init__(self, inner: ScoringAdapter, executor: SparkContext | DaskClient):
+        self._inner = inner
+        self._executor = executor
+
+    def predict(self, features: np.ndarray) -> np.ndarray:
+        """Partition features across workers; collect and reassemble results."""
+        ...  # Phase 3 implementation: executor.map(self._inner.predict, partitions)
+
+    def shap_values(self, features: np.ndarray) -> np.ndarray:
+        """Same partitioning strategy as predict."""
+        ...
+
+# Key design constraint: rank_bts_candidates and compute_coverage_score accept
+# any ScoringAdapter — swapping in DistributedScoringAdapter requires zero
+# changes to calling code, satisfying Requirement 13.4 (model adapter layer).
+```
+
 **Spatially-blocked cross-validation:**
 
 ```python
@@ -335,7 +365,7 @@ per-kecamatan mean. This choice is deliberate:
   neighbouring cells within the same region, defeating the purpose of "why is this cell
   worse than that one" explanations.
 - A national baseline would dilute the comparison for regions with systematically
-  different terrain profiles (e.g., Central Kalimantan's canopy-driven scores vs. NTT's
+  different terrain profiles (e.g., Central Kalimantan Province's canopy-driven scores vs. NTT's
   elevation-driven scores), making cross-region SHAP values misleading if compared.
 - The regional mean is recomputed and versioned alongside each scoring run (stored in
   `scoring_runs.input_checksums` metadata) so a stale baseline is never silently reused
@@ -662,6 +692,67 @@ class ConfidenceThresholds:
                              # and low_km, or being within high_km of only one
                              # source, is Med
 ```
+
+### Simulation Support Types
+
+These types are used by the Simulation_Engine interfaces defined in Section 4. They are
+defined here — in the Data Models section — so they appear before the Correctness
+Properties that reference them. All must be implemented in `backend/geosignal/models.py`.
+
+```python
+@dataclass
+class HeatmapDelta:
+    """Per-cell coverage score snapshot used in Before/After simulation output.
+    Contains the full set of grid cells for a region with their scores at a
+    given simulation state (before or after a BTS is placed)."""
+    region_id: str
+    cells: list[dict]   # each dict: {cell_id, lat, lon, coverage_score, colour_tier}
+    snapshot_label: str  # e.g. "before" or "after"
+
+@dataclass
+class WhatIfGrid:
+    """In-memory representation of the precomputed what-if grid for a region,
+    loaded from the `whatif_grid` Supabase table. Used by drag_drop_lookup to
+    snap a dropped coordinate to the nearest precomputed scenario cell."""
+    region_id: str
+    centroids: np.ndarray          # (N, 2) lat/lon array of precomputed cell centres
+    scenario_ids: list[str]        # (N,) scenario_id per centroid row
+    grid_resolution_m: int         # resolution at which this grid was precomputed
+    spatial_index: BallTree        # pre-built BallTree on centroids for O(log N) snap
+
+@dataclass
+class ComparisonPanel:
+    """Side-by-side comparison shown in Drag-and-Drop result panel.
+    Compares the Planner's manually dropped position against the model's
+    top-ranked candidate for the same area. manual_wins is never suppressed."""
+    manual_score: float            # Coverage Score at the dropped coordinate
+    model_score: float             # Coverage Score of model's top-ranked candidate
+    top_candidate_id: str          # candidate_id of model's top-ranked suggestion
+    top_candidate_lat: float
+    top_candidate_lon: float
+    manual_wins: bool              # True when manual_score > model_score; never False-clamped
+```
+
+### LOS Results Storage
+
+Line-of-sight results are stored as a Supabase table `los_results`, keyed by candidate
+coordinate. `rank_bts_candidates` performs a read-only lookup against this table — it
+never triggers live LOS recomputation. A `BTSCandidate` row is only ever inserted into
+`bts_candidates` after its corresponding `los_results` row exists.
+
+#### `los_results`
+Precomputed DEM-based line-of-sight validation results for candidate BTS coordinates.
+
+| Column | Type | Notes |
+|---|---|---|
+| los_id | UUID PK | |
+| region_id | VARCHAR | FK scope |
+| candidate_lat | DOUBLE PRECISION | Candidate BTS coordinate |
+| candidate_lon | DOUBLE PRECISION | |
+| cell_lat | DOUBLE PRECISION | Grid cell being assessed |
+| cell_lon | DOUBLE PRECISION | |
+| los_clear | BOOLEAN | True = direct propagation path exists; False = blocked |
+| computed_at | TIMESTAMPTZ | Batch job run timestamp |
 
 ### Ethical Risk Register (Python representation)
 

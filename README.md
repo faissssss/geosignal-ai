@@ -150,7 +150,7 @@ cp .env.example .env
 ### Run the Data Pipeline
 
 ```bash
-python pipeline/run_pipeline.py --region ntt --resolutions 100 250
+python -m geosignal.pipeline --region ntt --resolutions 100 250
 ```
 
 ### Run the App
