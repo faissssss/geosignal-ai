@@ -12,7 +12,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
 
 ## Tasks
 
-- [ ] 1. Project scaffolding and environment setup
+- [x] 1. Project scaffolding and environment setup
   - Create monorepo directory structure: `backend/` (Python), `frontend/` (Next.js), `infra/` (Docker), `tests/` (Hypothesis + Playwright)
   - Create `backend/pyproject.toml` (or `requirements.txt`) pinning: `python>=3.11`, `xgboost`, `lightgbm`, `scikit-learn`, `shap`, `hypothesis`, `geopandas`, `numpy`, `pandas`, `supabase-py`, `shapely`, `pyproj`
   - Create `frontend/package.json` pinning: `next`, `maplibre-gl`, `@supabase/supabase-js`
@@ -21,14 +21,14 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
   - **Register Google Earth Engine access on day one of the project** (not deferred) — GEE approval can take days to a week per the bootcamp's own registration guidance, and every downstream pipeline task in this plan (Task 3 onward) blocks on it. Register OpenCellID and Ookla Open Data access in parallel, since both are named as licensed/registration-gated sources.
   - _Requirements: 1.6, 10.1, 13.3_
 
-- [ ] 2. Supabase schema and data models
-  - [ ] 2.1 Create Supabase migration file defining all nine tables: `grid_cells`, `bts_candidates`, `target_areas`, `whatif_grid`, `model_artifacts`, `scoring_runs`, `ethical_risk_register`, `admin_boundaries`, `los_results`
+- [x] 2. Supabase schema and data models
+  - [x] 2.1 Create Supabase migration file defining all nine tables: `grid_cells`, `bts_candidates`, `target_areas`, `whatif_grid`, `model_artifacts`, `scoring_runs`, `ethical_risk_register`, `admin_boundaries`, `los_results`
     - Include all columns, types, constraints, and foreign keys exactly as specified in the design Data Models section
     - Add `ENUM` types: `confidence_level` (`Low`, `Med`, `High`), `model_tier` (`1`, `2`), `selection_method` (`drawn_polygon`, `kecamatan`)
     - Ensure `bts_candidates.los_validated` is `NOT NULL` (a row is only inserted once LOS is computed)
     - `los_results` columns: `los_id UUID PK`, `region_id VARCHAR`, `candidate_lat DOUBLE PRECISION`, `candidate_lon DOUBLE PRECISION`, `cell_lat DOUBLE PRECISION`, `cell_lon DOUBLE PRECISION`, `los_clear BOOLEAN NOT NULL`, `computed_at TIMESTAMPTZ`
     - _Requirements: 11.1, 11.2, 11.4, 12.1_
-  - [ ] 2.2 Implement Python dataclasses mirroring the schema in `backend/geosignal/models.py`
+  - [x] 2.2 Implement Python dataclasses mirroring the schema in `backend/geosignal/models.py`
     - `FeatureVector`, `ConfidenceThresholds` (single canonical definition), `DataQualityReport`, `BTSCandidate`, `InsufficientCandidatesResult`, `TargetArea`, `SimulationResult`, `DragDropResult`, `OutsideExtentError`, `UnavailableScenario`, `ComparisonPanel`, `HeatmapDelta`, `WhatIfGrid`, `EthicalRiskEntry`, `CVResult`
     - `ConfidenceThresholds` defaults: `high_km=2.0`, `low_km=10.0`
     - `FeatureVector` must NOT contain an Ookla field
@@ -37,14 +37,14 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - `HeatmapDelta` fields: `region_id: str`, `cells: list[dict]`, `snapshot_label: str`
     - `WhatIfGrid` fields: `region_id: str`, `centroids: np.ndarray`, `scenario_ids: list[str]`, `grid_resolution_m: int`, `spatial_index: BallTree`
     - _Requirements: 2.1, 7.1, 12.1_
-  - [ ]* 2.3 Write unit tests for data model construction and field validation
+  - [x] 2.3 Write unit tests for data model construction and field validation
     - Assert `FeatureVector` has no Ookla field
     - Assert `CONSOLIDATED_FEATURES` contains exactly eight entries
     - Assert `ConfidenceThresholds` defaults match `high_km=2.0`, `low_km=10.0`
     - Assert `FeatureVector` has distinct `land_cover_class` and `canopy_height_m` fields (neither is derived from or aliases the other)
     - Assert no administrative-boundary identifier field (village/regency/kecamatan label) appears anywhere in `CONSOLIDATED_FEATURES`
     - _Requirements: 2.1, 2.7, 7.1_
-  - [ ]* 2.4 Write property test and schema audit for PII absence (Property 26)
+  - [x] 2.4 Write property test and schema audit for PII absence (Property 26)
     - **Property 26: PII Absence Invariant**
     - **Validates: Requirements 12.1, 12.2, 12.3, 12.4**
     - Statically introspect every Supabase table schema defined in 2.1 (`grid_cells`, `bts_candidates`, `target_areas`, `whatif_grid`, `model_artifacts`, `scoring_runs`, `ethical_risk_register`, `admin_boundaries`)
@@ -53,78 +53,78 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert exported GEE payloads (Task 3.1) contain only processed, anonymised raster/vector outputs — not raw crowd-sourced records
     - `# Feature: geosignal-ai, Property 26: PII Absence Invariant`
 
-- [ ] 3. Data_Pipeline — geometry QC and attribute range validation
-  - [ ] 3.1 Implement `run_pipeline` entry point in `backend/geosignal/pipeline.py`
+- [x] 3. Data_Pipeline — geometry QC and attribute range validation
+  - [x] 3.1 Implement `run_pipeline` entry point in `backend/geosignal/pipeline.py`
     - Accept `region_boundary: GeoJSON`, `resolution_variants: list[int]`, `output_bucket: str`
     - Parameterise all source paths and bounds via config; no region-specific hard-coding in core code
     - Export only processed, anonymised raster/vector outputs from GEE to downstream storage — never raw crowd-sourced records (see Property 26, Task 2.4)
     - _Requirements: 1.1, 1.6, 13.1_
-  - [ ] 3.2 Implement geometry QC step
+  - [x] 3.2 Implement geometry QC step
     - Remove features with null or empty geometries; log each removed feature (source, feature ID, action)
     - Repair self-intersecting polygons via `buffer(0)`; fall back to removal if result is empty geometry; log repaired features
     - Expose a structured log of corrections accessible to `DataQualityReport`
     - _Requirements: 1.2_
-  - [ ]* 3.3 Write property test for geometry QC completeness (Property 3)
+  - [x] 3.3 Write property test for geometry QC completeness (Property 3)
     - **Property 3: Geometry QC Completeness**
     - **Validates: Requirements 1.2**
     - Use `hypothesis` `st.lists` of valid + randomly-injected invalid geometries (null, self-intersecting)
     - Assert output contains zero invalid geometries; assert log has exactly one entry per removed/repaired feature
     - `# Feature: geosignal-ai, Property 3: Geometry QC Completeness`
-  - [ ] 3.4 Implement attribute range validation step
+  - [x] 3.4 Implement attribute range validation step
     - Indonesia-scoped bounds: elevation −11 m to 4884 m; population density > 1,000,000 per km²; canopy height < 0 or > 100 m
     - Flag out-of-range records as anomalous; exclude them from scoring inputs; log each flagged record
     - Bounds stored in config, not hard-coded; unknown field names produce a log warning but do not flag the record
     - _Requirements: 1.3_
-  - [ ]* 3.5 Write property test for attribute range validation (Property 4)
+  - [x] 3.5 Write property test for attribute range validation (Property 4)
     - **Property 4: Attribute Range Validation**
     - **Validates: Requirements 1.3**
     - Generate random feature records with some attributes outside plausible ranges
     - Assert flagged set equals out-of-range set; assert scoring input set contains none of the flagged records
     - `# Feature: geosignal-ai, Property 4: Attribute Range Validation`
 
-- [ ] 4. Data_Pipeline — multi-resolution harmonisation and DataQualityReport
-  - [ ] 4.1 Implement multi-resolution raster harmonisation
+- [x] 4. Data_Pipeline — multi-resolution harmonisation and DataQualityReport
+  - [x] 4.1 Implement multi-resolution raster harmonisation
     - Resample continuous fields (elevation, slope, canopy height, population) via bilinear interpolation
     - Resample categorical fields (land-cover class) via nearest-neighbour
     - Produce output rasters at every resolution in `resolution_variants` (minimum 2, e.g. 100 m and 250 m)
     - All output variants must share the same CRS and spatial extent
     - _Requirements: 1.4_
-  - [ ]* 4.2 Write property test for multi-resolution output invariant (Property 5)
+  - [x] 4.2 Write property test for multi-resolution output invariant (Property 5)
     - **Property 5: Multi-Resolution Output Invariant**
     - **Validates: Requirements 1.4**
     - Generate various `resolution_variants` lists of length ≥ 2
     - Assert number of resolution outputs ≥ 2; assert all share CRS and spatial extent
     - `# Feature: geosignal-ai, Property 5: Multi-Resolution Output Invariant`
-  - [ ] 4.3 Implement `DataQualityReport` export
+  - [x] 4.3 Implement `DataQualityReport` export
     - Populate all required fields: `input_record_counts`, `removed_records`, `repaired_records`, `anomalous_records`, `chosen_resolution_m`, `confidence_thresholds` (the single canonical `ConfidenceThresholds` instance imported from `models.py`), `dataset_checksums`, `timestamp`
     - Confidence thresholds stored in the report — not hard-coded elsewhere
     - _Requirements: 1.5, 7.1_
-  - [ ]* 4.4 Write property test for DataQualityReport completeness (Property 6)
+  - [x] 4.4 Write property test for DataQualityReport completeness (Property 6)
     - **Property 6: DataQualityReport Completeness**
     - **Validates: Requirements 1.5, 7.1**
     - Generate random pipeline configs; assert all required fields are non-null on a successful run
     - `# Feature: geosignal-ai, Property 6: DataQualityReport Completeness`
-  - [ ]* 4.5 Write property test for pipeline region parameterisation (Property 22)
+  - [x] 4.5 Write property test for pipeline region parameterisation (Property 22)
     - **Property 22: Pipeline Region Parameterisation**
     - **Validates: Requirements 13.1**
     - Generate random valid GeoJSON boundary polygons; assert `run_pipeline` completes and produces output scoped to that boundary without code modification
     - `# Feature: geosignal-ai, Property 22: Pipeline Region Parameterisation`
 
-- [ ] 5. Data_Pipeline — GADM administrative boundary ingestion
-  - [ ] 5.1 Implement GADM Level 2 boundary ingestion in `backend/geosignal/admin_boundaries.py`
+- [x] 5. Data_Pipeline — GADM administrative boundary ingestion
+  - [x] 5.1 Implement GADM Level 2 boundary ingestion in `backend/geosignal/admin_boundaries.py`
     - Download/import GADM Level 2 (kabupaten/kecamatan) polygons covering the full extent of NTT Province, NTB Province, and Central Kalimantan Province — note this is a larger ingestion scope than a single kabupaten, since the region_id now maps to the whole province
     - Persist boundaries to the `admin_boundaries` Supabase table with `kecamatan_id`, `kecamatan_name`, `region_id`, and boundary geometry
     - This is a labeling/display layer only — GADM boundaries are never used as a Coverage Score scoring input (per Req 2.7)
     - This is the data source that `resolve_target_area`'s `kecamatan` mode (Task 17.1) and the kecamatan dropdown (Task 23.5) depend on — must complete before either is functional
     - _Requirements: 2.7, 10.7_
-  - [ ]* 5.2 Write unit test confirming `admin_boundaries` records exist for all three MVP/validation regions and that no `CONSOLIDATED_FEATURES` entry references this table
+  - [x] 5.2 Write unit test confirming `admin_boundaries` records exist for all three MVP/validation regions and that no `CONSOLIDATED_FEATURES` entry references this table
     - _Requirements: 2.7_
 
-- [ ] 6. Checkpoint — Data_Pipeline tests pass
+- [x] 6. Checkpoint — Data_Pipeline tests pass
   - Ensure all pipeline tests pass (geometry QC, attribute validation, harmonisation, DataQualityReport, GADM ingestion), ask the user if questions arise.
 
-- [ ] 7. Feature engineering — computing the eight Consolidated Feature Set inputs
-  - [ ] 7.1 Implement feature computation in `backend/geosignal/features.py`, producing a `FeatureVector` per grid cell from the harmonised rasters/vectors output by Task 4
+- [x] 7. Feature engineering — computing the eight Consolidated Feature Set inputs
+  - [x] 7.1 Implement feature computation in `backend/geosignal/features.py`, producing a `FeatureVector` per grid cell from the harmonised rasters/vectors output by Task 4
     - `elevation_m`, `slope_deg`: directly from harmonised SRTM DEM (slope derived via standard 3x3 neighborhood gradient)
     - `land_cover_class`: from harmonised ESA WorldCover raster
     - `canopy_height_m`: from harmonised OpenGeoAI canopy raster
@@ -134,111 +134,111 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - `facility_proximity_m`: nearest-neighbour distance to the closest OSM POI (school, clinic, government office, emergency service)
     - Output one `FeatureVector` per grid cell, at the chosen analysis resolution from Task 4.3, ready for `compute_coverage_score`
     - _Requirements: 1.1, 2.1, 2.6_
-  - [ ]* 7.2 Write unit tests for feature computation correctness
+  - [x] 7.2 Write unit tests for feature computation correctness
     - Assert `distance_to_bts_m` and `road_distance_m`/`facility_proximity_m` use independent nearest-neighbour indices (not conflated into a single "nearest infrastructure" distance)
     - Assert `land_cover_class` and `canopy_height_m` are computed from distinct source rasters and never merged into a single "dense vegetation" derived field, per the design doc's explicit prohibition on that phrase
     - Assert every `FeatureVector` produced has all eight `CONSOLIDATED_FEATURES` populated (no missing fields silently defaulted)
     - _Requirements: 2.1, 2.6_
 
-- [ ] 8. Confidence_Tagger
-  - [ ] 8.1 Implement `tag_confidence` function in `backend/geosignal/confidence.py`
+- [x] 8. Confidence_Tagger
+  - [x] 8.1 Implement `tag_confidence` function in `backend/geosignal/confidence.py`
     - Import `ConfidenceThresholds` from `models.py` — do NOT redefine thresholds here
     - High: both distances < `high_km`; Low: both distances > `low_km` or either absent within `low_km`; Med: all other cases
     - Absence of record is NOT treated as confirmed zero coverage
     - This single function is used for heatmap cells, BTS candidates, and drag-and-drop outputs — no separate implementations per context
     - _Requirements: 7.1, 7.2, 7.5, 2.5_
-  - [ ]* 8.2 Write property test for confidence tag correctness (Property 8)
+  - [x] 8.2 Write property test for confidence tag correctness (Property 8)
     - **Property 8: Confidence Tag Correctness**
     - **Validates: Requirements 7.1, 7.2, 7.5, 2.5**
     - Use `st.floats(min_value=0)` for distances; vary `ConfidenceThresholds`
     - Assert `tag_confidence` returns exactly `High`, `Med`, or `Low` per the if-and-only-if logic in the design
     - Assert absence-of-record case returns `Low`
     - `# Feature: geosignal-ai, Property 8: Confidence Tag Correctness`
-  - [ ]* 8.3 Write unit tests for confidence tag boundary values
+  - [x] 8.3 Write unit tests for confidence tag boundary values
     - Test exactly 2.0 km distance (boundary between High and Med)
     - Test exactly 10.0 km distance (boundary between Med and Low)
     - Test one source within 2 km, other absent (Med)
     - Test both sources absent (Low)
     - _Requirements: 7.1_
 
-- [ ] 9. Recommendation_Engine — Coverage Score and tier routing
-  - [ ] 9.1 Implement `select_tier` in `backend/geosignal/scoring.py`
+- [x] 9. Recommendation_Engine — Coverage Score and tier routing
+  - [x] 9.1 Implement `select_tier` in `backend/geosignal/scoring.py`
     - Return `ModelTier.TIER1` when `ookla_tile_count == 0`; return `ModelTier.TIER2` when `ookla_tile_count > 0`
     - No other tiers; exhaustive and mutually exclusive
     - _Requirements: 2.2, 2.3, 9.7_
-  - [ ]* 9.2 Write property test for tier routing correctness (Property 2)
+  - [x] 9.2 Write property test for tier routing correctness (Property 2)
     - **Property 2: Tier Routing Correctness**
     - **Validates: Requirements 2.2, 2.3, 9.7**
     - Use `st.integers(min_value=0)` for `ookla_tile_count`
     - Assert `select_tier` returns `TIER1` iff count == 0; `TIER2` iff count > 0
     - `# Feature: geosignal-ai, Property 2: Tier Routing Correctness`
-  - [ ] 9.3 Implement `AHPAdapter` in `backend/geosignal/adapters.py`, including equity weighting
+  - [x] 9.3 Implement `AHPAdapter` in `backend/geosignal/adapters.py`, including equity weighting
     - Implements `ScoringAdapter` protocol (`predict`, `shap_values`)
     - Uses normalised weight vector over `CONSOLIDATED_FEATURES`; normalised scores mapped to [0, 100]
     - **Equity weighting (single implementation, not duplicated elsewhere in this plan):** `facility_proximity_m` and `population_density_per_km2` carry elevated relative weights versus a baseline AHP configuration, such that closer-to-facility cells score ≥ farther cells (all else equal, non-zero population), and higher-population-density cells score ≥ lower-density cells (all else equal, same facility proximity)
     - Ookla signal quality is NOT in `CONSOLIDATED_FEATURES` and NOT used as a scoring input
     - Administrative boundary identifiers are NOT used as inputs
     - _Requirements: 2.1, 2.2, 2.6, 2.7, 9.1_
-  - [ ] 9.4 Implement `XGBoostAdapter` and `LightGBMAdapter` in `backend/geosignal/adapters.py`
+  - [x] 9.4 Implement `XGBoostAdapter` and `LightGBMAdapter` in `backend/geosignal/adapters.py`
     - Implements `ScoringAdapter` protocol
     - Trained against Ookla ground-truth labels (Ookla is ONLY the training label, never a score input)
     - `GNNAdapter` stub with `NotImplementedError` for Phase 3 extensibility
     - _Requirements: 2.3, 13.4_
-  - [ ] 9.4a Implement Tier 2 → Tier 1 fallback in `backend/geosignal/scoring.py`
+  - [x] 9.4a Implement Tier 2 → Tier 1 fallback in `backend/geosignal/scoring.py`
     - When a Tier 2 model artifact is missing, corrupt, or fails to load for a kecamatan, automatically fall back to `AHPAdapter` (Tier 1) for that kecamatan
     - Log the fallback event with: kecamatan_id, reason for fallback (missing / corrupt / load error), model_version attempted
     - Include the fallback event in the `scoring_runs` log entry for that run
     - Write a unit test: given a missing/corrupt XGBoost artifact, assert Tier 1 AHP is used and the fallback is logged
     - _Requirements: 2.2, 2.3_
-  - [ ] 9.5 Implement `compute_coverage_score` function
+  - [x] 9.5 Implement `compute_coverage_score` function
     - Accepts `FeatureVector` and a `ScoringAdapter`; returns `float` in [0.0, 100.0]
     - Works for both `AHPAdapter` and `XGBoostAdapter`/`LightGBMAdapter`
     - _Requirements: 2.1_
-  - [ ]* 9.6 Write property test for Coverage Score bounds invariant (Property 1)
+  - [x] 9.6 Write property test for Coverage Score bounds invariant (Property 1)
     - **Property 1: Coverage Score Bounds Invariant**
     - **Validates: Requirements 2.1**
     - Use random `FeatureVector` values within Indonesia-scoped valid ranges (elevation −11 to 4884 m, slope 0–90°, canopy 0–100 m, etc.)
     - Assert `0.0 <= compute_coverage_score(fv, tier) <= 100.0` for both `AHPAdapter` and `XGBoostAdapter`
     - `# Feature: geosignal-ai, Property 1: Coverage Score Bounds Invariant`
-  - [ ]* 9.7 Write property test for equity weighting direction (Property 17)
+  - [x] 9.7 Write property test for equity weighting direction (Property 17)
     - **Property 17: Equity Weighting Direction**
     - **Validates: Requirements 9.1**
     - Generate pairs of `FeatureVector` instances: (A) identical except A has lower `facility_proximity_m` than B; assert `score(A) >= score(B)` when both have non-zero population
     - Generate pairs (C, D): identical except C has higher `population_density_per_km2` than D; assert `score(C) >= score(D)`
     - `# Feature: geosignal-ai, Property 17: Equity Weighting Direction`
 
-- [ ] 10. Recommendation_Engine — SHAP explainability (both tiers)
-  - [ ] 10.1 Implement `compute_ahp_shap` in `backend/geosignal/shap_utils.py`
+- [x] 10. Recommendation_Engine — SHAP explainability (both tiers)
+  - [x] 10.1 Implement `compute_ahp_shap` in `backend/geosignal/shap_utils.py`
     - Compute `weight_i * (feature_value_i - baseline_i)` for each of the eight `CONSOLIDATED_FEATURES`
     - `regional_baseline`: mean of each feature across all scored grid cells within the same `region_id` for this scoring run; computed once per run and cached; not a national mean and not a per-kecamatan mean
     - Persist the regional baseline used alongside `scoring_runs.input_checksums` so it is versioned per run and never silently reused stale across runs with different input data
     - Returns a dict with exactly eight entries; no `None` values
     - _Requirements: 8.1, 8.3_
-  - [ ] 10.2 Implement `compute_gbm_shap` using the SHAP library's TreeExplainer for Tier 2 models
+  - [x] 10.2 Implement `compute_gbm_shap` using the SHAP library's TreeExplainer for Tier 2 models
     - Returns a dict with exactly eight entries matching `CONSOLIDATED_FEATURES`
     - _Requirements: 8.1, 8.3_
-  - [ ] 10.3 Implement `format_shap_top3` in `backend/geosignal/shap_utils.py`
+  - [x] 10.3 Implement `format_shap_top3` in `backend/geosignal/shap_utils.py`
     - Accepts a `shap_values` dict; returns a list of exactly three entries sorted by absolute value descending
     - Each entry has non-empty `feature_name` string and `direction` in `{positive, negative}`
     - Maps raw feature names to plain-language labels accessible to a non-technical planner
     - _Requirements: 4.6, 8.2_
-  - [ ]* 10.4 Write property test for SHAP completeness (Property 10)
+  - [x] 10.4 Write property test for SHAP completeness (Property 10)
     - **Property 10: SHAP Completeness**
     - **Validates: Requirements 4.6, 8.1, 8.3**
     - Generate random `FeatureVector` values; random regional baselines; test both tier adapters
     - Assert `shap_values` dict has exactly eight entries and no `None` values for both tiers
     - Assert Tier 1 requires `regional_baseline` with a value for every feature
     - `# Feature: geosignal-ai, Property 10: SHAP Completeness`
-  - [ ]* 10.5 Write property test for SHAP top-3 format invariant (Property 15)
+  - [x] 10.5 Write property test for SHAP top-3 format invariant (Property 15)
     - **Property 15: SHAP Top-3 Format Invariant**
     - **Validates: Requirements 8.2**
     - Generate random `shap_values` dicts with entries for all eight features
     - Assert `format_shap_top3` returns exactly three entries; each has non-empty `feature_name` and `direction` in `{positive, negative}`
     - `# Feature: geosignal-ai, Property 15: SHAP Top-3 Format Invariant`
-  - [ ]* 10.6 Write unit test confirming the AHP regional baseline is recomputed per region per scoring run and is never reused stale from a prior run with different input data
+  - [x] 10.6 Write unit test confirming the AHP regional baseline is recomputed per region per scoring run and is never reused stale from a prior run with different input data
     - _Requirements: 8.1, 8.3_
 
-  - [ ] 10.7 Implement SHAP batch write-back to all `grid_cells` rows
+  - [x] 10.7 Implement SHAP batch write-back to all `grid_cells` rows
     - After `compute_coverage_score` runs for all cells in a region, call `compute_ahp_shap` or `compute_gbm_shap` per cell and write the resulting `shap_top3` (formatted via `format_shap_top3`) back to `grid_cells.shap_top3` for every row
     - This ensures every heatmap cell-click (Requirement 3.4) can surface SHAP top-3, not just BTS candidate rows
     - Write a unit test asserting that after a batch scoring run, every `grid_cells` row for the target region has a non-null `shap_top3` field with exactly 3 entries
@@ -250,7 +250,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Constants `HIGH_CANOPY_LAND_COVER_CLASSES` and `CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M` defined here; configurable per region
     - Land-cover alone does NOT exclude; canopy height alone does NOT exclude; both signals required together
     - _Requirements: 4.3, 9.2_
-  - [ ]* 11.2 Write unit tests for canopy exclusion boundary cases
+  - [ ] 11.2 Write unit tests for canopy exclusion boundary cases
     - Forest class + 14.9 m canopy → NOT excluded
     - Forest class + 15.0 m canopy → excluded
     - Shrubland class + 20 m canopy → excluded (both criteria met)
@@ -263,7 +263,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Run this as an offline batch job, before demo time — this is the artifact that `los_validated` on every `BTSCandidate` depends on; a candidate is only ever emitted once its LOS result exists (Task 12.3)
     - Persist results to the `los_results` Supabase table (see Data Models in design.md) keyed by `(region_id, candidate_lat, candidate_lon, cell_lat, cell_lon)`, so `rank_bts_candidates` (12.3) can look up LOS results without live recomputation
     - _Requirements: 4.4_
-  - [ ]* 12.2 Write unit test confirming `rank_bts_candidates` never emits a `BTSCandidate` for a coordinate lacking a precomputed LOS result from 12.1
+  - [ ] 12.2 Write unit test confirming `rank_bts_candidates` never emits a `BTSCandidate` for a coordinate lacking a precomputed LOS result from 12.1
     - _Requirements: 4.4, 4.7_
   - [ ] 12.3 Implement `rank_bts_candidates` in `backend/geosignal/candidates.py`
     - Accept `grid_cells` (N, 2), `coverage_scores` (N,), `land_cover_classes` (N,), `canopy_heights_m` (N,), `n_candidates`, `exclude_high_canopy`
@@ -273,7 +273,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Return `InsufficientCandidatesResult` when fewer than 2 candidates survive all filters; never fabricate candidates
     - Attach `confidence_tag` via `tag_confidence`; attach `shap_values` via `compute_shap`; attach `model_version` and `scoring_run_id`
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 9.2_
-  - [ ]* 12.4 Write property test for BTS candidate list invariants (Property 9)
+  - [ ] 12.4 Write property test for BTS candidate list invariants (Property 9)
     - **Property 9: BTS Candidate List Invariants**
     - **Validates: Requirements 4.1, 4.2, 4.3, 4.4, 4.7, 9.2**
     - Generate random grid arrays with varied land-cover + canopy-height combinations including all-excluded cases
@@ -283,7 +283,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert no element satisfies `is_high_canopy` (joint check)
     - Assert `InsufficientCandidatesResult` returned (not a list) when fewer than 2 survive
     - `# Feature: geosignal-ai, Property 9: BTS Candidate List Invariants`
-  - [ ]* 12.5 Write unit tests for exactly 0 and exactly 1 surviving candidates
+  - [ ] 12.5 Write unit tests for exactly 0 and exactly 1 surviving candidates
     - Construct a grid where all candidates are excluded by canopy/LOS filters; assert `InsufficientCandidatesResult(surviving_count=0, ...)` returned
     - Construct a grid where exactly 1 candidate survives; assert `InsufficientCandidatesResult(surviving_count=1, ...)` returned, not a one-element list
     - _Requirements: 4.7_
@@ -294,13 +294,13 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Each fold: train-set kecamatan IDs and test-set kecamatan IDs are disjoint
     - Return `CVResult` with per-kecamatan accuracy entries for ALL kecamatan IDs in the dataset
     - _Requirements: 2.4, 9.4, 13.5_
-  - [ ]* 13.2 Write property test for spatial CV kecamatan disjointness (Property 7)
+  - [ ] 13.2 Write property test for spatial CV kecamatan disjointness (Property 7)
     - **Property 7: Spatial CV Kecamatan Disjointness**
     - **Validates: Requirements 2.4, 13.5**
     - Generate random kecamatan ID lists; run `spatial_cv`
     - Assert train-set ∩ test-set = {} for every fold
     - `# Feature: geosignal-ai, Property 7: Spatial CV Kecamatan Disjointness`
-  - [ ]* 13.3 Write property test for per-kecamatan accuracy reporting (Property 18)
+  - [ ] 13.3 Write property test for per-kecamatan accuracy reporting (Property 18)
     - **Property 18: Per-Kecamatan Accuracy Reporting**
     - **Validates: Requirements 9.4**
     - Generate random kecamatan sets of varying sizes; run `spatial_cv`
@@ -321,17 +321,17 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Document the retention policy in `infra/migrations/` alongside the schema migration
     - Write a unit test asserting that an attempt to delete a `scoring_runs` row younger than 12 months raises a permission error; an attempt to delete a row older than 12 months succeeds
     - _Requirements: 11.4_
-  - [ ]* 14.3 Write property test for model version assignment before use (Property 21)
+  - [ ] 14.3 Write property test for model version assignment before use (Property 21)
     - **Property 21: Model Version Assignment Before Use**
     - **Validates: Requirements 11.1**
     - Assert any scoring run has a non-empty `version_id` assigned before the first `compute_coverage_score` call
     - `# Feature: geosignal-ai, Property 21: Model Version Assignment Before Use`
-  - [ ]* 14.4 Write property test for scoring run log completeness (Property 16)
+  - [ ] 14.4 Write property test for scoring run log completeness (Property 16)
     - **Property 16: Scoring Run Log Completeness**
     - **Validates: Requirements 8.5, 11.2**
     - Generate random scoring run parameters; assert all required fields are non-null in the persisted log entry
     - `# Feature: geosignal-ai, Property 16: Scoring Run Log Completeness`
-  - [ ]* 14.5 Write property test for model artifact immutability (Property 20)
+  - [ ] 14.5 Write property test for model artifact immutability (Property 20)
     - **Property 20: Model Artifact Immutability**
     - **Validates: Requirements 11.5**
     - Simulate sequential Tier 2 retraining operations; assert `model_artifacts` count increases by exactly 1 per retraining; assert all prior `version_id` entries remain present and unmodified
@@ -346,7 +346,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Each entry has non-empty `risk_description`, `impact`, `mitigation`, `responsible_owner_role`
     - Write migration/seed to insert all five entries into the `ethical_risk_register` Supabase table
     - _Requirements: 9.6_
-  - [ ]* 16.2 Write property test for Ethical Risk Register completeness (Property 19)
+  - [ ] 16.2 Write property test for Ethical Risk Register completeness (Property 19)
     - **Property 19: Ethical Risk Register Completeness**
     - **Validates: Requirements 9.6**
     - Assert `EthicalRiskRegister` contains all five required risk IDs; each entry has all four non-empty fields
@@ -360,7 +360,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Persist the resolved `TargetArea` to the `target_areas` table
     - Every `grid_cells` coordinate passed to subsequent calls must fall within `TargetArea.boundary`
     - _Requirements: 10.7, 10.8, 4.1, 5.1_
-  - [ ]* 17.2 Write property test for target area resolution correctness (Property 25)
+  - [ ] 17.2 Write property test for target area resolution correctness (Property 25)
     - **Property 25: Target Area Resolution Correctness**
     - **Validates: Requirements 10.7, 10.8, 4.1, 5.1**
     - Generate random valid `kecamatan_id` values; assert `TargetArea.boundary` equals the GADM geometry and `kecamatan_id` is set
@@ -375,7 +375,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - This must run to completion, per region, before the Simulation_Engine (Task 19, 20) has anything to serve — Before/After and Drag-and-Drop both read exclusively from this table and never compute live
     - Run for all three regions (NTT Province MVP, NTB Province, Central Kalimantan Province) ahead of the demo
     - _Requirements: 5.1, 6.1_
-  - [ ]* 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
+  - [ ] 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
     - _Requirements: 5.1, 5.4_
 
 - [ ] 19. Simulation_Engine — Before/After simulation
@@ -385,13 +385,13 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Return `SimulationResult` with: `before_heatmap`, `after_heatmap`, `pct_good_change`, `villages_newly_covered`, `new_coverage_score`, `elapsed_ms`
     - `elapsed_ms` must be ≤ 3000 ms
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-  - [ ]* 19.2 Write property test for simulation unavailability contract (Property 12)
+  - [ ] 19.2 Write property test for simulation unavailability contract (Property 12)
     - **Property 12: Simulation Unavailability Contract**
     - **Validates: Requirements 5.4**
     - Generate random `(candidate_id, region_id)` pairs not present in the what-if grid
     - Assert `simulate_bts_placement` returns `UnavailableScenario` and does NOT call any DEM computation, interpolation, or extrapolation function
     - `# Feature: geosignal-ai, Property 12: Simulation Unavailability Contract`
-  - [ ]* 19.3 Write property test for simulation metric completeness (Property 23)
+  - [ ] 19.3 Write property test for simulation metric completeness (Property 23)
     - **Property 23: Simulation Metric Completeness**
     - **Validates: Requirements 5.3**
     - Generate random simulation inputs with valid precomputed entries
@@ -406,18 +406,18 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - `ComparisonPanel` includes `manual_wins: bool`; set to `True` when `coverage_score > model_score`; never suppressed
     - `overlay_enabled` flag does NOT modify `coverage_score`
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
-  - [ ]* 20.2 Write property test for drag-and-drop boundary and snap contracts (Property 13)
+  - [ ] 20.2 Write property test for drag-and-drop boundary and snap contracts (Property 13)
     - **Property 13: Drag-and-Drop Boundary and Snap Contracts**
     - **Validates: Requirements 6.6, 6.7**
     - Generate coordinates outside the grid extent; assert `OutsideExtentError` returned (no `DragDropResult`)
     - Generate coordinates within extent; assert `snapped_coordinate` equals nearest grid cell centroid; assert `grid_resolution_m` is a positive integer
     - `# Feature: geosignal-ai, Property 13: Drag-and-Drop Boundary and Snap Contracts`
-  - [ ]* 20.3 Write property test for power overlay non-interference (Property 14)
+  - [ ] 20.3 Write property test for power overlay non-interference (Property 14)
     - **Property 14: Power Overlay Non-Interference**
     - **Validates: Requirements 6.5**
     - For any dropped coordinate and any `overlay_enabled` value, assert `drag_drop_lookup(..., overlay_enabled=True).coverage_score == drag_drop_lookup(..., overlay_enabled=False).coverage_score`
     - `# Feature: geosignal-ai, Property 14: Power Overlay Non-Interference`
-  - [ ]* 20.4 Write property test for manual placement comparison correctness (Property 24)
+  - [ ] 20.4 Write property test for manual placement comparison correctness (Property 24)
     - **Property 24: Manual Placement Comparison Correctness**
     - **Validates: Requirements 6.3, 6.4**
     - Generate `DragDropResult` scenarios where `coverage_score > vs_top_candidate.model_score`
@@ -432,13 +432,13 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Return `Green` if score ≥ 70, `Yellow` if 40 ≤ score < 70, `Red` if score < 40
     - Three cases are exhaustive, mutually exclusive, and boundary-inclusive as specified
     - _Requirements: 3.1_
-  - [ ]* 22.2 Write property test for colour tier correctness (Property 11)
+  - [ ] 22.2 Write property test for colour tier correctness (Property 11)
     - **Property 11: Colour Tier Correctness**
     - **Validates: Requirements 3.1**
     - Use `st.floats(min_value=0.0, max_value=100.0)` for score
     - Assert `colour_tier(score)` returns `Green` iff score ≥ 70, `Yellow` iff 40 ≤ score < 70, `Red` iff score < 40
     - `# Feature: geosignal-ai, Property 11: Colour Tier Correctness`
-  - [ ]* 22.3 Write unit tests for colour tier boundary values
+  - [ ] 22.3 Write unit tests for colour tier boundary values
     - Test 39.99 → Red, 40.0 → Yellow, 40.01 → Yellow, 69.99 → Yellow, 70.0 → Green, 70.01 → Green
     - _Requirements: 3.1_
   - [ ] 22.4 Implement MapLibre Coverage Gap Heatmap layer in `frontend/components/CoverageHeatmap.tsx`
@@ -468,7 +468,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Highlight the selected boundary on the map before the Planner requests recommendations (visual confirmation step)
     - On submission, call `resolve_target_area` API with the chosen `selection_method` and payload
     - _Requirements: 10.7, 10.8_
-  - [ ]* 23.6 Write unit tests for target area selector state management
+  - [ ] 23.6 Write unit tests for target area selector state management
     - Assert switching the active region (Task 23.3) resets any in-progress target-area selection
     - Assert requesting recommendations or a simulation is blocked client-side until a `TargetArea` has been resolved and its boundary highlighted
     - _Requirements: 10.7, 10.8_

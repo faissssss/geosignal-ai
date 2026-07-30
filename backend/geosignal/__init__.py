@@ -1,0 +1,1 @@
+"""GeoSignal AI — backend package."""

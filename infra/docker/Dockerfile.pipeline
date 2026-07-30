@@ -1,0 +1,33 @@
+FROM python:3.11-slim
+
+# Install GDAL and other system-level geospatial dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gdal-bin \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    libspatialindex-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set GDAL environment variables for rasterio / pyproj
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
+
+WORKDIR /app
+
+# Copy backend package and scripts
+COPY backend/ ./backend/
+COPY scripts/ ./scripts/
+
+# Install Python dependencies from pyproject.toml
+RUN pip install --no-cache-dir ./backend/
+
+# Add the backend directory to PYTHONPATH so `geosignal` is importable
+ENV PYTHONPATH=/app/backend
+
+ENTRYPOINT ["python", "-m", "geosignal.pipeline"]
+
+# Default args — override at runtime:
+#   docker run ... --region ntt --resolutions 100 250
+CMD ["--region", "ntt", "--resolutions", "100", "250"]
