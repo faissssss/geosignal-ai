@@ -19,7 +19,151 @@
 
 ---
 
-## 👥 Pembagian Tugas
+## � Cara Mulai Kerja dengan Repository Ini
+
+### Step 1: Clone/Akses Repository
+```bash
+# Jika via GitHub/GitLab (minta akses dari Member 1)
+git clone <repository-url>
+cd geoai_vision
+
+# Atau jika Member 1 share via ZIP/Drive
+# Extract folder dan cd ke dalamnya
+```
+
+### Step 2: Setup Environment Variables
+
+#### Untuk Member 2 (Backend):
+```bash
+# Member 1 akan share file .env dan infra/gee-service-account.json
+# Copy kedua file ini ke root directory project
+
+# Verify .env ada dan berisi:
+cat .env
+# Harus ada: SUPABASE_URL, SUPABASE_SERVICE_KEY, GEE_PROJECT_ID, dll.
+```
+
+#### Untuk Member 3 (Frontend):
+```bash
+# Copy environment variables ke frontend
+cd frontend/
+cp ../.env .env.local
+
+# Atau buat manual file frontend/.env.local dengan isi:
+# NEXT_PUBLIC_SUPABASE_URL=https://ljstbtohevwxfreexvuu.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Step 3: Install Dependencies
+
+#### Member 2 (Backend):
+```bash
+cd backend/
+
+# Install Python packages
+pip install -e .
+
+# Atau jika pakai virtual environment (recommended):
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -e .
+```
+
+#### Member 3 (Frontend):
+```bash
+cd frontend/
+
+# Install Node packages
+npm install
+```
+
+### Step 4: Verify Setup
+
+#### Member 2 - Test Backend:
+```bash
+cd backend/
+
+# Run existing tests untuk verify setup
+python -m pytest ../tests/ -v
+
+# Test import models
+python -c "from geosignal.models import CONSOLIDATED_FEATURES, ConfidenceThresholds; print('✅ Import OK')"
+
+# Test Supabase connection
+python -c "import os; from supabase import create_client; client = create_client(os.getenv('SUPABASE_URL'), os.getenv('SUPABASE_SERVICE_KEY')); print('✅ Supabase OK')"
+```
+
+#### Member 3 - Test Frontend:
+```bash
+cd frontend/
+
+# Start dev server
+npm run dev
+
+# Buka browser: http://localhost:3000
+# Harus ada halaman Next.js tanpa error
+```
+
+### Step 5: Baca Task Assignments
+
+```bash
+# Baca file tasks untuk tau task mana yang harus dikerjakan
+cat .kiro/specs/geosignal-ai/tasks.md
+
+# Baca design spec (penting untuk Member 3)
+cat .kiro/specs/geosignal-ai/design.md
+
+# Baca requirements (context project)
+cat .kiro/specs/geosignal-ai/requirements.md
+```
+
+### Step 6: Mulai Development
+
+#### Member 2:
+```bash
+cd backend/geosignal/
+
+# Buat/edit file untuk task yang dikerjakan
+# Contoh untuk Task 11 (canopy exclusion):
+# Edit file: features.py atau buat file baru: canopy.py
+
+# Setelah selesai, test:
+python -m pytest ../tests/ -v
+```
+
+#### Member 3:
+```bash
+cd frontend/
+
+# Task 21-24: Interactive Map
+# Edit/buat files di:
+# - frontend/app/page.tsx (main page)
+# - frontend/components/Map.tsx (map component)
+# - frontend/components/LayerControls.tsx
+# dll.
+
+# Dev server auto-reload, langsung cek di browser
+```
+
+### Step 7: Git Workflow (Recommended)
+
+```bash
+# Buat branch untuk task kamu
+git checkout -b member2/task-11-canopy
+# atau
+git checkout -b member3/task-21-map
+
+# Commit changes setiap task selesai
+git add .
+git commit -m "Task 11: Implement canopy exclusion constraint"
+
+# Push ke remote (optional, tergantung workflow tim)
+git push origin member2/task-11-canopy
+```
+
+---
+
+## �👥 Pembagian Tugas
 
 ### Member 2 — Tasks 11–20 (Backend ML Lanjutan + Simulation Engine)
 
@@ -303,3 +447,99 @@ Member 2 Task 11–12 → Member 3 Task 23–24
 **Good luck, team! 🚀**
 
 *Jika ada pertanyaan atau blocker, koordinasi di group chat atau raise issue di repo.*
+
+---
+
+## 📖 Quick Reference — File Locations
+
+### Files yang SERING DIAKSES:
+
+```
+geoai_vision/
+├── .env                              # ← Credentials (JANGAN commit!)
+├── infra/
+│   ├── gee-service-account.json      # ← GEE credentials
+│   └── migrations/
+│       └── 001_initial_schema.sql    # ← Database schema reference
+│
+├── backend/
+│   ├── geosignal/
+│   │   ├── models.py                 # ← CANONICAL TYPES (jangan redefine!)
+│   │   ├── features.py               # ← Feature engineering
+│   │   ├── pipeline.py               # ← Main ML pipeline
+│   │   ├── scoring.py                # ← Scoring logic
+│   │   └── harmonisation.py          # ← Data harmonization
+│   └── tests/                        # ← Test suite
+│
+├── frontend/
+│   ├── .env.local                    # ← Frontend env vars
+│   ├── app/
+│   │   ├── page.tsx                  # ← Main page
+│   │   └── api/                      # ← API routes
+│   └── components/                   # ← React components
+│
+└── .kiro/specs/geosignal-ai/
+    ├── requirements.md               # ← Project requirements
+    ├── design.md                     # ← UI/UX spec (PENTING untuk Member 3!)
+    ├── tasks.md                      # ← Task breakdown
+    └── PANDUAN_TIM.md                # ← This file
+```
+
+### Cheat Sheet Commands:
+
+```bash
+# Backend testing
+cd backend && python -m pytest ../tests/ -v
+
+# Frontend dev
+cd frontend && npm run dev
+
+# Check no type redefinitions
+grep -r "class ConfidenceThresholds" backend/
+grep -r "CONSOLIDATED_FEATURES =" backend/
+
+# Verify Supabase tables
+# Go to: https://supabase.com/dashboard
+# Project: ljstbtohevwxfreexvuu
+# SQL Editor
+
+# Check Python imports
+python -c "from geosignal.models import CONSOLIDATED_FEATURES; print('OK')"
+```
+
+### Important URLs:
+
+- **Supabase Dashboard**: https://supabase.com/dashboard/project/ljstbtohevwxfreexvuu
+- **Google Earth Engine**: https://code.earthengine.google.com/
+- **OpenCelliD API**: https://opencellid.org/
+- **Ookla Open Data**: https://github.com/teamookla/ookla-open-data
+
+### Kontak & Koordinasi:
+
+- **Blocker di Task 11-12**: Tag Member 1 (critical untuk Member 3)
+- **Type/Schema issues**: Check `models.py` dan `001_initial_schema.sql`
+- **Environment issues**: Verify `.env` files lengkap
+- **Test failures**: Share full pytest output dengan Member 1
+
+---
+
+## 🎯 Daily Workflow Checklist
+
+### Setiap Mulai Kerja:
+- [ ] `git pull origin main` (sync latest changes)
+- [ ] Check group chat untuk updates
+- [ ] Review task yang sedang dikerjakan di `tasks.md`
+
+### Setiap Selesai Task:
+- [ ] Run tests (`pytest` untuk backend, manual test untuk frontend)
+- [ ] Commit dengan message jelas
+- [ ] Update progress di group chat
+- [ ] Check apakah task ini membuka blocker untuk member lain
+
+### Sebelum Submit Final:
+- [ ] All tests pass
+- [ ] No type redefinitions
+- [ ] Code reviewed (at least self-review)
+- [ ] Documentation updated (if needed)
+
+---
