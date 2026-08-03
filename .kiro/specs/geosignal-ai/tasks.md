@@ -244,13 +244,13 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Write a unit test asserting that after a batch scoring run, every `grid_cells` row for the target region has a non-null `shap_top3` field with exactly 3 entries
     - _Requirements: 3.4, 8.1_
 
-- [ ] 11. Recommendation_Engine — deforestation constraint and canopy exclusion
-  - [ ] 11.1 Implement `is_high_canopy` in `backend/geosignal/constraints.py`
+- [x] 11. Recommendation_Engine — deforestation constraint and canopy exclusion
+  - [x] 11.1 Implement `is_high_canopy` in `backend/geosignal/constraints.py`
     - Exclude a candidate if BOTH `land_cover_class in {10, 20}` AND `canopy_height_m >= 15.0`
     - Constants `HIGH_CANOPY_LAND_COVER_CLASSES` and `CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M` defined here; configurable per region
     - Land-cover alone does NOT exclude; canopy height alone does NOT exclude; both signals required together
     - _Requirements: 4.3, 9.2_
-  - [ ] 11.2 Write unit tests for canopy exclusion boundary cases
+  - [x] 11.2 Write unit tests for canopy exclusion boundary cases
     - Forest class + 14.9 m canopy → NOT excluded
     - Forest class + 15.0 m canopy → excluded
     - Shrubland class + 20 m canopy → excluded (both criteria met)
