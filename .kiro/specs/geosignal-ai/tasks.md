@@ -258,7 +258,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - _Requirements: 4.3, 9.2_
 
 - [ ] 12. Recommendation_Engine — DEM line-of-sight precomputation and BallTree candidate search
-  - [ ] 12.1 Implement precomputed DEM-based line-of-sight (LOS) grid computation in `backend/geosignal/los.py`
+  - [x] 12.1 Implement precomputed DEM-based line-of-sight (LOS) grid computation in `backend/geosignal/los.py`
     - For every grid cell within candidate range of a potential BTS site, compute a LOS validation result (direct propagation path exists / blocked) using the harmonised SRTM DEM and land-cover/canopy-height layers from Tasks 4 and 7
     - Run this as an offline batch job, before demo time — this is the artifact that `los_validated` on every `BTSCandidate` depends on; a candidate is only ever emitted once its LOS result exists (Task 12.3)
     - Persist results to the `los_results` Supabase table (see Data Models in design.md) keyed by `(region_id, candidate_lat, candidate_lon, cell_lat, cell_lon)`, so `rank_bts_candidates` (12.3) can look up LOS results without live recomputation
