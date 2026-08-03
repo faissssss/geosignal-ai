@@ -257,15 +257,15 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Non-forest class + 20 m canopy → NOT excluded (land_cover_class not in set)
     - _Requirements: 4.3, 9.2_
 
-- [ ] 12. Recommendation_Engine — DEM line-of-sight precomputation and BallTree candidate search
+- [x] 12. Recommendation_Engine — DEM line-of-sight precomputation and BallTree candidate search
   - [x] 12.1 Implement precomputed DEM-based line-of-sight (LOS) grid computation in `backend/geosignal/los.py`
     - For every grid cell within candidate range of a potential BTS site, compute a LOS validation result (direct propagation path exists / blocked) using the harmonised SRTM DEM and land-cover/canopy-height layers from Tasks 4 and 7
     - Run this as an offline batch job, before demo time — this is the artifact that `los_validated` on every `BTSCandidate` depends on; a candidate is only ever emitted once its LOS result exists (Task 12.3)
     - Persist results to the `los_results` Supabase table (see Data Models in design.md) keyed by `(region_id, candidate_lat, candidate_lon, cell_lat, cell_lon)`, so `rank_bts_candidates` (12.3) can look up LOS results without live recomputation
     - _Requirements: 4.4_
-  - [ ] 12.2 Write unit test confirming `rank_bts_candidates` never emits a `BTSCandidate` for a coordinate lacking a precomputed LOS result from 12.1
+  - [x] 12.2 Write unit test confirming `rank_bts_candidates` never emits a `BTSCandidate` for a coordinate lacking a precomputed LOS result from 12.1
     - _Requirements: 4.4, 4.7_
-  - [ ] 12.3 Implement `rank_bts_candidates` in `backend/geosignal/candidates.py`
+  - [x] 12.3 Implement `rank_bts_candidates` in `backend/geosignal/candidates.py`
     - Accept `grid_cells` (N, 2), `coverage_scores` (N,), `land_cover_classes` (N,), `canopy_heights_m` (N,), `n_candidates`, `exclude_high_canopy`
     - Filter candidates using `is_high_canopy` (both arrays, not land_cover alone)
     - Use scikit-learn `BallTree` for spatial indexing and ranking by `expected_improvement` (mean delta Coverage Score in BTS signal radius)
@@ -273,7 +273,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Return `InsufficientCandidatesResult` when fewer than 2 candidates survive all filters; never fabricate candidates
     - Attach `confidence_tag` via `tag_confidence`; attach `shap_values` via `compute_shap`; attach `model_version` and `scoring_run_id`
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 9.2_
-  - [ ] 12.4 Write property test for BTS candidate list invariants (Property 9)
+  - [x] 12.4 Write property test for BTS candidate list invariants (Property 9)
     - **Property 9: BTS Candidate List Invariants**
     - **Validates: Requirements 4.1, 4.2, 4.3, 4.4, 4.7, 9.2**
     - Generate random grid arrays with varied land-cover + canopy-height combinations including all-excluded cases
@@ -283,7 +283,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert no element satisfies `is_high_canopy` (joint check)
     - Assert `InsufficientCandidatesResult` returned (not a list) when fewer than 2 survive
     - `# Feature: geosignal-ai, Property 9: BTS Candidate List Invariants`
-  - [ ] 12.5 Write unit tests for exactly 0 and exactly 1 surviving candidates
+  - [x] 12.5 Write unit tests for exactly 0 and exactly 1 surviving candidates
     - Construct a grid where all candidates are excluded by canopy/LOS filters; assert `InsufficientCandidatesResult(surviving_count=0, ...)` returned
     - Construct a grid where exactly 1 candidate survives; assert `InsufficientCandidatesResult(surviving_count=1, ...)` returned, not a one-element list
     - _Requirements: 4.7_
