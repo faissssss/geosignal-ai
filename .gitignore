@@ -67,3 +67,5 @@ Thumbs.db
 # Docker / logs
 # ==============================================================================
 *.log
+
+frontend/tsconfig.tsbuildinfo
