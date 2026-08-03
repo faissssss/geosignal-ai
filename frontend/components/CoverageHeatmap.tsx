@@ -220,11 +220,8 @@ export default function CoverageHeatmap({
     if (!map || !map.isStyleLoaded()) return
     const source = map.getSource(SOURCE_ID)
     if (source && source.type === 'geojson') {
-      // Narrow to GeoJSONSource so TypeScript knows setData exists.
-      const { GeoJSONSource } = require('maplibre-gl') as typeof import('maplibre-gl')
-      if (source instanceof GeoJSONSource) {
-        source.setData(cellsToGeoJSON(cells))
-      }
+      // Cast to GeoJSONSource — source.type === 'geojson' guarantees this is safe.
+      (source as import('maplibre-gl').GeoJSONSource).setData(cellsToGeoJSON(cells))
     }
   }, [map, cells])
 
