@@ -378,20 +378,20 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
   - [x] 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
     - _Requirements: 5.1, 5.4_
 
-- [ ] 19. Simulation_Engine — Before/After simulation
-  - [ ] 19.1 Implement `simulate_bts_placement` in `backend/geosignal/simulation.py`
+- [x] 19. Simulation_Engine — Before/After simulation
+  - [x] 19.1 Implement `simulate_bts_placement` in `backend/geosignal/simulation.py`
     - Look up precomputed what-if grid (populated by Task 18.1) in `whatif_grid` table by `(candidate_id, region_id)`
     - Return `UnavailableScenario` (with human-readable message) if no precomputed entry exists — never compute, interpolate, or extrapolate
     - Return `SimulationResult` with: `before_heatmap`, `after_heatmap`, `pct_good_change`, `villages_newly_covered`, `new_coverage_score`, `elapsed_ms`
     - `elapsed_ms` must be ≤ 3000 ms
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-  - [ ] 19.2 Write property test for simulation unavailability contract (Property 12)
+  - [x] 19.2 Write property test for simulation unavailability contract (Property 12)
     - **Property 12: Simulation Unavailability Contract**
     - **Validates: Requirements 5.4**
     - Generate random `(candidate_id, region_id)` pairs not present in the what-if grid
     - Assert `simulate_bts_placement` returns `UnavailableScenario` and does NOT call any DEM computation, interpolation, or extrapolation function
     - `# Feature: geosignal-ai, Property 12: Simulation Unavailability Contract`
-  - [ ] 19.3 Write property test for simulation metric completeness (Property 23)
+  - [x] 19.3 Write property test for simulation metric completeness (Property 23)
     - **Property 23: Simulation Metric Completeness**
     - **Validates: Requirements 5.3**
     - Generate random simulation inputs with valid precomputed entries
