@@ -340,13 +340,13 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
 - [x] 15. Checkpoint — Recommendation_Engine core tests pass
   - Ensure all feature engineering, scoring, SHAP, LOS, candidate ranking, CV, and audit log tests pass. Ask the user if questions arise.
 
-- [ ] 16. Ethical Risk Register
-  - [ ] 16.1 Implement `EthicalRiskRegister` in `backend/geosignal/ethics.py`
+- [x] 16. Ethical Risk Register
+  - [x] 16.1 Implement `EthicalRiskRegister` in `backend/geosignal/ethics.py`
     - Instantiate all five required `EthicalRiskEntry` objects: `digital_exclusion`, `deforestation`, `opencellid_sparsity_misread`, `low_confidence_funding_decisions`, `maup_resampling_mismatch`
     - Each entry has non-empty `risk_description`, `impact`, `mitigation`, `responsible_owner_role`
     - Write migration/seed to insert all five entries into the `ethical_risk_register` Supabase table
     - _Requirements: 9.6_
-  - [ ] 16.2 Write property test for Ethical Risk Register completeness (Property 19)
+  - [x] 16.2 Write property test for Ethical Risk Register completeness (Property 19)
     - **Property 19: Ethical Risk Register Completeness**
     - **Validates: Requirements 9.6**
     - Assert `EthicalRiskRegister` contains all five required risk IDs; each entry has all four non-empty fields
