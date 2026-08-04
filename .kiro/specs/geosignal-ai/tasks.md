@@ -337,7 +337,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Simulate sequential Tier 2 retraining operations; assert `model_artifacts` count increases by exactly 1 per retraining; assert all prior `version_id` entries remain present and unmodified
     - `# Feature: geosignal-ai, Property 20: Model Artifact Immutability`
 
-- [ ] 15. Checkpoint — Recommendation_Engine core tests pass
+- [x] 15. Checkpoint — Recommendation_Engine core tests pass
   - Ensure all feature engineering, scoring, SHAP, LOS, candidate ranking, CV, and audit log tests pass. Ask the user if questions arise.
 
 - [ ] 16. Ethical Risk Register
