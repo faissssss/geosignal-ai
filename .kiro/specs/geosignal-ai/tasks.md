@@ -307,31 +307,31 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert `CVResult` contains one accuracy entry per kecamatan in the input dataset; no aggregate-only result
     - `# Feature: geosignal-ai, Property 18: Per-Kecamatan Accuracy Reporting`
 
-- [ ] 14. Recommendation_Engine — model versioning and scoring run audit log
-  - [ ] 14.1 Implement model version assignment in `backend/geosignal/versioning.py`
+- [x] 14. Recommendation_Engine — model versioning and scoring run audit log
+  - [x] 14.1 Implement model version assignment in `backend/geosignal/versioning.py`
     - Assign a unique semantic `version_id` to each model artifact before it produces any predictions
     - Store artifacts in `model_artifacts` table; never overwrite or delete prior artifacts
     - `artifact_path` points to Supabase Storage; `training_run_id` links to the training run
     - _Requirements: 11.1, 11.5_
-  - [ ] 14.2 Implement scoring run log writer — insert to `scoring_runs` table after every batch run
+  - [x] 14.2 Implement scoring run log writer — insert to `scoring_runs` table after every batch run
     - Log: `run_id`, `model_version`, `tier`, `region_kecamatans`, `resolution_m`, `input_checksums` (SHA-256 per source; also stores AHP regional baseline for SHAP reproducibility), `candidate_count`, `timestamp`, `retained_for_months=12`
     - _Requirements: 8.5, 11.2, 11.4_
-  - [ ] 14.2a Implement 12-month log retention enforcement
+  - [x] 14.2a Implement 12-month log retention enforcement
     - Add a Supabase Row Level Security policy (or a Postgres trigger) on the `scoring_runs` table that prevents `DELETE` on any row where `timestamp > NOW() - INTERVAL '12 months'`
     - Document the retention policy in `infra/migrations/` alongside the schema migration
     - Write a unit test asserting that an attempt to delete a `scoring_runs` row younger than 12 months raises a permission error; an attempt to delete a row older than 12 months succeeds
     - _Requirements: 11.4_
-  - [ ] 14.3 Write property test for model version assignment before use (Property 21)
+  - [x] 14.3 Write property test for model version assignment before use (Property 21)
     - **Property 21: Model Version Assignment Before Use**
     - **Validates: Requirements 11.1**
     - Assert any scoring run has a non-empty `version_id` assigned before the first `compute_coverage_score` call
     - `# Feature: geosignal-ai, Property 21: Model Version Assignment Before Use`
-  - [ ] 14.4 Write property test for scoring run log completeness (Property 16)
+  - [x] 14.4 Write property test for scoring run log completeness (Property 16)
     - **Property 16: Scoring Run Log Completeness**
     - **Validates: Requirements 8.5, 11.2**
     - Generate random scoring run parameters; assert all required fields are non-null in the persisted log entry
     - `# Feature: geosignal-ai, Property 16: Scoring Run Log Completeness`
-  - [ ] 14.5 Write property test for model artifact immutability (Property 20)
+  - [x] 14.5 Write property test for model artifact immutability (Property 20)
     - **Property 20: Model Artifact Immutability**
     - **Validates: Requirements 11.5**
     - Simulate sequential Tier 2 retraining operations; assert `model_artifacts` count increases by exactly 1 per retraining; assert all prior `version_id` entries remain present and unmodified
