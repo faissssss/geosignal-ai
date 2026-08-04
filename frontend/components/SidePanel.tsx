@@ -225,6 +225,26 @@ export default function SidePanel({
             </>
           )}
 
+          {/* Low-confidence disclaimer (Req 7.4) */}
+          {selection.data.confidence_tag === 'Low' && (
+            <div
+              data-testid="side-panel-low-confidence-disclaimer"
+              role="alert"
+              style={{
+                background: '#fef2f2',
+                border: '1px solid #fca5a5',
+                borderRadius: 6,
+                padding: '8px 10px',
+                marginBottom: 8,
+                fontSize: '0.78rem',
+                color: '#991b1b',
+              }}
+            >
+              ⚠ <strong>Low confidence</strong> — this estimate is based on sparse data
+              and should not be treated as an authoritative signal measurement.
+            </div>
+          )}
+
           {/* Coverage Score */}
           <p style={labelStyle}>Coverage Score</p>
           {(() => {

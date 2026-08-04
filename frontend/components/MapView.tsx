@@ -1,7 +1,8 @@
 'use client'
 
 /**
- * MapView — Task 23.1 (Requirements 3.1–3.5, 10.2, 10.3, 10.6)
+ * MapView — Task 23.1 + Task 24 integration
+ * (Requirements 3.1–3.5, 5.1–5.5, 6.1–6.7, 7.4, 7.5, 9.3, 9.5, 10.2, 10.3, 10.6)
  *
  * Full MapLibre GL JS interactive map with layer stack:
  *   1. Base terrain tiles
@@ -12,6 +13,12 @@
  *   6. Confidence overlay    ← handled inside CoverageHeatmap (opacity)
  *   7. OpenCellID BTS markers
  *   8. Ranked BTS candidate markers (draggable-ready)
+ *
+ * Task 24 additions (right-side panel stack):
+ *   - SimulationPanel  — "Simulate New BTS" for selected candidate
+ *   - DragDropMarker   — draggable marker + coverage result panel
+ *   - PowerOverlay     — optional power/energy feasibility toggle
+ *   - ConfidenceGate   — Low-confidence acknowledgement gate
  *
  * All layers have client-side visibility toggles (setLayoutProperty).
  * Toggles do NOT reload the page, refetch data, or recreate the map.
@@ -30,6 +37,10 @@ import CoverageHeatmap, { type CoverageCell } from './CoverageHeatmap'
 import SidePanel, { type SidePanelSelection } from './SidePanel'
 import RegionSelector, { type RegionData } from './RegionSelector'
 import TargetAreaSelector from './TargetAreaSelector'
+import SimulationPanel from './SimulationPanel'
+import DragDropMarker, { type DragDropResponse } from './DragDropMarker'
+import PowerOverlay, { type PowerFeasibilityData } from './PowerOverlay'
+import ConfidenceGate from './ConfidenceGate'
 
 // ---------------------------------------------------------------------------
 // Layer ID constants
@@ -242,6 +253,14 @@ export default function MapView({
   // ── Side panel ─────────────────────────────────────────────────────────
   const [selection, setSelection] = useState<SidePanelSelection | null>(null)
 
+  // ── Task 24: selected candidate for simulation + ConfidenceGate ────────
+  const [selectedCandidate, setSelectedCandidate] = useState<BTSCandidate | null>(null)
+
+  // ── Task 24: power overlay state ───────────────────────────────────────
+  const [overlayEnabled, setOverlayEnabled] = useState(false)
+  const [dragDropFeasibility, setDragDropFeasibility] = useState<PowerFeasibilityData | null>(null)
+  const [dragDropCoverageScore, setDragDropCoverageScore] = useState<number | null>(null)
+
   // ── Layer visibility ───────────────────────────────────────────────────
   const [visibility, setVisibility] = useState<LayerVisibility>({
     heatmap:    true,
@@ -318,6 +337,9 @@ export default function MapView({
       setActiveRegion(data.regionId)
       setTargetArea(null)
       setSelection(null)
+      setSelectedCandidate(null)
+      setDragDropCoverageScore(null)
+      setDragDropFeasibility(null)
     },
     [],
   )
@@ -482,6 +504,7 @@ export default function MapView({
       if (!f) return
       const props = f.properties as BTSCandidate
       setSelection({ kind: 'candidate', data: props })
+      setSelectedCandidate(props)
     }
     map.on('click', CAND_LAYER, onClick)
     return () => { map.off('click', CAND_LAYER, onClick) }
@@ -514,6 +537,23 @@ export default function MapView({
   const handleTargetAreaReset = useCallback(() => {
     setTargetArea(null)
   }, [])
+
+  // ── DragDrop result handler ────────────────────────────────────────────
+  const handleDragDropResult = useCallback((resp: DragDropResponse | null) => {
+    if (resp?.kind === 'result') {
+      setDragDropCoverageScore(resp.coverage_score)
+      // Power feasibility is not in the drag-drop API response (Task 25 territory).
+      // Show null until the overlay data arrives — never fabricate values.
+      setDragDropFeasibility({ nearest_grid_node_km: null, solar_potential_rating: null })
+    } else {
+      setDragDropCoverageScore(null)
+    }
+  }, [])
+
+  // ── Simulation action (called by ConfidenceGate after acknowledgement) ─
+  // This just scrolls the SimulationPanel into view; the actual API call
+  // is handled inside SimulationPanel when the button is clicked.
+  // ConfidenceGate wraps the button-click — no separate imperative trigger needed.
 
   // ── Cells → CoverageCell[] ─────────────────────────────────────────────
   const coverageCells: CoverageCell[] = cells.map((c) => ({
@@ -598,6 +638,61 @@ export default function MapView({
         onClose={() => setSelection(null)}
       />
 
+      {/* Task 24 — right-side panel stack ──────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 16,
+          right: selection ? 332 : 16,   // shift left when SidePanel is open
+          width: 300,
+          maxHeight: 'calc(100vh - 32px)',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+          zIndex: 10,
+          transition: 'right 0.2s ease',
+        }}
+        data-testid="task24-panel-stack"
+      >
+        {/* ConfidenceGate wraps the Simulate button for Low-confidence candidates */}
+        {selectedCandidate && (
+          <ConfidenceGate
+            confidenceTag={selectedCandidate.confidence_tag}
+            candidateId={selectedCandidate.candidate_id}
+            guardedAction={() => {
+              /* The actual simulation is triggered inside SimulationPanel.
+                 ConfidenceGate here guards a no-op to demonstrate the modal;
+                 in practice the SimulationPanel button itself is also wrapped. */
+            }}
+            actionLabel="Simulate New BTS (guarded)"
+            disabled={!targetArea}
+          />
+        )}
+
+        {/* SimulationPanel */}
+        <SimulationPanel
+          candidate={selectedCandidate}
+          regionId={activeRegion}
+          targetAreaResolved={targetArea !== null}
+        />
+
+        {/* DragDropMarker panel (result display) */}
+        <DragDropMarker
+          map={mapRef.current}
+          regionId={activeRegion}
+          overlayEnabled={overlayEnabled}
+          onResult={handleDragDropResult}
+        />
+
+        {/* PowerOverlay — secondary feasibility display only */}
+        <PowerOverlay
+          coverageScore={dragDropCoverageScore}
+          feasibilityData={dragDropFeasibility}
+          onToggle={setOverlayEnabled}
+        />
+      </div>
+
       {/* GeoAI label — always visible (Req 9.3) */}
       <div
         style={{
@@ -625,3 +720,6 @@ export default function MapView({
 // Named exports for testing
 export { WebGLFallback, LayerToggleBar, OCID_SOURCE, CAND_SOURCE, CAND_LAYER, VILLAGE_FILL, VILLAGE_OUTLINE, CONTOUR_LAYER, LC_LAYER }
 type GeoJSONSource = import('maplibre-gl').GeoJSONSource
+// Re-export new component types for convenience in tests
+export type { DragDropResponse }
+export type { PowerFeasibilityData }
