@@ -398,26 +398,26 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert `SimulationResult.pct_good_change`, `villages_newly_covered`, and `new_coverage_score` are all present and numerically finite (not `None`, `NaN`, or infinite)
     - `# Feature: geosignal-ai, Property 23: Simulation Metric Completeness`
 
-- [ ] 20. Simulation_Engine — Drag-and-Drop simulation
-  - [ ] 20.1 Implement `drag_drop_lookup` in `backend/geosignal/simulation.py`
+- [x] 20. Simulation_Engine — Drag-and-Drop simulation
+  - [x] 20.1 Implement `drag_drop_lookup` in `backend/geosignal/simulation.py`
     - Snap dropped coordinate to nearest `whatif_grid` cell (populated by Task 18.1) using `BallTree` index on grid centroids
     - Return `OutsideExtentError` (with region extent in payload) if coordinate is outside grid spatial extent — never extrapolate or interpolate
     - Return `DragDropResult` with: `snapped_coordinate`, `grid_resolution_m`, `coverage_score`, `confidence_tag`, `vs_top_candidate` (a `ComparisonPanel`), `elapsed_ms` ≤ 2000 ms
     - `ComparisonPanel` includes `manual_wins: bool`; set to `True` when `coverage_score > model_score`; never suppressed
     - `overlay_enabled` flag does NOT modify `coverage_score`
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
-  - [ ] 20.2 Write property test for drag-and-drop boundary and snap contracts (Property 13)
+  - [x] 20.2 Write property test for drag-and-drop boundary and snap contracts (Property 13)
     - **Property 13: Drag-and-Drop Boundary and Snap Contracts**
     - **Validates: Requirements 6.6, 6.7**
     - Generate coordinates outside the grid extent; assert `OutsideExtentError` returned (no `DragDropResult`)
     - Generate coordinates within extent; assert `snapped_coordinate` equals nearest grid cell centroid; assert `grid_resolution_m` is a positive integer
     - `# Feature: geosignal-ai, Property 13: Drag-and-Drop Boundary and Snap Contracts`
-  - [ ] 20.3 Write property test for power overlay non-interference (Property 14)
+  - [x] 20.3 Write property test for power overlay non-interference (Property 14)
     - **Property 14: Power Overlay Non-Interference**
     - **Validates: Requirements 6.5**
     - For any dropped coordinate and any `overlay_enabled` value, assert `drag_drop_lookup(..., overlay_enabled=True).coverage_score == drag_drop_lookup(..., overlay_enabled=False).coverage_score`
     - `# Feature: geosignal-ai, Property 14: Power Overlay Non-Interference`
-  - [ ] 20.4 Write property test for manual placement comparison correctness (Property 24)
+  - [x] 20.4 Write property test for manual placement comparison correctness (Property 24)
     - **Property 24: Manual Placement Comparison Correctness**
     - **Validates: Requirements 6.3, 6.4**
     - Generate `DragDropResult` scenarios where `coverage_score > vs_top_candidate.model_score`
