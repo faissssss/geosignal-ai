@@ -269,7 +269,10 @@ class EthicalRiskRegister:
         (
             supabase_client
             .table("ethical_risk_register")
-            .upsert(rows)
+            .upsert(
+                rows,
+                on_conflict="risk_id",
+            )
             .execute()
         )
 
