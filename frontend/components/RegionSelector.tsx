@@ -52,8 +52,12 @@ export async function defaultFetchRegionData(
   regionId: RegionId,
   signal: AbortSignal,
 ): Promise<{ cells: GridCell[]; candidates: BTSCandidate[] }> {
+  // resolution_m is required by the grid-cells route (Task 25.5).
+  // 100 m is the MVP grid resolution for all three regions (design.md §3.1).
+  const gridUrl = `/api/grid-cells?region_id=${regionId}&resolution_m=100`
+
   const [cellsRes, candidatesRes] = await Promise.all([
-    fetch(`/api/grid-cells?region_id=${regionId}`, { signal }),
+    fetch(gridUrl, { signal }),
     // Candidates are scoped to a target_area_id in production; here we fetch
     // all for the region as an initial load (target_area filtering happens
     // in TargetAreaSelector workflow).
@@ -65,7 +69,14 @@ export async function defaultFetchRegionData(
     }),
   ])
 
-  if (!cellsRes.ok) throw new Error(`Grid cells fetch failed: ${cellsRes.status}`)
+  if (!cellsRes.ok) {
+    const body = await cellsRes.json().catch(() => ({}))
+    const msg =
+      body.error && typeof body.error === 'object'
+        ? body.error.message
+        : `Grid cells fetch failed: ${cellsRes.status}`
+    throw new Error(msg)
+  }
   // Candidates returning non-200 is non-fatal — return empty array
   const cells: GridCell[] = await cellsRes.json()
   const candidates: BTSCandidate[] = candidatesRes.ok

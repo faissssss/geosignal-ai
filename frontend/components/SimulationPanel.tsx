@@ -59,10 +59,25 @@ export async function defaultSubmitSimulate(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ candidate_id: candidateId, region_id: regionId }),
   })
+
+  // HTTP 404 means UnavailableScenario — parse the body and return it as a
+  // discriminated result so the panel can display the human-readable message.
+  // Do NOT throw here: 404 is an expected semantic response, not a transport error.
+  if (res.status === 404) {
+    const body = await res.json().catch(() => ({}))
+    if (body.unavailable === true) {
+      return { kind: 'unavailable', ...body } as SimulationResponse
+    }
+  }
+
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? `Simulate API error: ${res.status}`)
+    throw new Error(
+      (body.error && typeof body.error === 'object' ? body.error.message : body.error) ??
+      `Simulate API error: ${res.status}`,
+    )
   }
+
   const data = await res.json()
   // Discriminate: UnavailableScenario has `unavailable: true`
   if (data.unavailable === true) {

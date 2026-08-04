@@ -79,10 +79,25 @@ export async function defaultSubmitDragDrop(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ lat, lon, region_id: regionId, overlay_enabled: overlayEnabled }),
   })
+
+  // HTTP 422 means OutsideExtentError — parse and return as a discriminated
+  // result so the panel can display the message without a Coverage Score.
+  // Do NOT throw: 422 is an expected semantic response, not a transport error.
+  if (res.status === 422) {
+    const body = await res.json().catch(() => ({}))
+    if (body.outside_extent === true) {
+      return { kind: 'outside_extent', ...body } as DragDropResponse
+    }
+  }
+
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? `Drag-drop API error: ${res.status}`)
+    throw new Error(
+      (body.error && typeof body.error === 'object' ? body.error.message : body.error) ??
+      `Drag-drop API error: ${res.status}`,
+    )
   }
+
   const data = await res.json()
   if (data.outside_extent === true) {
     return { kind: 'outside_extent', ...data } as DragDropResponse
