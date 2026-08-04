@@ -288,19 +288,19 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Construct a grid where exactly 1 candidate survives; assert `InsufficientCandidatesResult(surviving_count=1, ...)` returned, not a one-element list
     - _Requirements: 4.7_
 
-- [ ] 13. Recommendation_Engine — spatial cross-validation and per-kecamatan reporting
-  - [ ] 13.1 Implement `spatial_cv` in `backend/geosignal/validation.py`
+- [x] 13. Recommendation_Engine — spatial cross-validation and per-kecamatan reporting
+  - [x] 13.1 Implement `spatial_cv` in `backend/geosignal/validation.py`
     - Hold out entire kecamatan units as test blocks; no random point split
     - Each fold: train-set kecamatan IDs and test-set kecamatan IDs are disjoint
     - Return `CVResult` with per-kecamatan accuracy entries for ALL kecamatan IDs in the dataset
     - _Requirements: 2.4, 9.4, 13.5_
-  - [ ] 13.2 Write property test for spatial CV kecamatan disjointness (Property 7)
+  - [x] 13.2 Write property test for spatial CV kecamatan disjointness (Property 7)
     - **Property 7: Spatial CV Kecamatan Disjointness**
     - **Validates: Requirements 2.4, 13.5**
     - Generate random kecamatan ID lists; run `spatial_cv`
     - Assert train-set ∩ test-set = {} for every fold
     - `# Feature: geosignal-ai, Property 7: Spatial CV Kecamatan Disjointness`
-  - [ ] 13.3 Write property test for per-kecamatan accuracy reporting (Property 18)
+  - [x] 13.3 Write property test for per-kecamatan accuracy reporting (Property 18)
     - **Property 18: Per-Kecamatan Accuracy Reporting**
     - **Validates: Requirements 9.4**
     - Generate random kecamatan sets of varying sizes; run `spatial_cv`
