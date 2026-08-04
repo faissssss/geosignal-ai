@@ -352,15 +352,15 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert `EthicalRiskRegister` contains all five required risk IDs; each entry has all four non-empty fields
     - `# Feature: geosignal-ai, Property 19: Ethical Risk Register Completeness`
 
-- [ ] 17. Target area resolution
-  - [ ] 17.1 Implement `resolve_target_area` in `backend/geosignal/target_area.py`
+- [x] 17. Target area resolution
+  - [x] 17.1 Implement `resolve_target_area` in `backend/geosignal/target_area.py`
     - Accept `region_id`, `selection_method` (`drawn_polygon` or `kecamatan`), and `payload` (GeoJSON or `kecamatan_id`)
     - For `kecamatan` method: look up the GADM Level 2 boundary from `admin_boundaries` (Task 5.1); populate `kecamatan_id`; `TargetArea.boundary` equals that kecamatan's exact GADM geometry
     - For `drawn_polygon` method: accept polygon GeoJSON directly; `kecamatan_id` is `None`; reject self-intersecting polygons with a structured validation error (do NOT auto-repair user-drawn shapes)
     - Persist the resolved `TargetArea` to the `target_areas` table
     - Every `grid_cells` coordinate passed to subsequent calls must fall within `TargetArea.boundary`
     - _Requirements: 10.7, 10.8, 4.1, 5.1_
-  - [ ] 17.2 Write property test for target area resolution correctness (Property 25)
+  - [x] 17.2 Write property test for target area resolution correctness (Property 25)
     - **Property 25: Target Area Resolution Correctness**
     - **Validates: Requirements 10.7, 10.8, 4.1, 5.1**
     - Generate random valid `kecamatan_id` values; assert `TargetArea.boundary` equals the GADM geometry and `kecamatan_id` is set
