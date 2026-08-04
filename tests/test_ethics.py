@@ -152,6 +152,7 @@ def test_rows_match_supabase_schema_fields() -> None:
         "impact",
         "mitigation",
         "responsible_owner_role",
+        "last_reviewed_at",
     }
 
     assert all(

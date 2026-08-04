@@ -429,27 +429,12 @@ def all_grid_cells_within_target_area(
     target_area: TargetArea,
 ) -> bool:
     """Return whether every supplied grid cell is covered by the boundary."""
-    try:
-        coordinates = np.asarray(
-            grid_cells,
-            dtype=np.float64,
-        )
-    except (TypeError, ValueError):
-        return False
-
-    if (
-        coordinates.ndim != 2
-        or coordinates.shape[1] != 2
-        or not np.isfinite(coordinates).all()
-    ):
-        return False
-
     filtered = filter_grid_cells_to_target_area(
-        coordinates,
+        grid_cells,
         target_area,
     )
 
-    return len(filtered) == len(coordinates)
+    return len(filtered) == len(grid_cells)
 
 
 def _resolve_kecamatan_boundary(

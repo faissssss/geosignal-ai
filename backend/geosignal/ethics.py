@@ -247,8 +247,15 @@ class EthicalRiskRegister:
 
     def to_rows(self) -> list[dict[str, str]]:
         """Return rows compatible with the Supabase table."""
+        from datetime import datetime, timezone
+
+        reviewed_at = datetime.now(timezone.utc).isoformat()
+
         return [
-            asdict(self._entries[risk_id])
+            {
+                **asdict(self._entries[risk_id]),
+                "last_reviewed_at": reviewed_at,
+            }
             for risk_id in REQUIRED_RISK_IDS
         ]
 

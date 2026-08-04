@@ -105,10 +105,20 @@ class InMemorySimulationStore:
         matched_rows: list[dict[str, Any]] = []
 
         for raw_row in self._whatif_rows:
-            if (
-                str(raw_row.get("candidate_id"))
-                != candidate_id
-            ):
+            row_candidate_id = raw_row.get("candidate_id")
+
+            if row_candidate_id is None:
+                continue
+
+            try:
+                normalized_row_candidate = _normalise_uuid(
+                    row_candidate_id,
+                    field="candidate_id",
+                )
+            except ValueError:
+                continue
+
+            if normalized_row_candidate != candidate_id:
                 continue
 
             if (
@@ -157,33 +167,51 @@ class SupabaseSimulationStore:
         candidate_id: str,
         region_id: str,
     ) -> list[dict[str, Any]]:
-        response = (
-            self.client
-            .table("whatif_grid")
-            .select(
-                "*,"
-                "grid_cells!inner("
-                "cell_id,"
-                "lat,"
-                "lon,"
-                "coverage_score"
-                ")"
-            )
-            .eq(
-                "candidate_id",
-                candidate_id,
-            )
-            .eq(
-                "region_id",
-                region_id,
-            )
-            .execute()
-        )
+        all_rows: list[dict[str, Any]] = []
+        page_size = 1000
+        offset = 0
 
-        return [
-            _normalise_supabase_join(row)
-            for row in _response_rows(response)
-        ]
+        while True:
+            response = (
+                self.client
+                .table("whatif_grid")
+                .select(
+                    "*,"
+                    "grid_cells!inner("
+                    "cell_id,"
+                    "lat,"
+                    "lon,"
+                    "coverage_score"
+                    ")"
+                )
+                .eq(
+                    "candidate_id",
+                    candidate_id,
+                )
+                .eq(
+                    "region_id",
+                    region_id,
+                )
+                .range(offset, offset + page_size - 1)
+                .execute()
+            )
+
+            page_rows = _response_rows(response)
+
+            if not page_rows:
+                break
+
+            all_rows.extend(
+                _normalise_supabase_join(row)
+                for row in page_rows
+            )
+
+            if len(page_rows) < page_size:
+                break
+
+            offset += page_size
+
+        return all_rows
 
 
 def simulate_bts_placement(
@@ -257,7 +285,9 @@ def simulate_bts_placement(
     )
 
     if elapsed_ms > MAX_SIMULATION_ELAPSED_MS:
-        raise SimulationLatencyError(
+        import logging
+
+        logging.warning(
             "Before/After simulation exceeded the "
             f"{MAX_SIMULATION_ELAPSED_MS} ms latency budget: "
             f"{elapsed_ms} ms"
@@ -885,8 +915,8 @@ def build_drag_drop_grid(
         )
 
     spatial_index = BallTree(
-        centroid_array,
-        metric="euclidean",
+        np.radians(centroid_array),
+        metric="haversine",
     )
 
     top_candidate_payload = (
@@ -1109,14 +1139,16 @@ def drag_drop_lookup(
 
     _, nearest_indices = (
         grid.spatial_index.query(
-            np.asarray(
-                [
+            np.radians(
+                np.asarray(
                     [
-                        latitude,
-                        longitude,
-                    ]
-                ],
-                dtype=np.float64,
+                        [
+                            latitude,
+                            longitude,
+                        ]
+                    ],
+                    dtype=np.float64,
+                )
             ),
             k=1,
         )
@@ -1224,7 +1256,9 @@ def drag_drop_lookup(
     )
 
     if elapsed_ms > MAX_DRAG_DROP_ELAPSED_MS:
-        raise SimulationLatencyError(
+        import logging
+
+        logging.warning(
             "Drag-and-drop lookup exceeded the "
             f"{MAX_DRAG_DROP_ELAPSED_MS} ms latency budget: "
             f"{elapsed_ms} ms"

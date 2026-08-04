@@ -34,6 +34,7 @@ def compute_los(
     observer_height_m: float = 30.0,
     receiver_height_m: float = 1.5,
     clearance_margin_m: float = 0.0,
+    _skip_raster_validation: bool = False,
 ) -> bool:
     """Check terrain-aware LOS between a BTS candidate and one grid cell.
 
@@ -42,11 +43,12 @@ def compute_los(
     LOS is clear when every intermediate terrain or vegetation obstacle lies
     below the straight line connecting the BTS antenna and receiver.
     """
-    _validate_rasters(
-        dem=dem,
-        land_cover=land_cover,
-        canopy_height=canopy_height,
-    )
+    if not _skip_raster_validation:
+        _validate_rasters(
+            dem=dem,
+            land_cover=land_cover,
+            canopy_height=canopy_height,
+        )
 
     if observer_height_m <= 0:
         raise ValueError("observer_height_m must be positive")
@@ -175,6 +177,12 @@ def precompute_los_grid(
     if len(candidates) == 0 or len(cells) == 0:
         return []
 
+    _validate_rasters(
+        dem=dem,
+        land_cover=land_cover,
+        canopy_height=canopy_height,
+    )
+
     cell_tree = BallTree(
         np.radians(cells),
         metric="haversine",
@@ -211,6 +219,7 @@ def precompute_los_grid(
                 observer_height_m=observer_height_m,
                 receiver_height_m=receiver_height_m,
                 clearance_margin_m=clearance_margin_m,
+                _skip_raster_validation=True,
             )
 
             records.append(
@@ -242,7 +251,7 @@ def persist_los_results(
     *,
     batch_size: int = 500,
 ) -> None:
-    """Insert LOS records into Supabase in bounded batches."""
+    """Upsert LOS records into Supabase in bounded batches."""
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
 
@@ -252,7 +261,16 @@ def persist_los_results(
         (
             supabase_client
             .table("los_results")
-            .insert(batch)
+            .upsert(
+                batch,
+                on_conflict=(
+                    "region_id,"
+                    "candidate_lat,"
+                    "candidate_lon,"
+                    "cell_lat,"
+                    "cell_lon"
+                ),
+            )
             .execute()
         )
 

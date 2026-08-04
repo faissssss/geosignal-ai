@@ -11,6 +11,12 @@ Each persisted row is uniquely identified by:
 Candidate scenarios use their candidate UUID as ``scenario_id``. Manual
 placement scenarios receive deterministic UUIDs generated from the region
 and source grid-cell ID.
+
+Manual-placement scenarios require LOS precomputation for every sampled
+grid-cell centroid and therefore scale quadratically (O(N²)) with the
+number of cells. Use ``manual_sample_stride`` to reduce the sampling
+density, or invoke ``precompute_los_grid`` with all candidate-to-cell
+pairs before running ``precompute_region_whatif``.
 """
 
 from __future__ import annotations
@@ -307,21 +313,40 @@ class SupabaseWhatIfStore:
         *,
         region_id: str | None = None,
     ) -> list[dict[str, Any]]:
-        query = (
-            self.client
-            .table("whatif_grid")
-            .select("*")
-        )
+        all_rows: list[dict[str, Any]] = []
+        page_size = 1000
+        offset = 0
 
-        if region_id is not None:
-            query = query.eq(
-                "region_id",
-                region_id,
+        while True:
+            query = (
+                self.client
+                .table("whatif_grid")
+                .select("*")
             )
 
-        return _response_rows(
-            query.execute()
-        )
+            if region_id is not None:
+                query = query.eq(
+                    "region_id",
+                    region_id,
+                )
+
+            query = query.range(offset, offset + page_size - 1)
+
+            page_rows = _response_rows(
+                query.execute()
+            )
+
+            if not page_rows:
+                break
+
+            all_rows.extend(page_rows)
+
+            if len(page_rows) < page_size:
+                break
+
+            offset += page_size
+
+        return all_rows
 
 
 def precompute_region_whatif(
@@ -335,6 +360,7 @@ def precompute_region_whatif(
     signal_radius_m: float = 10_000.0,
     maximum_gain: float = 35.0,
     manual_sample_stride: int = 1,
+    upsert_batch_size: int = 500,
 ) -> list[dict[str, Any]]:
     """Precompute candidate and dense manual-placement scenarios.
 
@@ -375,6 +401,11 @@ def precompute_region_whatif(
         field="manual_sample_stride",
     )
 
+    batch_size = _positive_integer(
+        upsert_batch_size,
+        field="upsert_batch_size",
+    )
+
     scenarios = _build_scenarios(
         region_id=normalised_region,
         grid_cells=cells,
@@ -403,6 +434,15 @@ def precompute_region_whatif(
         metric="haversine",
     )
 
+    village_to_cell_indices: dict[str, list[int]] = {}
+
+    for index, cell in enumerate(cells):
+        if cell.village_id is not None:
+            village_to_cell_indices.setdefault(
+                cell.village_id,
+                [],
+            ).append(index)
+
     staged_rows: list[
         dict[str, Any]
     ] = []
@@ -421,6 +461,7 @@ def precompute_region_whatif(
             grid_resolution_m=resolution,
             signal_radius_m=radius,
             maximum_gain=gain,
+            village_to_cell_indices=village_to_cell_indices,
         )
 
         if not scenario_rows:
@@ -464,9 +505,14 @@ def precompute_region_whatif(
             f"No what-if rows produced for {normalised_region}"
         )
 
-    return store.upsert_whatif_rows(
-        staged_rows
-    )
+    all_results: list[dict[str, Any]] = []
+
+    for start in range(0, len(staged_rows), batch_size):
+        batch = staged_rows[start : start + batch_size]
+        batch_results = store.upsert_whatif_rows(batch)
+        all_results.extend(batch_results)
+
+    return all_results
 
 
 def precompute_all_regions(
@@ -559,12 +605,22 @@ def assert_precomputation_ready(
                 f"region: {region_id}"
             )
 
-        present_candidate_ids = {
-            str(row["candidate_id"])
-            for row in rows
-            if row.get("candidate_id")
-            is not None
-        }
+        present_candidate_ids = set()
+
+        for row in rows:
+            candidate_id = row.get("candidate_id")
+
+            if candidate_id is None:
+                continue
+
+            try:
+                normalized_id = _normalise_uuid(
+                    candidate_id,
+                    field="candidate_id",
+                )
+                present_candidate_ids.add(normalized_id)
+            except ValueError:
+                continue
 
         expected_candidate_ids = {
             _normalise_uuid(
@@ -705,6 +761,7 @@ def _compute_scenario_rows(
     grid_resolution_m: int,
     signal_radius_m: float,
     maximum_gain: float,
+    village_to_cell_indices: dict[str, list[int]],
 ) -> list[dict[str, Any]]:
     scenario_radians = np.radians(
         np.asarray(
@@ -801,9 +858,9 @@ def _compute_scenario_rows(
 
     villages_newly_covered = (
         _count_villages_newly_covered(
-            grid_cells=grid_cells,
             before_scores=coverage_scores,
             after_scores=after_scores,
+            village_to_cell_indices=village_to_cell_indices,
         )
     )
 
@@ -923,31 +980,13 @@ def _percentage_good_change(
 
 def _count_villages_newly_covered(
     *,
-    grid_cells: Sequence[GridCellInput],
     before_scores: np.ndarray,
     after_scores: np.ndarray,
+    village_to_cell_indices: dict[str, list[int]],
 ) -> int:
-    village_indices: dict[
-        str,
-        list[int],
-    ] = {}
-
-    for index, cell in enumerate(
-        grid_cells
-    ):
-        if cell.village_id is None:
-            continue
-
-        village_indices.setdefault(
-            cell.village_id,
-            [],
-        ).append(index)
-
     newly_covered = 0
 
-    for indices in (
-        village_indices.values()
-    ):
+    for indices in village_to_cell_indices.values():
         had_good_coverage_before = bool(
             np.any(
                 before_scores[indices]

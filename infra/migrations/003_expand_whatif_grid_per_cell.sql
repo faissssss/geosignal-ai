@@ -11,6 +11,8 @@
 -- reproducible precomputation artifact.
 -- =============================================================================
 
+BEGIN;
+
 ALTER TABLE whatif_grid
 ADD COLUMN IF NOT EXISTS grid_cell_id UUID
 REFERENCES grid_cells(cell_id)
@@ -35,6 +37,8 @@ PRIMARY KEY (
     scenario_id,
     grid_cell_id
 );
+
+COMMIT;
 
 CREATE INDEX IF NOT EXISTS
 idx_whatif_grid_candidate_region
