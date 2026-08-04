@@ -368,14 +368,14 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert all `grid_cells` coordinates for a resolved `target_area_id` fall within `TargetArea.boundary`
     - `# Feature: geosignal-ai, Property 25: Target Area Resolution Correctness`
 
-- [ ] 18. Simulation_Engine — what-if grid precomputation
-  - [ ] 18.1 Implement the offline what-if grid precomputation batch job in `backend/geosignal/whatif_precompute.py`
+- [x] 18. Simulation_Engine — what-if grid precomputation
+  - [x] 18.1 Implement the offline what-if grid precomputation batch job in `backend/geosignal/whatif_precompute.py`
     - For each ranked `BTSCandidate` (from Task 12.3) and, separately, for a dense sample of manual-placement scenarios across each MVP/validation region, compute the expected Coverage Score delta across all grid cells within the BTS signal radius, using the precomputed LOS grid (Task 12.1)
     - Persist every result to the `whatif_grid` Supabase table keyed by `(region_id, scenario_id, grid_cell_id)`, populating `delta_coverage_score`, `pct_good_change`, `villages_newly_covered`, and `new_coverage_score`
     - This must run to completion, per region, before the Simulation_Engine (Task 19, 20) has anything to serve — Before/After and Drag-and-Drop both read exclusively from this table and never compute live
     - Run for all three regions (NTT Province MVP, NTB Province, Central Kalimantan Province) ahead of the demo
     - _Requirements: 5.1, 6.1_
-  - [ ] 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
+  - [x] 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
     - _Requirements: 5.1, 5.4_
 
 - [ ] 19. Simulation_Engine — Before/After simulation
