@@ -302,10 +302,24 @@ export default function SidePanel({
             {selection.data.model_version || '—'}
           </p>
 
-          {/* Scoring run timestamp */}
+          {/* Scoring run ID */}
           <p style={labelStyle}>Scoring Run</p>
           <p style={{ ...valueStyle, fontFamily: 'monospace', fontSize: '0.8rem' }} data-testid="scoring-run">
             {selection.data.scoring_run_id || '—'}
+          </p>
+
+          {/* Scoring run timestamp — distinct from run ID (Req 11.3) */}
+          <p style={labelStyle}>Scored At</p>
+          <p
+            style={{ ...valueStyle, fontFamily: 'monospace', fontSize: '0.8rem' }}
+            data-testid="scoring-run-timestamp"
+          >
+            {selection.data.scoring_run_timestamp
+              ? new Date(selection.data.scoring_run_timestamp).toLocaleString(undefined, {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                })
+              : '—'}
           </p>
 
           {/* SHAP top-3 — co-located in same panel (Requirement 8.4) */}

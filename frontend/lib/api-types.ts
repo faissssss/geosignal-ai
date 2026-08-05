@@ -143,6 +143,8 @@ export interface GridCellResponse {
   shap_top3: ShapEntry[]
   model_version: string
   scoring_run_id: string
+  /** ISO 8601 timestamp from the scoring run. Undefined when not yet available. */
+  scoring_run_timestamp?: string
 }
 
 // ---------------------------------------------------------------------------
