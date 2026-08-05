@@ -193,7 +193,7 @@ export default function DragDropMarker({
       marker.on('dragend', () => {
         if (!isMounted) return
         const { lat, lng } = marker.getLngLat()
-        handleDrop(lat, lng)
+        handleDropRef.current(lat, lng)
       })
 
       markerRef.current = marker
