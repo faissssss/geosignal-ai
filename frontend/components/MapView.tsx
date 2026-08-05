@@ -62,6 +62,8 @@ const CAND_LAYER       = 'candidates-layer'
 // Types
 // ---------------------------------------------------------------------------
 
+type MapLayerMouseEvent = import('maplibre-gl').MapLayerMouseEvent
+
 export interface LayerVisibility {
   heatmap:    boolean
   landcover:  boolean
@@ -499,7 +501,7 @@ export default function MapView({
     })
 
     // Set up click handler for candidate → SidePanel
-    const onClick = (e: maplibregl.MapLayerMouseEvent) => {
+    const onClick = (e: MapLayerMouseEvent) => {
       const f = e.features?.[0]
       if (!f) return
       const props = f.properties as BTSCandidate
@@ -516,7 +518,7 @@ export default function MapView({
     const map = mapRef.current
     if (!map || !mapReady) return
 
-    const onCellClick = (e: maplibregl.MapLayerMouseEvent) => {
+    const onCellClick = (e: MapLayerMouseEvent) => {
       const f = e.features?.[0]
       if (!f) return
       const props = f.properties as GridCell
@@ -563,9 +565,6 @@ export default function MapView({
     lat: c.lat,
     lon: c.lon,
   }))
-
-  // ── Import type reference for event handler ────────────────────────────
-  type MapLayerMouseEvent = import('maplibre-gl').MapLayerMouseEvent
 
   // ── Render: SSR / initial loading state ───────────────────────────────
   if (webglSupported === null) {

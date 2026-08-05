@@ -156,6 +156,12 @@ export default function DragDropMarker({
     [regionId, overlayEnabled, submitDragDrop, onResult],
   )
 
+  // Store handleDrop in a ref for access from async effect
+  const handleDropRef = useRef(handleDrop)
+  useEffect(() => {
+    handleDropRef.current = handleDrop
+  }, [handleDrop])
+
   // ── Create/update MapLibre marker ────────────────────────────────────────
   useEffect(() => {
     if (!map) return
