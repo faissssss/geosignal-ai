@@ -127,9 +127,20 @@ test.describe('27.5 Planner Journey — hermetic (seeded test data)', () => {
   })
 
   test('27.5-H11: no runtime JS errors on initial load', async ({ page }) => {
+    // Attach the pageerror listener BEFORE navigation so it captures errors
+    // from the initial page load — beforeEach has already navigated, so we
+    // navigate again here after registering the listener.
     const errors: string[] = []
     page.on('pageerror', (err) => errors.push(err.message))
-    await page.waitForTimeout(2_000)
+
+    // Re-navigate with the listener already attached
+    await page.reload()
+    await page.waitForSelector(
+      '[data-testid="map-view"], [data-testid="webgl-fallback"], [data-testid="map-loading"]',
+      { timeout: 15_000 },
+    )
+    await page.waitForTimeout(1_000)
+
     const fatalErrors = errors.filter(
       (e) =>
         !e.includes('Warning:') &&

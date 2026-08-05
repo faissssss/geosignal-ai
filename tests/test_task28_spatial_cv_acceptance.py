@@ -640,58 +640,200 @@ class TestT13NoRandomPointSplit:
 # T14 — Test fold rows absent from train features (Requirement 2.4)
 # ===========================================================================
 
-class TestT14NoRowLeakage:
-    """T14: in each fold, test-fold rows are absent from the training set.
+# ---------------------------------------------------------------------------
+# Module-level helper and fixture precondition
+# ---------------------------------------------------------------------------
 
-    Verified via a spy adapter that records every array it sees.
-    The test fold's feature rows must not appear in any train batch.
+def _row_fingerprint(fv: FeatureVector) -> tuple:
+    """Return an exact float-tuple fingerprint for *fv* in CONSOLIDATED_FEATURES order.
+
+    Uses exact float equality — no rounding, no np.allclose.
+    Duplicate rows produce identical fingerprints, which Counter handles correctly.
+    """
+    from geosignal.models import CONSOLIDATED_FEATURES
+    return tuple(float(getattr(fv, feat)) for feat in CONSOLIDATED_FEATURES)
+
+
+def _assert_fixture_fingerprints_unique_across_kecamatan(
+    kec_ids: list[str],
+    fvs: list[FeatureVector],
+) -> None:
+    """Precondition: every fingerprint in the fixture is unique across kecamatan.
+
+    If two kecamatan share a fingerprint, the spy-based T14 tests cannot
+    distinguish which kecamatan owns a captured row — leakage would be
+    undetectable.  This assertion must be satisfied by any fixture used in T14.
+
+    Raises AssertionError with a clear message if the fixture is unsuitable.
+    """
+    from collections import defaultdict
+    fp_to_kecs: dict[tuple, list[str]] = defaultdict(list)
+    for kid, fv in zip(kec_ids, fvs):
+        fp_to_kecs[_row_fingerprint(fv)].append(kid)
+
+    collisions: dict[tuple, list[str]] = {
+        fp: kids for fp, kids in fp_to_kecs.items() if len(set(kids)) > 1
+    }
+    assert not collisions, (
+        "FIXTURE PRECONDITION FAILED: the following fingerprints appear in more "
+        "than one kecamatan, making cross-fold row-swap undetectable:\n"
+        + "\n".join(
+            f"  fp={fp!r} → kecamatan: {kecs}"
+            for fp, kecs in collisions.items()
+        )
+    )
+
+
+class TestT14NoRowLeakage:
+    """T14: in each fold, the batch passed to the adapter is the TEST fold only.
+
+    Verified via a SpyAdapter that captures every array passed to predict().
+    spatial_cv calls predict() exactly once per fold — on the test batch.
+    We verify:
+      1. Each captured batch is exactly the rows belonging to one kecamatan.
+      2. Each captured batch contains NO rows from any other kecamatan.
+      3. This would fail if spatial_cv mixed rows from multiple kecamatan.
     """
 
-    def test_t14_test_rows_not_in_train_batch_ntt(self):
-        """No row from the test fold appears in the train batch (NTT)."""
+    def test_t14_each_scored_batch_matches_exactly_the_held_out_kecamatan(self):
+        """Each predict() batch is exactly (no more, no less) the rows for one kecamatan.
 
-        seen_in_train: list[np.ndarray] = []
+        Uses Counter over exact float-tuple fingerprints — no np.allclose.
+        Asserts:
+          - batch row count == expected held-out row count (no rows added or lost)
+          - Counter(captured_rows) == Counter(expected_rows_for_kecamatan)
+          - each batch corresponds to exactly one kecamatan
+          - each kecamatan appears as a held-out batch exactly once
+        """
+        from collections import Counter
+
+        # Precondition: fixture fingerprints must be unique across kecamatan
+        _assert_fixture_fingerprints_unique_across_kecamatan(NTT_KEC_IDS, NTT_FVS)
+
+        scored_batches: list[np.ndarray] = []
 
         class SpyAdapter:
-            """Records all feature arrays passed to predict() as training batches.
-
-            spatial_cv calls predict() once per fold on the TEST fold.
-            We intercept those calls, which lets us verify the test rows
-            were not also passed during any train-time operation.
-
-            Since spatial_cv with AHPAdapter has no explicit train step
-            (AHP is non-parametric), we verify the split logic directly by
-            asserting test-row tuples don't appear in train_mask rows.
-            """
             def predict(self, features: np.ndarray) -> np.ndarray:
-                seen_in_train.append(features.copy())
+                scored_batches.append(features.copy())
                 return _ADAPTER.predict(features)
+            def shap_values(self, features: np.ndarray) -> np.ndarray:
+                return _ADAPTER.shap_values(features)
+
+        # Build expected Counter per kecamatan directly from the fixture zip —
+        # never from a set, so duplicate rows are counted correctly.
+        kec_to_row_counter: dict[str, Counter] = {}
+        for kid, fv in zip(NTT_KEC_IDS, NTT_FVS):
+            fp = _row_fingerprint(fv)
+            kec_to_row_counter.setdefault(kid, Counter())
+            kec_to_row_counter[kid][fp] += 1
 
         spy = SpyAdapter()
-        feat_arr = np.array(
-            [[float(getattr(fv, f)) for f in
-              ["elevation_m", "slope_deg", "land_cover_class", "canopy_height_m",
-               "distance_to_bts_m", "road_distance_m",
-               "population_density_per_km2", "facility_proximity_m"]]
-             for fv in NTT_FVS],
-            dtype=np.float64,
-        )
-
         result = spatial_cv(NTT_KEC_IDS, NTT_FVS, NTT_SCORES, spy)
 
-        # For each fold the spy saw the TEST batch.
-        # Verify that for fold k the TEST rows have kecamatan == k.
-        kec_arr = np.array(NTT_KEC_IDS, dtype=object)
-        for fold_idx, test_kec in enumerate(sorted(result.kecamatan_accuracies)):
-            test_mask  = kec_arr == test_kec
-            train_mask = ~test_mask
-            test_rows_set  = {tuple(feat_arr[i]) for i in range(len(NTT_KEC_IDS)) if test_mask[i]}
-            train_rows_set = {tuple(feat_arr[i]) for i in range(len(NTT_KEC_IDS)) if train_mask[i]}
-            overlap = test_rows_set & train_rows_set
-            assert overlap == set(), (
-                f"T14 FAIL: {len(overlap)} row(s) from kecamatan '{test_kec}' "
-                f"appear in both test and train sets."
+        assert len(scored_batches) == result.n_folds, (
+            f"Expected {result.n_folds} predict() calls (one per fold), "
+            f"got {len(scored_batches)}"
+        )
+
+        held_out_kecamatan: list[str] = []
+        for batch_idx, batch in enumerate(scored_batches):
+            # Build Counter of exact float-tuple fingerprints for this batch
+            batch_counter: Counter = Counter(
+                tuple(float(v) for v in row) for row in batch
             )
+
+            # Find which kecamatan owns this batch — must match exactly one
+            matching: list[str] = [
+                kec for kec, expected in kec_to_row_counter.items()
+                if batch_counter == expected
+            ]
+
+            assert len(matching) == 1, (
+                f"T14 FAIL: batch {batch_idx} does not match exactly one kecamatan. "
+                f"Matching kecamatan: {matching}. "
+                f"Batch fingerprints: {dict(batch_counter)}. "
+                "spatial_cv may be mixing rows from multiple kecamatan in one fold."
+            )
+
+            owned_kec = matching[0]
+            held_out_kecamatan.append(owned_kec)
+
+            # Assert exact Counter equality — no missing, extra, or wrong-duplicate rows
+            expected_counter = kec_to_row_counter[owned_kec]
+            assert batch_counter == expected_counter, (
+                f"T14 FAIL: batch for kecamatan '{owned_kec}' has wrong rows.\n"
+                f"  Expected: {dict(expected_counter)}\n"
+                f"  Got:      {dict(batch_counter)}"
+            )
+
+        # Every NTT kecamatan must appear as a held-out batch exactly once
+        assert Counter(held_out_kecamatan) == Counter(NTT_KECAMATAN), (
+            f"T14 FAIL: each kecamatan must be held out exactly once.\n"
+            f"  Expected: {sorted(NTT_KECAMATAN)}\n"
+            f"  Got:      {sorted(held_out_kecamatan)}"
+        )
+
+    def test_t14_no_row_from_kecamatan_k_in_batch_for_kecamatan_j(self):
+        """No row belonging to kecamatan K appears in the scored batch for kecamatan J≠K.
+
+        Calls spatial_cv with a SpyAdapter, inspects captured batches, and
+        verifies cross-fold row isolation.  This would catch any bug where
+        spatial_cv includes a test-fold row in the wrong fold's batch.
+        """
+        from collections import Counter
+
+        # Precondition: fixture fingerprints must be unique across kecamatan
+        _assert_fixture_fingerprints_unique_across_kecamatan(NTT_KEC_IDS, NTT_FVS)
+
+        scored_batches: list[np.ndarray] = []
+
+        class SpyAdapter:
+            def predict(self, features: np.ndarray) -> np.ndarray:
+                scored_batches.append(features.copy())
+                return _ADAPTER.predict(features)
+            def shap_values(self, features: np.ndarray) -> np.ndarray:
+                return _ADAPTER.shap_values(features)
+
+        # Build expected Counter per kecamatan directly from fixture zip —
+        # never from a set, so duplicate rows are counted correctly.
+        kec_to_row_counter: dict[str, Counter] = {}
+        kec_to_fingerprints: dict[str, set[tuple]] = {}
+        for kid, fv in zip(NTT_KEC_IDS, NTT_FVS):
+            fp = _row_fingerprint(fv)
+            kec_to_row_counter.setdefault(kid, Counter())
+            kec_to_row_counter[kid][fp] += 1
+            kec_to_fingerprints.setdefault(kid, set()).add(fp)
+
+        spy = SpyAdapter()
+        result = spatial_cv(NTT_KEC_IDS, NTT_FVS, NTT_SCORES, spy)
+
+        for batch_idx, batch in enumerate(scored_batches):
+            batch_fps = {tuple(float(v) for v in row) for row in batch}
+            batch_counter = Counter(tuple(float(v) for v in row) for row in batch)
+
+            # Identify which kecamatan this batch belongs to —
+            # if no match found, fail immediately (no silent continue).
+            matching: list[str] = [
+                kec for kec, expected in kec_to_row_counter.items()
+                if batch_counter == expected
+            ]
+            assert len(matching) == 1, (
+                f"T14 FAIL: batch {batch_idx} cannot be attributed to exactly one "
+                f"kecamatan. Matches: {matching}. "
+                "Cannot verify cross-fold isolation for an unidentifiable batch."
+            )
+            owned_kec = matching[0]
+
+            # Verify: no fingerprint in this batch belongs to a different kecamatan
+            for other_kec, other_fps in kec_to_fingerprints.items():
+                if other_kec == owned_kec:
+                    continue
+                leaked = batch_fps & other_fps
+                assert leaked == set(), (
+                    f"T14 FAIL: batch {batch_idx} (held-out: '{owned_kec}') "
+                    f"contains {len(leaked)} row(s) belonging to '{other_kec}'. "
+                    "spatial_cv is leaking rows from another kecamatan into this fold."
+                )
 
 
 # ===========================================================================
