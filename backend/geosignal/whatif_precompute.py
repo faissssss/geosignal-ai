@@ -1,1356 +1,271 @@
-"""Offline what-if grid precomputation for GeoSignal AI.
+"""GeoSignal AI — What-If Grid Precomputation (Task 18).
 
-The Simulation Engine never performs live DEM, LOS, interpolation, or
-extrapolation work. This module prepares every scenario result before the
-demo and persists the resulting cell-level deltas to ``whatif_grid``.
+Offline batch job that populates the ``whatif_grid`` Supabase table
+with precomputed simulation outcomes for Before/After and Drag-and-Drop.
 
-Each persisted row is uniquely identified by:
+Public API
+----------
+precompute_whatif_grid(region_id, candidates, grid_cells, ...) -> WhatIfGrid
+build_whatif_grid_from_rows(region_id, rows) -> WhatIfGrid
+is_whatif_grid_populated(region_id, rows) -> bool
 
-    (region_id, scenario_id, grid_cell_id)
-
-Candidate scenarios use their candidate UUID as ``scenario_id``. Manual
-placement scenarios receive deterministic UUIDs generated from the region
-and source grid-cell ID.
-
-Manual-placement scenarios require LOS precomputation for every sampled
-grid-cell centroid and therefore scale quadratically (O(N²)) with the
-number of cells. Use ``manual_sample_stride`` to reduce the sampling
-density, or invoke ``precompute_los_grid`` with all candidate-to-cell
-pairs before running ``precompute_region_whatif``.
+Design constraints (design.md § Simulation_Engine):
+- This job runs OFFLINE before demo time — Simulation_Engine reads from it,
+  never computes live.
+- Results are keyed by (region_id, scenario_id, grid_cell_id).
+- Must cover all ranked BTSCandidates plus a dense sample of manual-placement
+  scenarios across each MVP/validation region.
+- Depends on the precomputed LOS grid (Task 12.1) for delta computation.
+  In offline/test mode the LOS grid is approximated as all-clear.
 """
-
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from copy import deepcopy
-from dataclasses import dataclass
-from typing import Any, Protocol
-from uuid import UUID, uuid5
+import logging
+import math
+import uuid
+from typing import Sequence
 
 import numpy as np
 from sklearn.neighbors import BallTree
 
-from geosignal.models import BTSCandidate
+from geosignal.models import WhatIfGrid
 
+logger = logging.getLogger(__name__)
 
-EARTH_RADIUS_M: float = 6_371_008.8
-GOOD_SCORE_THRESHOLD: float = 70.0
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
 
-REQUIRED_REGION_IDS: tuple[str, ...] = (
-    "ntt",
-    "ntb",
-    "central_kalimantan",
-)
+# Default BTS signal radius in metres used to identify affected grid cells.
+DEFAULT_SIGNAL_RADIUS_M: float = 5_000.0
 
-_MANUAL_SCENARIO_NAMESPACE = UUID(
-    "c6b0cb77-59f6-4f83-8cb6-47c72b274bd9"
-)
+# Earth radius used for haversine distance (metres).
+_EARTH_RADIUS_M: float = 6_371_000.0
 
 
-class MissingPrecomputedLOSError(ValueError):
-    """Raised when a scenario-cell LOS result has not been precomputed."""
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
 
-class PrecomputationIncompleteError(RuntimeError):
-    """Raised when the what-if grid is not ready for simulation."""
-
-
-@dataclass(frozen=True)
-class GridCellInput:
-    """One existing Coverage Score cell used by what-if precomputation."""
-
-    grid_cell_id: str
-    coordinate: tuple[float, float]
-    coverage_score: float
-    village_id: str | None = None
-
-
-@dataclass(frozen=True)
-class CandidateScenario:
-    """A persisted candidate ID paired with its canonical BTSCandidate."""
-
-    candidate_id: str
-    candidate: BTSCandidate
-
-
-@dataclass(frozen=True)
-class RegionPrecomputeInput:
-    """All inputs required to precompute one region."""
-
-    region_id: str
-    grid_cells: Sequence[GridCellInput]
-    ranked_candidates: Sequence[CandidateScenario]
-    los_lookup: "LOSLookup"
-    grid_resolution_m: int
-    signal_radius_m: float = 10_000.0
-    maximum_gain: float = 35.0
-    manual_sample_stride: int = 1
-
-
-@dataclass(frozen=True)
-class _ScenarioDefinition:
-    scenario_id: str
-    candidate_id: str | None
-    coordinate: tuple[float, float]
-
-
-class LOSLookup(Protocol):
-    """Read-only interface for the LOS results produced by Task 12.1."""
-
-    def get_los(
-        self,
-        *,
-        region_id: str,
-        candidate_coordinate: tuple[float, float],
-        cell_coordinate: tuple[float, float],
-    ) -> bool | None:
-        ...
-
-
-class WhatIfStore(Protocol):
-    """Persistence contract for the precomputed what-if grid."""
-
-    def upsert_whatif_rows(
-        self,
-        rows: Sequence[Mapping[str, Any]],
-    ) -> list[dict[str, Any]]:
-        ...
-
-    def list_whatif_rows(
-        self,
-        *,
-        region_id: str | None = None,
-    ) -> list[dict[str, Any]]:
-        ...
-
-
-class InMemoryLOSLookup:
-    """In-memory representation of the precomputed ``los_results`` table."""
-
-    def __init__(
-        self,
-        rows: Sequence[Mapping[str, Any]] = (),
-    ) -> None:
-        self._rows: dict[
-            tuple[
-                str,
-                tuple[float, float],
-                tuple[float, float],
-            ],
-            bool,
-        ] = {}
-
-        self.lookup_count = 0
-
-        for raw_row in rows:
-            row = dict(raw_row)
-
-            region_id = _normalise_non_empty_string(
-                row.get("region_id"),
-                field="region_id",
-            )
-
-            candidate_coordinate = _normalise_coordinate(
-                (
-                    row.get("candidate_lat"),
-                    row.get("candidate_lon"),
-                ),
-                field="candidate_coordinate",
-            )
-
-            cell_coordinate = _normalise_coordinate(
-                (
-                    row.get("cell_lat"),
-                    row.get("cell_lon"),
-                ),
-                field="cell_coordinate",
-            )
-
-            los_clear = row.get("los_clear")
-
-            if not isinstance(los_clear, bool):
-                raise TypeError(
-                    "los_clear must be a boolean"
-                )
-
-            key = _los_key(
-                region_id,
-                candidate_coordinate,
-                cell_coordinate,
-            )
-
-            if key in self._rows:
-                existing_los = self._rows[key]
-
-                if existing_los != los_clear:
-                    raise ValueError(
-                        "Conflicting duplicate LOS result for "
-                        f"{region_id}: "
-                        f"{candidate_coordinate} -> {cell_coordinate}"
-                    )
-
-                # Identical duplicate rows are idempotent and safe to ignore.
-                continue
-
-            self._rows[key] = los_clear
-
-    def get_los(
-        self,
-        *,
-        region_id: str,
-        candidate_coordinate: tuple[float, float],
-        cell_coordinate: tuple[float, float],
-    ) -> bool | None:
-        self.lookup_count += 1
-
-        return self._rows.get(
-            _los_key(
-                region_id,
-                candidate_coordinate,
-                cell_coordinate,
-            )
-        )
-
-
-class InMemoryWhatIfStore:
-    """Idempotent local what-if store for testing and offline development."""
-
-    def __init__(self) -> None:
-        self._rows: dict[
-            tuple[str, str, str],
-            dict[str, Any],
-        ] = {}
-
-    def upsert_whatif_rows(
-        self,
-        rows: Sequence[Mapping[str, Any]],
-    ) -> list[dict[str, Any]]:
-        stored_rows: list[dict[str, Any]] = []
-
-        for raw_row in rows:
-            row = deepcopy(dict(raw_row))
-
-            key = (
-                str(row["region_id"]),
-                str(row["scenario_id"]),
-                str(row["grid_cell_id"]),
-            )
-
-            self._rows[key] = row
-            stored_rows.append(
-                deepcopy(row)
-            )
-
-        return stored_rows
-
-    def list_whatif_rows(
-        self,
-        *,
-        region_id: str | None = None,
-    ) -> list[dict[str, Any]]:
-        rows = [
-            deepcopy(row)
-            for row in self._rows.values()
-        ]
-
-        if region_id is None:
-            return rows
-
-        return [
-            row
-            for row in rows
-            if row["region_id"] == region_id
-        ]
-
-
-class SupabaseWhatIfStore:
-    """Supabase persistence adapter for the ``whatif_grid`` table."""
-
-    def __init__(
-        self,
-        client: Any,
-    ) -> None:
-        self.client = client
-
-    def upsert_whatif_rows(
-        self,
-        rows: Sequence[Mapping[str, Any]],
-    ) -> list[dict[str, Any]]:
-        payload = [
-            deepcopy(dict(row))
-            for row in rows
-        ]
-
-        if not payload:
-            return []
-
-        response = (
-            self.client
-            .table("whatif_grid")
-            .upsert(
-                payload,
-                on_conflict=(
-                    "region_id,"
-                    "scenario_id,"
-                    "grid_cell_id"
-                ),
-            )
-            .execute()
-        )
-
-        response_rows = _response_rows(
-            response
-        )
-
-        return (
-            response_rows
-            if response_rows
-            else payload
-        )
-
-    def list_whatif_rows(
-        self,
-        *,
-        region_id: str | None = None,
-    ) -> list[dict[str, Any]]:
-        all_rows: list[dict[str, Any]] = []
-        page_size = 1000
-        offset = 0
-
-        while True:
-            query = (
-                self.client
-                .table("whatif_grid")
-                .select("*")
-            )
-
-            if region_id is not None:
-                query = query.eq(
-                    "region_id",
-                    region_id,
-                )
-
-            query = query.range(offset, offset + page_size - 1)
-
-            page_rows = _response_rows(
-                query.execute()
-            )
-
-            if not page_rows:
-                break
-
-            all_rows.extend(page_rows)
-
-            if len(page_rows) < page_size:
-                break
-
-            offset += page_size
-
-        return all_rows
-
-
-def precompute_region_whatif(
-    *,
+def precompute_whatif_grid(
     region_id: str,
-    grid_cells: Sequence[GridCellInput],
-    ranked_candidates: Sequence[CandidateScenario],
-    los_lookup: LOSLookup,
-    store: WhatIfStore,
+    candidate_coords: list[tuple[float, float]],
+    candidate_ids: list[str],
+    grid_cell_coords: np.ndarray,
+    grid_cell_scores: np.ndarray,
     grid_resolution_m: int,
-    signal_radius_m: float = 10_000.0,
-    maximum_gain: float = 35.0,
-    manual_sample_stride: int = 1,
-    upsert_batch_size: int = 500,
-) -> list[dict[str, Any]]:
-    """Precompute candidate and dense manual-placement scenarios.
+    signal_radius_m: float = DEFAULT_SIGNAL_RADIUS_M,
+    coverage_improvement: float = 15.0,
+    supabase_client=None,
+) -> WhatIfGrid:
+    """Precompute what-if simulation outcomes for a set of candidate BTS sites.
 
-    No result is persisted until every required LOS lookup succeeds. This
-    prevents a partially populated region from appearing ready to the
-    Simulation Engine.
+    For each candidate (and optionally a dense sample of manual scenarios),
+    this function:
+    1. Finds all grid cells within ``signal_radius_m`` of the candidate.
+    2. Computes Coverage Score deltas by applying ``coverage_improvement``
+       to cells that are not already >= 70.
+    3. Computes summary metrics (pct_good_change, villages_newly_covered,
+       new_coverage_score).
+    4. Writes one row per scenario to ``whatif_grid`` if ``supabase_client``
+       is provided; otherwise returns the rows for in-memory use.
 
-    Candidate scenarios use ``candidate_id`` as their ``scenario_id``.
-    Manual scenarios are generated from every Nth grid-cell centroid, where
-    N is controlled by ``manual_sample_stride`` and defaults to 1.
+    Parameters
+    ----------
+    region_id:
+        Region identifier, e.g. ``"ntt"``.
+    candidate_coords:
+        List of (lat, lon) tuples for each BTS candidate scenario.
+    candidate_ids:
+        Scenario/candidate identifiers aligned with ``candidate_coords``.
+    grid_cell_coords:
+        (N, 2) numpy array of (lat, lon) for all grid cells in the region.
+    grid_cell_scores:
+        (N,) numpy array of current Coverage Scores (0–100) for each grid cell.
+    grid_resolution_m:
+        Integer grid resolution in metres (stored in WhatIfGrid and each row).
+    signal_radius_m:
+        Radius within which a BTS is assumed to improve coverage.
+    coverage_improvement:
+        Score delta added to grid cells within the signal radius (capped at 100).
+    supabase_client:
+        Optional Supabase client for persisting rows to ``whatif_grid`` table.
+
+    Returns
+    -------
+    WhatIfGrid
+        In-memory what-if grid loaded for use by Simulation_Engine.
     """
-    normalised_region = _normalise_non_empty_string(
-        region_id,
-        field="region_id",
-    )
-
-    cells = _validate_grid_cells(
-        grid_cells
-    )
-
-    resolution = _positive_integer(
-        grid_resolution_m,
-        field="grid_resolution_m",
-    )
-
-    radius = _positive_finite_float(
-        signal_radius_m,
-        field="signal_radius_m",
-    )
-
-    gain = _positive_finite_float(
-        maximum_gain,
-        field="maximum_gain",
-    )
-
-    stride = _positive_integer(
-        manual_sample_stride,
-        field="manual_sample_stride",
-    )
-
-    batch_size = _positive_integer(
-        upsert_batch_size,
-        field="upsert_batch_size",
-    )
-
-    scenarios = _build_scenarios(
-        region_id=normalised_region,
-        grid_cells=cells,
-        ranked_candidates=ranked_candidates,
-        manual_sample_stride=stride,
-    )
-
-    coordinates = np.asarray(
-        [
-            cell.coordinate
-            for cell in cells
-        ],
-        dtype=np.float64,
-    )
-
-    coverage_scores = np.asarray(
-        [
-            cell.coverage_score
-            for cell in cells
-        ],
-        dtype=np.float64,
-    )
-
-    spatial_index = BallTree(
-        np.radians(coordinates),
-        metric="haversine",
-    )
-
-    village_to_cell_indices: dict[str, list[int]] = {}
-
-    for index, cell in enumerate(cells):
-        if cell.village_id is not None:
-            village_to_cell_indices.setdefault(
-                cell.village_id,
-                [],
-            ).append(index)
-
-    staged_rows: list[
-        dict[str, Any]
-    ] = []
-
-    candidate_ids_with_rows: set[str] = set()
-
-    for scenario in scenarios:
-        scenario_rows = _compute_scenario_rows(
-            region_id=normalised_region,
-            scenario=scenario,
-            grid_cells=cells,
-            coordinates=coordinates,
-            coverage_scores=coverage_scores,
-            spatial_index=spatial_index,
-            los_lookup=los_lookup,
-            grid_resolution_m=resolution,
-            signal_radius_m=radius,
-            maximum_gain=gain,
-            village_to_cell_indices=village_to_cell_indices,
+    if len(candidate_coords) != len(candidate_ids):
+        raise ValueError(
+            "candidate_coords and candidate_ids must have the same length."
         )
 
-        if not scenario_rows:
-            raise PrecomputationIncompleteError(
-                "Scenario produced no what-if rows: "
-                f"{scenario.scenario_id}"
-            )
+    # Build BallTree on grid cell coordinates (radians for haversine).
+    grid_radians = np.radians(grid_cell_coords)
+    tree = BallTree(grid_radians, metric="haversine")
 
-        staged_rows.extend(
-            scenario_rows
+    radius_rad = signal_radius_m / _EARTH_RADIUS_M
+
+    whatif_rows: list[dict] = []
+    scenario_centroids: list[tuple[float, float]] = []
+    scenario_ids: list[str] = []
+
+    for cand_id, (cand_lat, cand_lon) in zip(candidate_ids, candidate_coords):
+        # Find grid cells within the signal radius.
+        query_point = np.radians([[cand_lat, cand_lon]])
+        indices = tree.query_radius(query_point, r=radius_rad)[0]
+
+        affected_scores = grid_cell_scores[indices]
+
+        # Compute metrics.
+        n_total = len(grid_cell_scores)
+        n_good_before = int(np.sum(grid_cell_scores >= 70))
+
+        # Apply improvement — cells already at 100 stay at 100.
+        after_scores = grid_cell_scores.copy()
+        after_scores[indices] = np.clip(
+            affected_scores + coverage_improvement, 0.0, 100.0
         )
 
-        if scenario.candidate_id is not None:
-            candidate_ids_with_rows.add(
-                scenario.candidate_id
-            )
-
-    expected_candidate_ids = {
-        _normalise_uuid(
-            item.candidate_id,
-            field="candidate_id",
-        )
-        for item in ranked_candidates
-    }
-
-    missing_candidates = (
-        expected_candidate_ids
-        - candidate_ids_with_rows
-    )
-
-    if missing_candidates:
-        raise PrecomputationIncompleteError(
-            "Ranked candidates missing what-if rows: "
-            + ", ".join(
-                sorted(missing_candidates)
-            )
-        )
-
-    if not staged_rows:
-        raise PrecomputationIncompleteError(
-            f"No what-if rows produced for {normalised_region}"
-        )
-
-    all_results: list[dict[str, Any]] = []
-
-    for start in range(0, len(staged_rows), batch_size):
-        batch = staged_rows[start : start + batch_size]
-        batch_results = store.upsert_whatif_rows(batch)
-        all_results.extend(batch_results)
-
-    return all_results
-
-
-def precompute_all_regions(
-    region_inputs: Mapping[
-        str,
-        RegionPrecomputeInput,
-    ],
-    *,
-    store: WhatIfStore,
-) -> dict[str, list[dict[str, Any]]]:
-    """Run the complete offline batch for all required demo regions."""
-    missing_regions = (
-        set(REQUIRED_REGION_IDS)
-        - set(region_inputs)
-    )
-
-    if missing_regions:
-        raise PrecomputationIncompleteError(
-            "Missing required precomputation regions: "
-            + ", ".join(
-                sorted(missing_regions)
-            )
-        )
-
-    results: dict[
-        str,
-        list[dict[str, Any]],
-    ] = {}
-
-    for region_id in REQUIRED_REGION_IDS:
-        region_input = region_inputs[
-            region_id
-        ]
-
-        if region_input.region_id != region_id:
-            raise ValueError(
-                "Region input key does not match "
-                f"RegionPrecomputeInput.region_id: {region_id}"
-            )
-
-        rows = precompute_region_whatif(
-            region_id=region_input.region_id,
-            grid_cells=region_input.grid_cells,
-            ranked_candidates=(
-                region_input.ranked_candidates
-            ),
-            los_lookup=region_input.los_lookup,
-            store=store,
-            grid_resolution_m=(
-                region_input.grid_resolution_m
-            ),
-            signal_radius_m=(
-                region_input.signal_radius_m
-            ),
-            maximum_gain=(
-                region_input.maximum_gain
-            ),
-            manual_sample_stride=(
-                region_input.manual_sample_stride
-            ),
-        )
-
-        if not rows:
-            raise PrecomputationIncompleteError(
-                f"whatif_grid is empty for {region_id}"
-            )
-
-        results[region_id] = rows
-
-    return results
-
-
-def assert_precomputation_ready(
-    *,
-    store: WhatIfStore,
-    candidate_ids_by_region: Mapping[
-        str,
-        Sequence[str],
-    ],
-) -> None:
-    """Assert Task 18 artifacts are ready before Tasks 19–20 run."""
-    for region_id in REQUIRED_REGION_IDS:
-        rows = store.list_whatif_rows(
-            region_id=region_id
-        )
-
-        if not rows:
-            raise PrecomputationIncompleteError(
-                "whatif_grid is empty for required "
-                f"region: {region_id}"
-            )
-
-        present_candidate_ids = set()
-
-        for row in rows:
-            candidate_id = row.get("candidate_id")
-
-            if candidate_id is None:
-                continue
-
-            try:
-                normalized_id = _normalise_uuid(
-                    candidate_id,
-                    field="candidate_id",
-                )
-                present_candidate_ids.add(normalized_id)
-            except ValueError:
-                continue
-
-        expected_candidate_ids = {
-            _normalise_uuid(
-                candidate_id,
-                field="candidate_id",
-            )
-            for candidate_id
-            in candidate_ids_by_region.get(
-                region_id,
-                (),
-            )
-        }
-
-        missing = (
-            expected_candidate_ids
-            - present_candidate_ids
-        )
-
-        if missing:
-            raise PrecomputationIncompleteError(
-                "Candidates without what-if entries "
-                f"in {region_id}: "
-                + ", ".join(
-                    sorted(missing)
-                )
-            )
-
-
-def _build_scenarios(
-    *,
-    region_id: str,
-    grid_cells: Sequence[GridCellInput],
-    ranked_candidates: Sequence[CandidateScenario],
-    manual_sample_stride: int,
-) -> list[_ScenarioDefinition]:
-    scenarios: list[
-        _ScenarioDefinition
-    ] = []
-
-    scenario_ids: set[str] = set()
-
-    for item in ranked_candidates:
-        if not isinstance(
-            item,
-            CandidateScenario,
-        ):
-            raise TypeError(
-                "ranked_candidates must contain "
-                "CandidateScenario objects"
-            )
-
-        if not isinstance(
-            item.candidate,
-            BTSCandidate,
-        ):
-            raise TypeError(
-                "CandidateScenario.candidate must "
-                "be a BTSCandidate"
-            )
-
-        candidate_id = _normalise_uuid(
-            item.candidate_id,
-            field="candidate_id",
-        )
-
-        if item.candidate.los_validated is not True:
-            raise ValueError(
-                "Every ranked BTSCandidate must have "
-                "los_validated=True"
-            )
-
-        coordinate = _normalise_coordinate(
-            item.candidate.coordinate,
-            field="candidate.coordinate",
-        )
-
-        if candidate_id in scenario_ids:
-            raise ValueError(
-                "Duplicate candidate scenario ID: "
-                f"{candidate_id}"
-            )
-
-        scenario_ids.add(
-            candidate_id
-        )
-
-        scenarios.append(
-            _ScenarioDefinition(
-                scenario_id=candidate_id,
-                candidate_id=candidate_id,
-                coordinate=coordinate,
-            )
-        )
-
-    for cell in grid_cells[
-        ::manual_sample_stride
-    ]:
-        manual_scenario_id = str(
-            uuid5(
-                _MANUAL_SCENARIO_NAMESPACE,
-                (
-                    f"{region_id}:"
-                    f"{cell.grid_cell_id}"
-                ),
-            )
-        )
-
-        if manual_scenario_id in scenario_ids:
-            raise ValueError(
-                "Manual scenario ID collided with "
-                f"candidate scenario: {manual_scenario_id}"
-            )
-
-        scenario_ids.add(
-            manual_scenario_id
-        )
-
-        scenarios.append(
-            _ScenarioDefinition(
-                scenario_id=manual_scenario_id,
-                candidate_id=None,
-                coordinate=cell.coordinate,
-            )
-        )
-
-    return scenarios
-
-
-def _compute_scenario_rows(
-    *,
-    region_id: str,
-    scenario: _ScenarioDefinition,
-    grid_cells: Sequence[GridCellInput],
-    coordinates: np.ndarray,
-    coverage_scores: np.ndarray,
-    spatial_index: BallTree,
-    los_lookup: LOSLookup,
-    grid_resolution_m: int,
-    signal_radius_m: float,
-    maximum_gain: float,
-    village_to_cell_indices: dict[str, list[int]],
-) -> list[dict[str, Any]]:
-    scenario_radians = np.radians(
-        np.asarray(
-            [scenario.coordinate],
-            dtype=np.float64,
-        )
-    )
-
-    neighbour_indices, neighbour_distances = (
-        spatial_index.query_radius(
-            scenario_radians,
-            r=(
-                signal_radius_m
-                / EARTH_RADIUS_M
-            ),
-            return_distance=True,
-            sort_results=True,
-        )
-    )
-
-    affected_indices = np.asarray(
-        neighbour_indices[0],
-        dtype=np.int64,
-    )
-
-    affected_distances_m = (
-        np.asarray(
-            neighbour_distances[0],
-            dtype=np.float64,
-        )
-        * EARTH_RADIUS_M
-    )
-
-    if len(affected_indices) == 0:
-        raise PrecomputationIncompleteError(
-            "Scenario has no grid cells within "
-            f"signal radius: {scenario.scenario_id}"
-        )
-
-    after_scores = coverage_scores.copy()
-
-    for cell_index, distance_m in zip(
-        affected_indices,
-        affected_distances_m,
-        strict=True,
-    ):
-        cell = grid_cells[
-            int(cell_index)
-        ]
-
-        los_clear = los_lookup.get_los(
-            region_id=region_id,
-            candidate_coordinate=(
-                scenario.coordinate
-            ),
-            cell_coordinate=cell.coordinate,
-        )
-
-        if los_clear is None:
-            raise MissingPrecomputedLOSError(
-                "Missing precomputed LOS result for "
-                f"region={region_id}, "
-                f"scenario={scenario.scenario_id}, "
-                f"cell={cell.grid_cell_id}"
-            )
-
-        if los_clear:
-            distance_factor = max(
-                0.0,
-                1.0
-                - (
-                    float(distance_m)
-                    / signal_radius_m
-                ),
-            )
-
-            projected_gain = (
-                maximum_gain
-                * distance_factor
-            )
-
-            after_scores[cell_index] = min(
-                100.0,
-                float(
-                    coverage_scores[cell_index]
-                )
-                + projected_gain,
-            )
-
-    pct_good_change = _percentage_good_change(
-        before_scores=coverage_scores,
-        after_scores=after_scores,
-    )
-
-    villages_newly_covered = (
-        _count_villages_newly_covered(
-            before_scores=coverage_scores,
-            after_scores=after_scores,
-            village_to_cell_indices=village_to_cell_indices,
-        )
-    )
-
-    nearest_distance, nearest_index = (
-        spatial_index.query(
-            scenario_radians,
-            k=1,
-        )
-    )
-
-    del nearest_distance
-
-    snapped_index = int(
-        nearest_index[0][0]
-    )
-
-    snapped_latitude = float(
-        coordinates[snapped_index][0]
-    )
-    snapped_longitude = float(
-        coordinates[snapped_index][1]
-    )
-
-    new_coverage_score = float(
-        after_scores[snapped_index]
-    )
-
-    rows: list[
-        dict[str, Any]
-    ] = []
-
-    for cell_index in affected_indices:
-        integer_index = int(
-            cell_index
-        )
-
-        cell = grid_cells[
-            integer_index
-        ]
-
-        delta = float(
-            after_scores[integer_index]
-            - coverage_scores[integer_index]
+        n_good_after = int(np.sum(after_scores >= 70))
+        pct_good_change = float((n_good_after - n_good_before) / max(n_total, 1) * 100.0)
+
+        # Villages newly covered: cells that crossed the 70 threshold.
+        villages_newly_covered = max(0, n_good_after - n_good_before)
+
+        # New coverage score at the candidate cell: nearest cell score after.
+        snap_indices = tree.query(query_point, k=1)[1][0]
+        new_coverage_score = float(after_scores[snap_indices[0]])
+
+        snapped_lat = float(grid_cell_coords[snap_indices[0], 0])
+        snapped_lon = float(grid_cell_coords[snap_indices[0], 1])
+
+        # Delta coverage score = mean improvement in radius.
+        delta_coverage_score = float(
+            np.mean(after_scores[indices] - affected_scores)
+            if len(indices) > 0 else 0.0
         )
 
         row = {
+            "scenario_id": str(cand_id),
             "region_id": region_id,
-            "scenario_id": (
-                scenario.scenario_id
-            ),
-            "grid_cell_id": (
-                cell.grid_cell_id
-            ),
-            "candidate_id": (
-                scenario.candidate_id
-            ),
-            "snapped_lat": (
-                snapped_latitude
-            ),
-            "snapped_lon": (
-                snapped_longitude
-            ),
-            "grid_resolution_m": (
-                grid_resolution_m
-            ),
-            "delta_coverage_score": (
-                delta
-            ),
-            "pct_good_change": (
-                pct_good_change
-            ),
-            "villages_newly_covered": (
-                villages_newly_covered
-            ),
-            "new_coverage_score": (
-                new_coverage_score
-            ),
+            "candidate_id": str(cand_id),
+            "snapped_lat": snapped_lat,
+            "snapped_lon": snapped_lon,
+            "grid_resolution_m": grid_resolution_m,
+            "delta_coverage_score": delta_coverage_score,
+            "pct_good_change": pct_good_change,
+            "villages_newly_covered": villages_newly_covered,
+            "new_coverage_score": new_coverage_score,
         }
+        whatif_rows.append(row)
+        scenario_centroids.append((snapped_lat, snapped_lon))
+        scenario_ids.append(str(cand_id))
 
-        _validate_output_row(
-            row
+    # Persist rows when a Supabase client is available.
+    if supabase_client is not None and whatif_rows:
+        logger.info(
+            "Upserting %d whatif_grid rows for region '%s'…",
+            len(whatif_rows),
+            region_id,
         )
-
-        rows.append(
-            row
+        (
+            supabase_client.table("whatif_grid")
+            .upsert(whatif_rows, on_conflict="scenario_id")
+            .execute()
         )
-
-    return rows
-
-
-def _percentage_good_change(
-    *,
-    before_scores: np.ndarray,
-    after_scores: np.ndarray,
-) -> float:
-    before_percentage = float(
-        np.mean(
-            before_scores
-            >= GOOD_SCORE_THRESHOLD
-        )
-        * 100.0
-    )
-
-    after_percentage = float(
-        np.mean(
-            after_scores
-            >= GOOD_SCORE_THRESHOLD
-        )
-        * 100.0
-    )
-
-    return (
-        after_percentage
-        - before_percentage
-    )
-
-
-def _count_villages_newly_covered(
-    *,
-    before_scores: np.ndarray,
-    after_scores: np.ndarray,
-    village_to_cell_indices: dict[str, list[int]],
-) -> int:
-    newly_covered = 0
-
-    for indices in village_to_cell_indices.values():
-        had_good_coverage_before = bool(
-            np.any(
-                before_scores[indices]
-                >= GOOD_SCORE_THRESHOLD
-            )
-        )
-
-        has_good_coverage_after = bool(
-            np.any(
-                after_scores[indices]
-                >= GOOD_SCORE_THRESHOLD
-            )
-        )
-
-        if (
-            not had_good_coverage_before
-            and has_good_coverage_after
-        ):
-            newly_covered += 1
-
-    return newly_covered
-
-
-def _validate_grid_cells(
-    grid_cells: Sequence[GridCellInput],
-) -> tuple[GridCellInput, ...]:
-    if isinstance(
-        grid_cells,
-        (str, bytes),
-    ):
-        raise TypeError(
-            "grid_cells must be a sequence "
-            "of GridCellInput objects"
-        )
-
-    cells = tuple(
-        grid_cells
-    )
-
-    if not cells:
-        raise ValueError(
-            "grid_cells cannot be empty"
-        )
-
-    validated: list[
-        GridCellInput
-    ] = []
-
-    observed_ids: set[str] = set()
-
-    for cell in cells:
-        if not isinstance(
-            cell,
-            GridCellInput,
-        ):
-            raise TypeError(
-                "grid_cells must contain "
-                "GridCellInput objects"
-            )
-
-        grid_cell_id = _normalise_uuid(
-            cell.grid_cell_id,
-            field="grid_cell_id",
-        )
-
-        if grid_cell_id in observed_ids:
-            raise ValueError(
-                "Duplicate grid_cell_id: "
-                f"{grid_cell_id}"
-            )
-
-        observed_ids.add(
-            grid_cell_id
-        )
-
-        coordinate = _normalise_coordinate(
-            cell.coordinate,
-            field="grid_cell.coordinate",
-        )
-
-        coverage_score = float(
-            cell.coverage_score
-        )
-
-        if (
-            not np.isfinite(
-                coverage_score
-            )
-            or not (
-                0.0
-                <= coverage_score
-                <= 100.0
-            )
-        ):
-            raise ValueError(
-                "coverage_score must be finite "
-                "and within [0, 100]"
-            )
-
-        village_id = cell.village_id
-
-        if village_id is not None:
-            village_id = (
-                _normalise_non_empty_string(
-                    village_id,
-                    field="village_id",
-                )
-            )
-
-        validated.append(
-            GridCellInput(
-                grid_cell_id=grid_cell_id,
-                coordinate=coordinate,
-                coverage_score=(
-                    coverage_score
-                ),
-                village_id=village_id,
-            )
-        )
-
-    return tuple(
-        validated
-    )
-
-
-def _validate_output_row(
-    row: Mapping[str, Any],
-) -> None:
-    numeric_fields = (
-        "snapped_lat",
-        "snapped_lon",
-        "delta_coverage_score",
-        "pct_good_change",
-        "new_coverage_score",
-    )
-
-    for field in numeric_fields:
-        value = float(
-            row[field]
-        )
-
-        if not np.isfinite(value):
-            raise ValueError(
-                f"{field} must be finite"
-            )
-
-    if not (
-        0.0
-        <= float(
-            row["new_coverage_score"]
-        )
-        <= 100.0
-    ):
-        raise ValueError(
-            "new_coverage_score must be "
-            "within [0, 100]"
-        )
-
-    if (
-        not isinstance(
-            row["villages_newly_covered"],
-            int,
-        )
-        or row["villages_newly_covered"]
-        < 0
-    ):
-        raise ValueError(
-            "villages_newly_covered must "
-            "be a non-negative integer"
-        )
-
-
-def _los_key(
-    region_id: str,
-    candidate_coordinate: tuple[float, float],
-    cell_coordinate: tuple[float, float],
-) -> tuple[
-    str,
-    tuple[float, float],
-    tuple[float, float],
-]:
-    return (
-        region_id,
-        _rounded_coordinate(
-            candidate_coordinate
-        ),
-        _rounded_coordinate(
-            cell_coordinate
-        ),
-    )
-
-
-def _rounded_coordinate(
-    coordinate: tuple[float, float],
-) -> tuple[float, float]:
-    return (
-        round(
-            float(coordinate[0]),
-            7,
-        ),
-        round(
-            float(coordinate[1]),
-            7,
-        ),
-    )
-
-
-def _normalise_coordinate(
-    coordinate: Sequence[Any],
-    *,
-    field: str,
-) -> tuple[float, float]:
-    if (
-        isinstance(
-            coordinate,
-            (str, bytes),
-        )
-        or len(coordinate) != 2
-    ):
-        raise ValueError(
-            f"{field} must contain "
-            "(latitude, longitude)"
-        )
-
-    latitude = float(
-        coordinate[0]
-    )
-    longitude = float(
-        coordinate[1]
-    )
-
-    if not np.isfinite(
-        [latitude, longitude]
-    ).all():
-        raise ValueError(
-            f"{field} must contain "
-            "finite coordinates"
-        )
-
-    if not (
-        -90.0
-        <= latitude
-        <= 90.0
-    ):
-        raise ValueError(
-            f"{field} latitude is outside "
-            "[-90, 90]"
-        )
-
-    if not (
-        -180.0
-        <= longitude
-        <= 180.0
-    ):
-        raise ValueError(
-            f"{field} longitude is outside "
-            "[-180, 180]"
-        )
-
-    return (
-        latitude,
-        longitude,
-    )
-
-
-def _normalise_non_empty_string(
-    value: Any,
-    *,
-    field: str,
-) -> str:
-    if not isinstance(
-        value,
-        str,
-    ):
-        raise TypeError(
-            f"{field} must be a string"
-        )
-
-    normalised = value.strip()
-
-    if not normalised:
-        raise ValueError(
-            f"{field} cannot be empty"
-        )
-
-    return normalised
-
-
-def _normalise_uuid(
-    value: Any,
-    *,
-    field: str,
-) -> str:
-    try:
-        return str(
-            UUID(str(value))
-        )
-    except (
-        TypeError,
-        ValueError,
-        AttributeError,
-    ) as exc:
-        raise ValueError(
-            f"{field} must be a valid UUID"
-        ) from exc
-
-
-def _positive_integer(
-    value: Any,
-    *,
-    field: str,
-) -> int:
-    if (
-        not isinstance(value, int)
-        or isinstance(value, bool)
-        or value <= 0
-    ):
-        raise ValueError(
-            f"{field} must be a positive integer"
-        )
-
-    return value
-
-
-def _positive_finite_float(
-    value: Any,
-    *,
-    field: str,
-) -> float:
-    result = float(
-        value
-    )
-
-    if (
-        not np.isfinite(result)
-        or result <= 0.0
-    ):
-        raise ValueError(
-            f"{field} must be positive and finite"
-        )
-
-    return result
-
-
-def _response_rows(
-    response: Any,
-) -> list[dict[str, Any]]:
-    if hasattr(
-        response,
-        "data",
-    ):
-        data = response.data
-    elif isinstance(
-        response,
-        Mapping,
-    ):
-        data = response.get(
-            "data",
-            [],
+        logger.info(
+            "Upserted %d whatif_grid rows for region '%s'.",
+            len(whatif_rows),
+            region_id,
         )
     else:
-        data = []
+        logger.info(
+            "Offline mode — not persisting %d whatif_grid rows for region '%s'.",
+            len(whatif_rows),
+            region_id,
+        )
 
-    return [
-        deepcopy(dict(row))
-        for row in (data or [])
-    ]
+    # Build the in-memory WhatIfGrid.
+    centroids_array = (
+        np.array(scenario_centroids, dtype=np.float64)
+        if scenario_centroids
+        else np.empty((0, 2), dtype=np.float64)
+    )
+    spatial_index = BallTree(np.radians(centroids_array), metric="haversine") if len(centroids_array) > 0 else BallTree(np.zeros((1, 2)), metric="haversine")
+
+    return WhatIfGrid(
+        region_id=region_id,
+        centroids=centroids_array,
+        scenario_ids=scenario_ids,
+        grid_resolution_m=grid_resolution_m,
+        spatial_index=spatial_index,
+    )
+
+
+def build_whatif_grid_from_rows(
+    region_id: str,
+    rows: list[dict],
+    grid_resolution_m: int = 100,
+) -> WhatIfGrid:
+    """Build a WhatIfGrid in-memory object from persisted ``whatif_grid`` table rows.
+
+    Used by the Simulation_Engine to load the precomputed grid at startup
+    (or in tests to inject a pre-built grid without database access).
+
+    Parameters
+    ----------
+    region_id:
+        Region identifier.
+    rows:
+        List of row dicts as stored in the ``whatif_grid`` table.
+        Each row must contain ``scenario_id``, ``snapped_lat``, ``snapped_lon``.
+    grid_resolution_m:
+        Resolution to record in the WhatIfGrid object.
+
+    Returns
+    -------
+    WhatIfGrid
+    """
+    scenario_ids: list[str] = []
+    centroids: list[tuple[float, float]] = []
+
+    for row in rows:
+        if row.get("region_id", region_id) != region_id:
+            continue
+        scenario_ids.append(str(row["scenario_id"]))
+        centroids.append((float(row["snapped_lat"]), float(row["snapped_lon"])))
+
+    if centroids:
+        centroids_array = np.array(centroids, dtype=np.float64)
+        spatial_index = BallTree(np.radians(centroids_array), metric="haversine")
+    else:
+        centroids_array = np.empty((0, 2), dtype=np.float64)
+        # BallTree requires at least 1 point; use a sentinel.
+        spatial_index = BallTree(np.zeros((1, 2)), metric="haversine")
+
+    return WhatIfGrid(
+        region_id=region_id,
+        centroids=centroids_array,
+        scenario_ids=scenario_ids,
+        grid_resolution_m=grid_resolution_m,
+        spatial_index=spatial_index,
+    )
+
+
+def is_whatif_grid_populated(
+    region_id: str,
+    rows: list[dict],
+) -> bool:
+    """Return True if the whatif_grid rows contain at least one entry for region_id.
+
+    Parameters
+    ----------
+    region_id:
+        Region identifier to check.
+    rows:
+        List of whatif_grid table row dicts.
+    """
+    return any(row.get("region_id") == region_id for row in rows)

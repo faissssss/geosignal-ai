@@ -1,297 +1,157 @@
-"""Ethical Risk Register for GeoSignal AI.
+"""GeoSignal AI — Ethical Risk Register (Task 30).
 
-The register is a structured governance artifact containing the five
-project-specific ethical risks required by Requirement 9.6.
+Provides:
+    ETHICAL_RISK_REGISTER   Canonical list of EthicalRiskEntry objects.
+    REQUIRED_RISK_IDS       Frozenset of the five mandatory risk IDs.
+    get_risk_by_id()        Lookup an entry by risk_id.
 
-EthicalRiskEntry is imported from geosignal.models and is never redefined
-in this module.
+The deforestation constraint (is_high_canopy) is defined in:
+    geosignal.constraints
+
+Import it from there — it is NOT redefined here.
+
+Requirements: 9.6
 """
-
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator
-from copy import deepcopy
-from dataclasses import asdict
-from typing import Any
-
+# Re-export is_high_canopy for backwards compatibility only.
+# The canonical definition lives in geosignal.constraints.
+from geosignal.constraints import is_high_canopy as is_high_canopy  # noqa: F401
 from geosignal.models import EthicalRiskEntry
 
 
-REQUIRED_RISK_IDS: tuple[str, ...] = (
+# ---------------------------------------------------------------------------
+# Ethical Risk Register — five mandatory entries (Req 9.6)
+# ---------------------------------------------------------------------------
+
+ETHICAL_RISK_REGISTER: list[EthicalRiskEntry] = [
+    EthicalRiskEntry(
+        risk_id="digital_exclusion",
+        risk_description=(
+            "BTS placement recommendations may systematically favour areas with "
+            "denser existing infrastructure, inadvertently excluding the most "
+            "underserved 3T communities from connectivity improvements."
+        ),
+        impact=(
+            "Communities with the greatest connectivity need may receive lower "
+            "recommendation priority, widening the digital divide rather than "
+            "closing it."
+        ),
+        mitigation=(
+            "Equity weighting in AHP (facility_proximity_m and "
+            "population_density_per_km2 have elevated weights). "
+            "Coverage Score is validated against population density maps to "
+            "ensure high-need areas receive proportional attention. "
+            "Low-confidence gate requires acknowledgement before acting on "
+            "sparse-data recommendations."
+        ),
+        responsible_owner_role="Data Scientist / Equity Lead",
+    ),
+    EthicalRiskEntry(
+        risk_id="deforestation",
+        risk_description=(
+            "Recommending BTS tower placement in forested or high-canopy areas "
+            "risks contributing to deforestation or habitat fragmentation if "
+            "field crews clear vegetation to install towers."
+        ),
+        impact=(
+            "Permanent loss of forest cover, biodiversity harm, and contribution "
+            "to carbon emissions — contrary to Indonesia's national conservation "
+            "commitments."
+        ),
+        mitigation=(
+            "is_high_canopy() joint constraint (ESA WorldCover class 10/20 AND "
+            "canopy_height_m >= 15.0 m) excludes affected sites from BTS candidate "
+            "ranking. The constraint is active by default and cannot be disabled "
+            "through the normal UI flow. excluded_by_canopy flag is persisted per "
+            "candidate for audit purposes."
+        ),
+        responsible_owner_role="Environmental Compliance Officer",
+    ),
+    EthicalRiskEntry(
+        risk_id="opencellid_sparsity_misread",
+        risk_description=(
+            "Sparse OpenCellID coverage in remote 3T regions may cause the "
+            "model to interpret the absence of records as confirmed zero coverage, "
+            "leading to over-confident or mis-directed recommendations."
+        ),
+        impact=(
+            "Areas with no OpenCellID towers may appear as high-priority gaps "
+            "when they are actually uncharted, leading to misallocation of "
+            "infrastructure investment."
+        ),
+        mitigation=(
+            "tag_confidence() treats absent OpenCellID records (None or inf) as "
+            "Low confidence — never as confirmed zero coverage. "
+            "Low-confidence recommendations require explicit Planner acknowledgement "
+            "via ConfidenceGate before any action is taken."
+        ),
+        responsible_owner_role="Data Quality Lead",
+    ),
+    EthicalRiskEntry(
+        risk_id="low_confidence_funding_decisions",
+        risk_description=(
+            "Planners may act on Low-confidence Coverage Score estimates when "
+            "making funding and procurement decisions, treating GeoAI output as "
+            "authoritative ground truth rather than a decision-support tool."
+        ),
+        impact=(
+            "Misallocation of limited rural connectivity budgets based on "
+            "unreliable estimates; potential legal or policy liability if "
+            "funding decisions are later found to be based on sparse data."
+        ),
+        mitigation=(
+            "ConfidenceGate component blocks Low-confidence actions until the "
+            "Planner explicitly acknowledges the sparse-data warning. "
+            "GeoAI-assisted estimate label is visible on all outputs. "
+            "Acknowledgement is tied to the specific candidate and resets on "
+            "candidate change — no persistent global override."
+        ),
+        responsible_owner_role="Product Owner / Planner Liaison",
+    ),
+    EthicalRiskEntry(
+        risk_id="maup_resampling_mismatch",
+        risk_description=(
+            "Resampling geospatial layers (population, land cover, signal data) "
+            "to different grid resolutions introduces the Modifiable Areal Unit "
+            "Problem (MAUP): aggregate statistics at 250 m resolution do not "
+            "faithfully represent conditions at 100 m resolution."
+        ),
+        impact=(
+            "Coverage Score values may change non-trivially when the grid "
+            "resolution is changed, making cross-resolution comparisons "
+            "misleading and potentially biasing recommendations toward or "
+            "against certain terrain types."
+        ),
+        mitigation=(
+            "Multi-resolution harmonisation pipeline (harmonise_rasters) is "
+            "run at all resolution variants before scoring. DataQualityReport "
+            "records chosen_resolution_m and dataset_checksums so downstream "
+            "consumers know the resolution at which scores were computed. "
+            "Scores from different resolutions are not compared directly."
+        ),
+        responsible_owner_role="GIS / Harmonisation Engineer",
+    ),
+]
+
+# Fast lookup by risk_id
+_REGISTER_INDEX: dict[str, EthicalRiskEntry] = {
+    e.risk_id: e for e in ETHICAL_RISK_REGISTER
+}
+
+REQUIRED_RISK_IDS: frozenset[str] = frozenset({
     "digital_exclusion",
     "deforestation",
     "opencellid_sparsity_misread",
     "low_confidence_funding_decisions",
     "maup_resampling_mismatch",
-)
+})
 
 
-def _default_risk_entries() -> tuple[EthicalRiskEntry, ...]:
-    """Return the canonical five GeoSignal AI ethical risk entries."""
-    return (
-        EthicalRiskEntry(
-            risk_id="digital_exclusion",
-            risk_description=(
-                "Low-population or poorly mapped communities may be "
-                "systematically deprioritised even when they have genuine "
-                "connectivity needs."
-            ),
-            impact=(
-                "Remote and vulnerable communities may continue to receive "
-                "lower infrastructure priority, widening the digital divide."
-            ),
-            mitigation=(
-                "Apply explicit equity weighting through public-facility "
-                "proximity and population-density indicators, and review "
-                "results per kecamatan rather than relying only on aggregate "
-                "performance."
-            ),
-            responsible_owner_role="Model/Data Lead",
-        ),
-        EthicalRiskEntry(
-            risk_id="deforestation",
-            risk_description=(
-                "Recommended BTS sites may encourage clearing of forest or "
-                "other high-canopy vegetation."
-            ),
-            impact=(
-                "Infrastructure placement could contribute to habitat loss, "
-                "forest degradation, and avoidable environmental damage."
-            ),
-            mitigation=(
-                "Exclude candidates by default only when the land-cover class "
-                "and canopy-height threshold jointly identify high-canopy "
-                "vegetation, and require human review of final placement."
-            ),
-            responsible_owner_role="Model/Data Lead",
-        ),
-        EthicalRiskEntry(
-            risk_id="opencellid_sparsity_misread",
-            risk_description=(
-                "The absence of a nearby OpenCellID record may be incorrectly "
-                "interpreted as confirmed absence of mobile coverage."
-            ),
-            impact=(
-                "Unknown or under-measured locations may be labelled as "
-                "confirmed coverage gaps, causing investment to be directed "
-                "using misleading evidence."
-            ),
-            mitigation=(
-                "Treat missing OpenCellID or Ookla observations as "
-                "low-confidence unknowns rather than confirmed poor coverage, "
-                "and expose the confidence tag with every recommendation."
-            ),
-            responsible_owner_role="Data Lead",
-        ),
-        EthicalRiskEntry(
-            risk_id="low_confidence_funding_decisions",
-            risk_description=(
-                "A stakeholder may use a low-confidence recommendation as if "
-                "it were an authoritative infrastructure decision."
-            ),
-            impact=(
-                "Public funding may be committed to an unsuitable site based "
-                "on incomplete, sparse, or low-fidelity evidence."
-            ),
-            mitigation=(
-                "Visually distinguish confidence tiers, require explicit "
-                "acknowledgement before acting on low-confidence outputs, and "
-                "label all results as GeoAI-assisted estimates requiring "
-                "human and field validation."
-            ),
-            responsible_owner_role="Product/Presentation Lead",
-        ),
-        EthicalRiskEntry(
-            risk_id="maup_resampling_mismatch",
-            risk_description=(
-                "Combining spatial layers with different native resolutions "
-                "may produce different Coverage Scores depending on the "
-                "selected analysis grid."
-            ),
-            impact=(
-                "Candidate rankings and apparent connectivity gaps may be "
-                "distorted by resampling choices rather than actual geographic "
-                "conditions."
-            ),
-            mitigation=(
-                "Generate and compare outputs at multiple grid resolutions, "
-                "document the selected resolution and resampling method, and "
-                "report material differences before recommendations are used."
-            ),
-            responsible_owner_role="Model/Data Lead",
-        ),
-    )
+def get_risk_by_id(risk_id: str) -> EthicalRiskEntry:
+    """Return the EthicalRiskEntry for a given risk_id.
 
-
-DEFAULT_RISK_ENTRIES: tuple[EthicalRiskEntry, ...] = (
-    _default_risk_entries()
-)
-
-
-class EthicalRiskRegister:
-    """Validated collection of all required GeoSignal AI ethical risks.
-
-    The register must contain exactly one entry for each required risk ID.
-    Entries are copied on input and output to prevent accidental mutation of
-    the canonical governance record.
+    Raises:
+        KeyError: if risk_id is not in the register.
     """
-
-    def __init__(
-        self,
-        entries: Iterable[EthicalRiskEntry] | None = None,
-    ) -> None:
-        source_entries = (
-            DEFAULT_RISK_ENTRIES
-            if entries is None
-            else tuple(entries)
-        )
-
-        indexed: dict[str, EthicalRiskEntry] = {}
-
-        for entry in source_entries:
-            if not isinstance(entry, EthicalRiskEntry):
-                raise TypeError(
-                    "Every risk entry must be an EthicalRiskEntry"
-                )
-
-            self._validate_entry(entry)
-
-            if entry.risk_id in indexed:
-                raise ValueError(
-                    f"Duplicate ethical risk ID: {entry.risk_id}"
-                )
-
-            indexed[entry.risk_id] = deepcopy(entry)
-
-        expected = set(REQUIRED_RISK_IDS)
-        actual = set(indexed)
-
-        missing = expected.difference(actual)
-        unexpected = actual.difference(expected)
-
-        if missing or unexpected:
-            details: list[str] = []
-
-            if missing:
-                details.append(
-                    f"missing={sorted(missing)}"
-                )
-
-            if unexpected:
-                details.append(
-                    f"unexpected={sorted(unexpected)}"
-                )
-
-            raise ValueError(
-                "EthicalRiskRegister must contain exactly the five "
-                f"required risks ({'; '.join(details)})"
-            )
-
-        self._entries = {
-            risk_id: indexed[risk_id]
-            for risk_id in REQUIRED_RISK_IDS
-        }
-
-    @staticmethod
-    def _validate_entry(
-        entry: EthicalRiskEntry,
-    ) -> None:
-        """Validate one ethical risk entry."""
-        fields = {
-            "risk_id": entry.risk_id,
-            "risk_description": entry.risk_description,
-            "impact": entry.impact,
-            "mitigation": entry.mitigation,
-            "responsible_owner_role": (
-                entry.responsible_owner_role
-            ),
-        }
-
-        for field_name, raw_value in fields.items():
-            if not isinstance(raw_value, str):
-                raise TypeError(
-                    f"{field_name} must be a string"
-                )
-
-            if not raw_value.strip():
-                raise ValueError(
-                    f"{field_name} cannot be empty"
-                )
-
-    @property
-    def entries(self) -> tuple[EthicalRiskEntry, ...]:
-        """Return defensive copies in canonical risk-ID order."""
-        return tuple(
-            deepcopy(self._entries[risk_id])
-            for risk_id in REQUIRED_RISK_IDS
-        )
-
-    @property
-    def risk_ids(self) -> tuple[str, ...]:
-        """Return all required risk identifiers."""
-        return tuple(self._entries)
-
-    def get(
-        self,
-        risk_id: str,
-    ) -> EthicalRiskEntry:
-        """Return one risk entry by ID."""
-        key = str(risk_id).strip()
-
-        try:
-            return deepcopy(self._entries[key])
-        except KeyError as exc:
-            raise KeyError(
-                f"Unknown ethical risk ID: {key}"
-            ) from exc
-
-    def to_rows(self) -> list[dict[str, str]]:
-        """Return rows compatible with the Supabase table."""
-        from datetime import datetime, timezone
-
-        reviewed_at = datetime.now(timezone.utc).isoformat()
-
-        return [
-            {
-                **asdict(self._entries[risk_id]),
-                "last_reviewed_at": reviewed_at,
-            }
-            for risk_id in REQUIRED_RISK_IDS
-        ]
-
-    def persist(
-        self,
-        supabase_client: Any,
-    ) -> list[dict[str, str]]:
-        """Upsert all five entries to ethical_risk_register."""
-        rows = self.to_rows()
-
-        (
-            supabase_client
-            .table("ethical_risk_register")
-            .upsert(
-                rows,
-                on_conflict="risk_id",
-            )
-            .execute()
-        )
-
-        return rows
-
-    def __len__(self) -> int:
-        return len(self._entries)
-
-    def __iter__(self) -> Iterator[EthicalRiskEntry]:
-        return iter(self.entries)
-
-    def __contains__(self, risk_id: object) -> bool:
-        return risk_id in self._entries
-
-
-def seed_ethical_risk_register(
-    supabase_client: Any,
-) -> list[dict[str, str]]:
-    """Create and persist the canonical Ethical Risk Register."""
-    return EthicalRiskRegister().persist(
-        supabase_client
-    )
+    return _REGISTER_INDEX[risk_id]

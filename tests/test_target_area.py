@@ -1,738 +1,360 @@
-"""Tests for GeoSignal AI target-area resolution."""
+"""Tests for Target Area Resolution — Task 17.
 
+Includes:
+  - Property 25 (Hypothesis): Target Area Resolution Correctness (sub-task 17.2)
+  - Unit tests: kecamatan mode, drawn_polygon mode, self-intersecting rejection,
+    grid-cell containment.
+
+# Feature: geosignal-ai, Property 25: Target Area Resolution Correctness
+"""
 from __future__ import annotations
 
-from uuid import uuid4
+import sys
+import os
+import uuid
 
-import numpy as np
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
+
 import pytest
-from hypothesis import given, settings
+from hypothesis import given, settings, HealthCheck
 from hypothesis import strategies as st
-from shapely.geometry import Point, shape
 
 from geosignal.models import TargetArea
 from geosignal.target_area import (
-    InMemoryTargetAreaStore,
-    SupabaseTargetAreaStore,
-    TargetAreaValidationError,
-    all_grid_cells_within_target_area,
     filter_grid_cells_to_target_area,
     resolve_target_area,
 )
 
 
-REGION_ID = "ntt"
-KECAMATAN_ID = "IDN.18.01.01_1"
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+_VALID_POLYGON = {
+    "type": "Polygon",
+    "coordinates": [[
+        [120.0, -9.0],
+        [120.5, -9.0],
+        [120.5, -9.5],
+        [120.0, -9.5],
+        [120.0, -9.0],
+    ]],
+}
+
+_SELF_INTERSECTING_POLYGON = {
+    "type": "Polygon",
+    "coordinates": [[
+        [0.0, 0.0],
+        [1.0, 1.0],
+        [1.0, 0.0],
+        [0.0, 1.0],
+        [0.0, 0.0],
+    ]],
+}
 
 
-def _rectangle(
-    *,
-    minimum_lon: float = 123.0,
-    minimum_lat: float = -10.0,
-    width: float = 1.0,
-    height: float = 1.0,
-) -> dict:
-    maximum_lon = minimum_lon + width
-    maximum_lat = minimum_lat + height
-
-    return {
-        "type": "Polygon",
-        "coordinates": [
-            [
-                [
-                    minimum_lon,
-                    minimum_lat,
-                ],
-                [
-                    maximum_lon,
-                    minimum_lat,
-                ],
-                [
-                    maximum_lon,
-                    maximum_lat,
-                ],
-                [
-                    minimum_lon,
-                    maximum_lat,
-                ],
-                [
-                    minimum_lon,
-                    minimum_lat,
-                ],
-            ]
-        ],
-    }
-
-
-def _store_with_boundary(
-    *,
-    region_id: str = REGION_ID,
-    kecamatan_id: str = KECAMATAN_ID,
-    boundary: dict | None = None,
-) -> InMemoryTargetAreaStore:
-    return InMemoryTargetAreaStore(
-        [
-            {
-                "region_id": region_id,
-                "kecamatan_id": kecamatan_id,
-                "kecamatan_name": "Test Kecamatan",
-                "boundary_geojson": (
-                    _rectangle()
-                    if boundary is None
-                    else boundary
-                ),
-            }
-        ]
-    )
-
-
-def test_drawn_polygon_is_preserved_and_persisted() -> None:
-    store = InMemoryTargetAreaStore()
-    polygon = _rectangle()
-    target_area_id = uuid4()
-
-    result = resolve_target_area(
-        REGION_ID,
-        "drawn_polygon",
-        polygon,
-        store=store,
-        target_area_id=target_area_id,
-    )
-
-    assert isinstance(
-        result,
-        TargetArea,
-    )
-
-    assert result.target_area_id == str(
-        target_area_id
-    )
-    assert result.region_id == REGION_ID
-    assert (
-        result.selection_method
-        == "drawn_polygon"
-    )
-    assert result.boundary == polygon
-    assert result.kecamatan_id is None
-
-    assert len(store.target_areas) == 1
-
-    persisted = store.target_areas[0]
-
-    assert (
-        persisted["boundary_geojson"]
-        == polygon
-    )
-    assert persisted["kecamatan_id"] is None
-
-
-def test_kecamatan_uses_exact_gadm_boundary() -> None:
-    boundary = _rectangle(
-        minimum_lon=124.0,
-        minimum_lat=-9.0,
-        width=0.5,
-        height=0.75,
-    )
-    store = _store_with_boundary(
-        boundary=boundary
-    )
-
-    result = resolve_target_area(
-        REGION_ID,
-        "kecamatan",
-        KECAMATAN_ID,
-        store=store,
-    )
-
-    assert result.boundary == boundary
-    assert result.kecamatan_id == KECAMATAN_ID
-    assert (
-        result.selection_method
-        == "kecamatan"
-    )
-
-    persisted = store.target_areas[0]
-
-    assert (
-        persisted["boundary_geojson"]
-        == boundary
-    )
-    assert (
-        persisted["kecamatan_id"]
-        == KECAMATAN_ID
-    )
-
-
-def test_invalid_selection_method_is_rejected() -> None:
-    store = InMemoryTargetAreaStore()
-
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        resolve_target_area(
-            REGION_ID,
-            "district",
-            _rectangle(),
-            store=store,
-        )
-
-    assert (
-        error.value.code
-        == "invalid_selection_method"
-    )
-    assert not store.target_areas
-
-
-def test_unknown_kecamatan_is_rejected() -> None:
-    store = _store_with_boundary()
-
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        resolve_target_area(
-            REGION_ID,
-            "kecamatan",
-            "unknown-kecamatan",
-            store=store,
-        )
-
-    assert (
-        error.value.code
-        == "kecamatan_not_found"
-    )
-    assert not store.target_areas
-
-
-def test_kecamatan_payload_must_be_string() -> None:
-    store = _store_with_boundary()
-
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        resolve_target_area(
-            REGION_ID,
-            "kecamatan",
-            {
-                "kecamatan_id": KECAMATAN_ID
+def _make_admin_boundaries(n: int = 3) -> list[dict]:
+    """Create n fake admin boundary rows. Each is a 1-degree square polygon."""
+    rows = []
+    for i in range(n):
+        lon_base = 119.0 + i * 2.0
+        rows.append({
+            "kecamatan_id": f"IDN.15.{i + 1}_1",
+            "kecamatan_name": f"Kecamatan-{i + 1}",
+            "region_id": "ntt",
+            "boundary_geojson": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [lon_base,       -9.0],
+                    [lon_base + 1.0, -9.0],
+                    [lon_base + 1.0, -10.0],
+                    [lon_base,       -10.0],
+                    [lon_base,       -9.0],
+                ]],
             },
-            store=store,
-        )
+        })
+    return rows
 
-    assert (
-        error.value.code
-        == "invalid_kecamatan_payload"
+
+# ---------------------------------------------------------------------------
+# Property 25 — Target Area Resolution Correctness
+# Validates: Requirements 10.7, 10.8, 4.1, 5.1
+# ---------------------------------------------------------------------------
+
+@given(kecamatan_index=st.integers(min_value=0, max_value=2))
+@settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
+def test_property_25_kecamatan_boundary_equals_gadm(kecamatan_index):
+    """kecamatan mode: boundary equals GADM geometry and kecamatan_id is set.
+
+    # Feature: geosignal-ai, Property 25: Target Area Resolution Correctness
+    **Validates: Requirements 10.7, 10.8, 4.1, 5.1**
+    """
+    admin_boundaries = _make_admin_boundaries(3)
+    row = admin_boundaries[kecamatan_index]
+    kecamatan_id = row["kecamatan_id"]
+    expected_boundary = row["boundary_geojson"]
+
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="kecamatan",
+        payload=kecamatan_id,
+        admin_boundaries=admin_boundaries,
     )
 
-
-def test_drawn_polygon_payload_must_be_mapping() -> None:
-    store = InMemoryTargetAreaStore()
-
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        resolve_target_area(
-            REGION_ID,
-            "drawn_polygon",
-            "not-geojson",
-            store=store,
-        )
-
-    assert (
-        error.value.code
-        == "invalid_drawn_polygon_payload"
-    )
+    assert isinstance(ta, TargetArea)
+    assert ta.selection_method == "kecamatan"
+    assert ta.kecamatan_id == kecamatan_id
+    assert ta.boundary == expected_boundary
+    assert ta.region_id == "ntt"
+    assert ta.target_area_id  # non-empty string
 
 
-def test_self_intersecting_polygon_is_not_repaired() -> None:
-    store = InMemoryTargetAreaStore()
+@given(
+    lon_min=st.floats(min_value=95.0, max_value=139.0,
+                      allow_nan=False, allow_infinity=False),
+    lat_min=st.floats(min_value=-11.0, max_value=-1.5,
+                      allow_nan=False, allow_infinity=False),
+)
+@settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
+def test_property_25_drawn_polygon_boundary_equals_input(lon_min, lat_min):
+    """drawn_polygon mode: boundary equals input polygon and kecamatan_id is None.
 
-    bow_tie_polygon = {
+    # Feature: geosignal-ai, Property 25: Target Area Resolution Correctness
+    **Validates: Requirements 10.7, 10.8, 4.1, 5.1**
+    """
+    polygon = {
         "type": "Polygon",
-        "coordinates": [
-            [
-                [123.0, -10.0],
-                [124.0, -9.0],
-                [123.0, -9.0],
-                [124.0, -10.0],
-                [123.0, -10.0],
-            ]
-        ],
+        "coordinates": [[
+            [lon_min,       lat_min],
+            [lon_min + 0.5, lat_min],
+            [lon_min + 0.5, lat_min - 0.5],
+            [lon_min,       lat_min - 0.5],
+            [lon_min,       lat_min],
+        ]],
     }
 
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        resolve_target_area(
-            REGION_ID,
-            "drawn_polygon",
-            bow_tie_polygon,
-            store=store,
-        )
-
-    assert (
-        error.value.code
-        == "self_intersecting_polygon"
-    )
-
-    assert (
-        "reason"
-        in error.value.details
-    )
-
-    # Invalid user geometry must never be auto-repaired or persisted.
-    assert not store.target_areas
-
-
-def test_drawn_multipolygon_is_rejected() -> None:
-    store = InMemoryTargetAreaStore()
-
-    multi_polygon = {
-        "type": "MultiPolygon",
-        "coordinates": [
-            _rectangle()["coordinates"],
-        ],
-    }
-
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        resolve_target_area(
-            REGION_ID,
-            "drawn_polygon",
-            multi_polygon,
-            store=store,
-        )
-
-    assert (
-        error.value.code
-        == "invalid_geometry_type"
-    )
-
-
-def test_grid_cells_are_filtered_to_boundary() -> None:
-    polygon = _rectangle()
-
-    target_area = TargetArea(
-        target_area_id=str(uuid4()),
-        region_id=REGION_ID,
+    ta = resolve_target_area(
+        region_id="ntt",
         selection_method="drawn_polygon",
-        boundary=polygon,
-        kecamatan_id=None,
+        payload=polygon,
     )
 
-    grid_cells = np.asarray(
-        [
-            [-9.5, 123.5],   # inside
-            [-10.0, 123.0], # boundary
-            [-8.0, 125.0],  # outside
-        ],
-        dtype=np.float64,
+    assert isinstance(ta, TargetArea)
+    assert ta.selection_method == "drawn_polygon"
+    assert ta.kecamatan_id is None
+    assert ta.boundary == polygon
+    assert ta.region_id == "ntt"
+    assert ta.target_area_id
+
+
+@given(kecamatan_index=st.integers(min_value=0, max_value=2))
+@settings(max_examples=30, suppress_health_check=[HealthCheck.too_slow])
+def test_property_25_grid_cells_inside_boundary_pass_filter(kecamatan_index):
+    """Cells that fall inside the resolved boundary are retained by filter;
+    cells outside are excluded.
+
+    # Feature: geosignal-ai, Property 25: Target Area Resolution Correctness
+    **Validates: Requirements 4.1, 5.1**
+    """
+    admin_boundaries = _make_admin_boundaries(3)
+    row = admin_boundaries[kecamatan_index]
+    kecamatan_id = row["kecamatan_id"]
+    lon_base = 119.0 + kecamatan_index * 2.0
+
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="kecamatan",
+        payload=kecamatan_id,
+        admin_boundaries=admin_boundaries,
     )
 
-    filtered = (
-        filter_grid_cells_to_target_area(
-            grid_cells,
-            target_area,
-        )
-    )
-
-    assert filtered.shape == (2, 2)
-
-    boundary_shape = shape(
-        target_area.boundary
-    )
-
-    assert all(
-        boundary_shape.covers(
-            Point(
-                float(longitude),
-                float(latitude),
-            )
-        )
-        for latitude, longitude
-        in filtered
-    )
-
-    assert all_grid_cells_within_target_area(
-        filtered,
-        target_area,
-    )
-
-    assert not all_grid_cells_within_target_area(
-        grid_cells,
-        target_area,
-    )
-
-
-def test_invalid_grid_cell_shape_is_rejected() -> None:
-    target_area = TargetArea(
-        target_area_id=str(uuid4()),
-        region_id=REGION_ID,
-        selection_method="drawn_polygon",
-        boundary=_rectangle(),
-        kecamatan_id=None,
-    )
-
-    with pytest.raises(
-        TargetAreaValidationError,
-    ) as error:
-        filter_grid_cells_to_target_area(
-            [1.0, 2.0, 3.0],
-            target_area,
-        )
-
-    assert (
-        error.value.code
-        == "invalid_grid_cells_shape"
-    )
-
-
-def test_duplicate_target_area_id_is_rejected() -> None:
-    store = InMemoryTargetAreaStore()
-    target_area_id = uuid4()
-
-    resolve_target_area(
-        REGION_ID,
-        "drawn_polygon",
-        _rectangle(),
-        store=store,
-        target_area_id=target_area_id,
-    )
-
-    with pytest.raises(
-        ValueError,
-        match="already exists",
-    ):
-        resolve_target_area(
-            REGION_ID,
-            "drawn_polygon",
-            _rectangle(
-                minimum_lon=125.0
-            ),
-            store=store,
-            target_area_id=target_area_id,
-        )
-
-
-class FakeSupabaseQuery:
-    def __init__(
-        self,
-        client: "FakeSupabaseClient",
-        table_name: str,
-    ) -> None:
-        self.client = client
-        self.table_name = table_name
-        self.operation: str | None = None
-        self.filters: dict[str, object] = {}
-        self.payload: dict | None = None
-        self.limit_count: int | None = None
-
-    def select(
-        self,
-        columns: str,
-    ) -> "FakeSupabaseQuery":
-        self.operation = "select"
-        return self
-
-    def eq(
-        self,
-        field: str,
-        value: object,
-    ) -> "FakeSupabaseQuery":
-        self.filters[field] = value
-        return self
-
-    def limit(
-        self,
-        count: int,
-    ) -> "FakeSupabaseQuery":
-        self.limit_count = count
-        return self
-
-    def insert(
-        self,
-        payload: dict,
-    ) -> "FakeSupabaseQuery":
-        self.operation = "insert"
-        self.payload = payload
-        return self
-
-    def execute(self) -> dict:
-        if (
-            self.table_name
-            == "admin_boundaries"
-        ):
-            rows = [
-                row
-                for row in self.client.admin_boundaries
-                if all(
-                    row.get(field) == value
-                    for field, value
-                    in self.filters.items()
-                )
-            ]
-
-            if self.limit_count is not None:
-                rows = rows[:self.limit_count]
-
-            return {
-                "data": rows,
-            }
-
-        if (
-            self.table_name
-            == "target_areas"
-            and self.operation == "insert"
-        ):
-            assert self.payload is not None
-
-            self.client.target_areas.append(
-                self.payload
-            )
-
-            return {
-                "data": [self.payload],
-            }
-
-        return {
-            "data": [],
-        }
-
-
-class FakeSupabaseClient:
-    def __init__(self) -> None:
-        self.admin_boundaries = [
-            {
-                "region_id": REGION_ID,
-                "kecamatan_id": KECAMATAN_ID,
-                "boundary_geojson": (
-                    _rectangle()
-                ),
-            }
-        ]
-        self.target_areas: list[dict] = []
-        self.requested_tables: list[str] = []
-
-    def table(
-        self,
-        table_name: str,
-    ) -> FakeSupabaseQuery:
-        self.requested_tables.append(
-            table_name
-        )
-
-        return FakeSupabaseQuery(
-            self,
-            table_name,
-        )
-
-
-def test_supabase_store_uses_required_tables() -> None:
-    client = FakeSupabaseClient()
-    store = SupabaseTargetAreaStore(
-        client
-    )
-
-    result = resolve_target_area(
-        REGION_ID,
-        "kecamatan",
-        KECAMATAN_ID,
-        store=store,
-    )
-
-    assert result.kecamatan_id == KECAMATAN_ID
-
-    assert client.requested_tables == [
-        "admin_boundaries",
-        "target_areas",
-    ]
-
-    assert len(client.target_areas) == 1
-
-
-@st.composite
-def _rectangle_cases(draw):
-    minimum_lon = draw(
-        st.integers(
-            min_value=110,
-            max_value=130,
-        )
-    )
-    minimum_lat = draw(
-        st.integers(
-            min_value=-11,
-            max_value=-3,
-        )
-    )
-    width = draw(
-        st.integers(
-            min_value=1,
-            max_value=4,
-        )
-    )
-    height = draw(
-        st.integers(
-            min_value=1,
-            max_value=4,
-        )
-    )
-    identifier_number = draw(
-        st.integers(
-            min_value=1,
-            max_value=999_999,
-        )
-    )
-
-    return (
-        float(minimum_lon),
-        float(minimum_lat),
-        float(width),
-        float(height),
-        f"kec-{identifier_number}",
-    )
-
-
-# Feature: geosignal-ai, Property 25:
-# Target Area Resolution Correctness
-@settings(max_examples=50, deadline=None)
-@given(case=_rectangle_cases())
-def test_property_25_kecamatan_resolution_correctness(
-    case,
-) -> None:
-    (
-        minimum_lon,
-        minimum_lat,
-        width,
-        height,
-        kecamatan_id,
-    ) = case
-
-    boundary = _rectangle(
-        minimum_lon=minimum_lon,
-        minimum_lat=minimum_lat,
-        width=width,
-        height=height,
-    )
-
-    store = _store_with_boundary(
-        kecamatan_id=kecamatan_id,
-        boundary=boundary,
-    )
-
-    target_area = resolve_target_area(
-        REGION_ID,
-        "kecamatan",
-        kecamatan_id,
-        store=store,
-    )
-
-    assert target_area.boundary == boundary
-    assert (
-        target_area.kecamatan_id
-        == kecamatan_id
-    )
-
-    grid_cells = np.asarray(
-        [
-            [
-                minimum_lat + height / 2.0,
-                minimum_lon + width / 2.0,
-            ],
-            [
-                minimum_lat,
-                minimum_lon,
-            ],
-            [
-                minimum_lat + height + 1.0,
-                minimum_lon + width + 1.0,
-            ],
-        ],
-        dtype=np.float64,
-    )
+    # A cell clearly inside: centroid of the polygon
+    inside_cell = (-9.5, lon_base + 0.5)
+    # A cell clearly outside: far from all polygons
+    outside_cell = (10.0, 10.0)
 
     filtered = filter_grid_cells_to_target_area(
-        grid_cells,
-        target_area,
+        [inside_cell, outside_cell], ta
     )
 
-    assert len(filtered) == 2
+    assert inside_cell in filtered, "Cell inside the boundary must be retained"
+    assert outside_cell not in filtered, "Cell outside the boundary must be excluded"
 
-    assert all_grid_cells_within_target_area(
-        filtered,
-        target_area,
+
+# ---------------------------------------------------------------------------
+# Unit tests — kecamatan mode
+# ---------------------------------------------------------------------------
+
+def test_unit_kecamatan_returns_gadm_boundary():
+    """kecamatan mode returns the GADM boundary verbatim."""
+    boundaries = _make_admin_boundaries(1)
+    kid = boundaries[0]["kecamatan_id"]
+    expected = boundaries[0]["boundary_geojson"]
+
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="kecamatan",
+        payload=kid,
+        admin_boundaries=boundaries,
     )
 
+    assert ta.boundary == expected
+    assert ta.kecamatan_id == kid
 
-# Feature: geosignal-ai, Property 25:
-# Target Area Resolution Correctness
-@settings(max_examples=50, deadline=None)
-@given(case=_rectangle_cases())
-def test_property_25_drawn_polygon_resolution_correctness(
-    case,
-) -> None:
-    (
-        minimum_lon,
-        minimum_lat,
-        width,
-        height,
-        _,
-    ) = case
 
-    polygon = _rectangle(
-        minimum_lon=minimum_lon,
-        minimum_lat=minimum_lat,
-        width=width,
-        height=height,
+def test_unit_kecamatan_id_is_populated():
+    """kecamatan_id is not None in kecamatan mode."""
+    boundaries = _make_admin_boundaries(2)
+    kid = boundaries[1]["kecamatan_id"]
+
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="kecamatan",
+        payload=kid,
+        admin_boundaries=boundaries,
     )
 
-    store = InMemoryTargetAreaStore()
+    assert ta.kecamatan_id is not None
+    assert ta.kecamatan_id == kid
 
-    target_area = resolve_target_area(
-        REGION_ID,
-        "drawn_polygon",
-        polygon,
-        store=store,
+
+def test_unit_kecamatan_unknown_id_raises_key_error():
+    """KeyError raised when kecamatan_id is not found."""
+    boundaries = _make_admin_boundaries(2)
+
+    with pytest.raises(KeyError):
+        resolve_target_area(
+            region_id="ntt",
+            selection_method="kecamatan",
+            payload="DOES.NOT.EXIST",
+            admin_boundaries=boundaries,
+        )
+
+
+def test_unit_kecamatan_none_boundaries_raises_key_error():
+    """KeyError raised when admin_boundaries is None."""
+    with pytest.raises(KeyError):
+        resolve_target_area(
+            region_id="ntt",
+            selection_method="kecamatan",
+            payload="IDN.15.1_1",
+            admin_boundaries=None,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Unit tests — drawn_polygon mode
+# ---------------------------------------------------------------------------
+
+def test_unit_drawn_polygon_returns_input_boundary():
+    """drawn_polygon mode: boundary equals the input GeoJSON."""
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="drawn_polygon",
+        payload=_VALID_POLYGON,
     )
 
-    assert target_area.boundary == polygon
-    assert target_area.kecamatan_id is None
+    assert ta.boundary == _VALID_POLYGON
+    assert ta.kecamatan_id is None
+    assert ta.selection_method == "drawn_polygon"
 
-    grid_cells = np.asarray(
-        [
-            [
-                minimum_lat + height / 2.0,
-                minimum_lon + width / 2.0,
-            ],
-            [
-                minimum_lat,
-                minimum_lon,
-            ],
-            [
-                minimum_lat - 1.0,
-                minimum_lon - 1.0,
-            ],
-        ],
-        dtype=np.float64,
+
+def test_unit_drawn_polygon_kecamatan_id_is_none():
+    """kecamatan_id is always None in drawn_polygon mode."""
+    ta = resolve_target_area(
+        region_id="ntb",
+        selection_method="drawn_polygon",
+        payload=_VALID_POLYGON,
     )
+    assert ta.kecamatan_id is None
+
+
+def test_unit_drawn_polygon_target_area_id_is_nonempty():
+    """target_area_id is a non-empty string (UUID)."""
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="drawn_polygon",
+        payload=_VALID_POLYGON,
+    )
+    assert ta.target_area_id
+    # Must be parseable as UUID
+    parsed = uuid.UUID(ta.target_area_id)
+    assert str(parsed) == ta.target_area_id
+
+
+def test_unit_drawn_polygon_self_intersecting_raises_value_error():
+    """Self-intersecting drawn polygon is rejected with ValueError.
+    User polygons are NOT auto-repaired (unlike pipeline source-data QC).
+    """
+    with pytest.raises(ValueError, match="self-intersecting|invalid"):
+        resolve_target_area(
+            region_id="ntt",
+            selection_method="drawn_polygon",
+            payload=_SELF_INTERSECTING_POLYGON,
+        )
+
+
+def test_unit_drawn_polygon_non_dict_payload_raises_value_error():
+    """Non-dict payload in drawn_polygon mode raises ValueError."""
+    with pytest.raises(ValueError):
+        resolve_target_area(
+            region_id="ntt",
+            selection_method="drawn_polygon",
+            payload="not a geojson dict",  # type: ignore[arg-type]
+        )
+
+
+def test_unit_drawn_polygon_wrong_geometry_type_raises_value_error():
+    """Non-Polygon geometry type raises ValueError."""
+    point_geom = {"type": "Point", "coordinates": [120.0, -9.0]}
+    with pytest.raises(ValueError):
+        resolve_target_area(
+            region_id="ntt",
+            selection_method="drawn_polygon",
+            payload=point_geom,
+        )
+
+
+def test_unit_unknown_selection_method_raises_value_error():
+    """Unknown selection_method raises ValueError."""
+    with pytest.raises(ValueError):
+        resolve_target_area(
+            region_id="ntt",
+            selection_method="invalid_method",  # type: ignore[arg-type]
+            payload=_VALID_POLYGON,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Unit tests — filter_grid_cells_to_target_area
+# ---------------------------------------------------------------------------
+
+def test_unit_filter_cells_inside_polygon():
+    """Cells inside the polygon pass the filter."""
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="drawn_polygon",
+        payload=_VALID_POLYGON,
+    )
+    # _VALID_POLYGON spans lon 120.0–120.5, lat -9.0 to -9.5
+    cells_inside = [(-9.25, 120.25), (-9.1, 120.1)]
+    cells_outside = [(0.0, 0.0), (-9.25, 119.0)]
 
     filtered = filter_grid_cells_to_target_area(
-        grid_cells,
-        target_area,
+        cells_inside + cells_outside, ta
     )
 
-    boundary_shape = shape(
-        target_area.boundary
-    )
+    for c in cells_inside:
+        assert c in filtered, f"Cell {c} should be inside the polygon"
+    for c in cells_outside:
+        assert c not in filtered, f"Cell {c} should be outside the polygon"
 
-    assert len(filtered) == 2
 
-    assert all(
-        boundary_shape.covers(
-            Point(
-                float(longitude),
-                float(latitude),
-            )
-        )
-        for latitude, longitude
-        in filtered
+def test_unit_filter_cells_empty_input():
+    """Empty grid cell list returns empty list."""
+    ta = resolve_target_area(
+        region_id="ntt",
+        selection_method="drawn_polygon",
+        payload=_VALID_POLYGON,
     )
+    assert filter_grid_cells_to_target_area([], ta) == []

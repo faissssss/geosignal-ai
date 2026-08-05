@@ -67,3 +67,15 @@ Thumbs.db
 # Docker / logs
 # ==============================================================================
 *.log
+
+frontend/tsconfig.tsbuildinfo
+
+# ==============================================================================
+# Playwright E2E artifacts (Task 27)
+# Never commit browser binaries, test results, or reports.
+# ==============================================================================
+playwright-report/
+test-results/
+frontend/playwright-report/
+frontend/test-results/
+*.zip

@@ -22,6 +22,8 @@ export interface GridCell {
   shap_top3: ShapEntry[]
   model_version: string
   scoring_run_id: string
+  /** ISO 8601 timestamp from the scoring run. Undefined when not yet available. */
+  scoring_run_timestamp?: string
 }
 
 export interface BTSCandidate {
@@ -37,6 +39,8 @@ export interface BTSCandidate {
   shap_values: Record<string, number>
   model_version: string
   scoring_run_id: string
+  /** ISO 8601 timestamp from the scoring run. Undefined when not yet available. */
+  scoring_run_timestamp?: string
   excluded_by_canopy: boolean
 }
 
