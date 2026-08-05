@@ -1,80 +1,65 @@
-"""GeoSignal AI — Candidate placement constraints (Task 30).
+"""Environmental constraints for BTS candidate selection.
 
-Provides:
-    HIGH_CANOPY_LAND_COVER_CLASSES         Canonical ESA WorldCover class set.
-    CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M    Canonical height threshold.
-    is_high_canopy()                       Deforestation exclusion predicate.
-
-This is the SINGLE canonical definition of the deforestation constraint.
-Import only from here — do NOT redefine these constants or this function
-anywhere else in the codebase.
-
-Requirements: 4.3, 9.2
-
-Deforestation constraint
-------------------------
-A grid cell or candidate site is classified as high-canopy (excluded from
-BTS placement recommendations) when BOTH conditions hold:
-
-    land_cover_class in HIGH_CANOPY_LAND_COVER_CLASSES
-    canopy_height_m  >= CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M
-
-Neither condition alone is sufficient.
-
-When rank_bts_candidates is implemented (Task 11–12), it must call
-is_high_canopy() with default exclude_high_canopy=True and set
-excluded_by_canopy=True on any candidate that is filtered out.
+This module contains the canonical high-canopy exclusion rule used by the
+Recommendation Engine before BTS candidates are ranked.
 """
+
 from __future__ import annotations
 
-# ---------------------------------------------------------------------------
-# Canonical constants
-# ---------------------------------------------------------------------------
+from collections.abc import Set
 
-#: ESA WorldCover 2021 land-cover class codes indicating forested or shrubland
-#: terrain that must be excluded from BTS placement recommendations.
-#: Class 10 = Tree cover; Class 20 = Shrubland.
+
+# ESA WorldCover classes treated as woody/tree-cover candidates.
+#
+# 10 = Tree cover
+# 20 = Shrubland
+#
+# A class in this set is not excluded automatically. The canopy-height
+# threshold must also be met.
 HIGH_CANOPY_LAND_COVER_CLASSES: frozenset[int] = frozenset({10, 20})
 
-#: Minimum canopy height in metres for the joint exclusion condition.
-#: A site must have BOTH a matching land-cover class AND canopy height
-#: at or above this threshold to be excluded.
+
+# Default canopy-height threshold above which a candidate may require
+# meaningful vegetation clearing.
 CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M: float = 15.0
 
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
+def is_high_canopy(
+    land_cover_class: int,
+    canopy_height_m: float,
+    *,
+    high_canopy_classes: Set[int] = HIGH_CANOPY_LAND_COVER_CLASSES,
+    threshold_m: float = CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M,
+) -> bool:
+    """Return whether a BTS candidate must be excluded for high canopy.
 
-def is_high_canopy(land_cover_class: int, canopy_height_m: float) -> bool:
-    """Return True when a site meets the joint deforestation exclusion condition.
+    A candidate is classified as high-canopy only when both conditions hold:
 
-    A site is classified high-canopy (excluded from BTS placement) if and
-    only if BOTH of the following hold:
+    1. Its ESA WorldCover class is included in ``high_canopy_classes``.
+    2. Its canopy height is greater than or equal to ``threshold_m``.
 
-        land_cover_class in HIGH_CANOPY_LAND_COVER_CLASSES   ({10, 20})
-        canopy_height_m  >= CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M  (15.0 m)
+    Parameters
+    ----------
+    land_cover_class:
+        ESA WorldCover integer class code.
 
-    Examples:
-        >>> is_high_canopy(10, 15.0)   # Tree cover, exactly at threshold → True
-        True
-        >>> is_high_canopy(10, 14.9)   # Tree cover, below threshold → False
-        False
-        >>> is_high_canopy(30, 20.0)   # Cropland, above threshold → False
-        False
-        >>> is_high_canopy(20, 20.0)   # Shrubland, above threshold → True
-        True
+    canopy_height_m:
+        Canopy height in metres.
 
-    Args:
-        land_cover_class: ESA WorldCover class code for the cell.
-        canopy_height_m:  Canopy height in metres for the cell.
+    high_canopy_classes:
+        Configurable set of land-cover classes considered for exclusion.
+        Defaults to tree cover and shrubland: ``{10, 20}``.
 
-    Returns:
-        bool — True if the site should be excluded from recommendations.
+    threshold_m:
+        Configurable canopy-height threshold in metres. Defaults to 15 metres.
 
-    Requirements: 4.3, 9.2
+    Returns
+    -------
+    bool
+        ``True`` only when both the land-cover and canopy-height conditions
+        are satisfied.
     """
     return (
-        land_cover_class in HIGH_CANOPY_LAND_COVER_CLASSES
-        and canopy_height_m >= CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M
+        land_cover_class in high_canopy_classes
+        and canopy_height_m >= threshold_m
     )

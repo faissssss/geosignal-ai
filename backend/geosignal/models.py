@@ -181,7 +181,7 @@ class WhatIfGrid:
     spatial_index: BallTree
 
 
-@dataclass
+@dataclass(frozen=True)
 class EthicalRiskEntry:
     """One entry in the Ethical Risk Register."""
 

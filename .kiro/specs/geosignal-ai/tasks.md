@@ -244,28 +244,28 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Write a unit test asserting that after a batch scoring run, every `grid_cells` row for the target region has a non-null `shap_top3` field with exactly 3 entries
     - _Requirements: 3.4, 8.1_
 
-- [ ] 11. Recommendation_Engine — deforestation constraint and canopy exclusion
-  - [ ] 11.1 Implement `is_high_canopy` in `backend/geosignal/constraints.py`
+- [x] 11. Recommendation_Engine — deforestation constraint and canopy exclusion
+  - [x] 11.1 Implement `is_high_canopy` in `backend/geosignal/constraints.py`
     - Exclude a candidate if BOTH `land_cover_class in {10, 20}` AND `canopy_height_m >= 15.0`
     - Constants `HIGH_CANOPY_LAND_COVER_CLASSES` and `CANOPY_HEIGHT_EXCLUSION_THRESHOLD_M` defined here; configurable per region
     - Land-cover alone does NOT exclude; canopy height alone does NOT exclude; both signals required together
     - _Requirements: 4.3, 9.2_
-  - [ ] 11.2 Write unit tests for canopy exclusion boundary cases
+  - [x] 11.2 Write unit tests for canopy exclusion boundary cases
     - Forest class + 14.9 m canopy → NOT excluded
     - Forest class + 15.0 m canopy → excluded
     - Shrubland class + 20 m canopy → excluded (both criteria met)
     - Non-forest class + 20 m canopy → NOT excluded (land_cover_class not in set)
     - _Requirements: 4.3, 9.2_
 
-- [ ] 12. Recommendation_Engine — DEM line-of-sight precomputation and BallTree candidate search
-  - [ ] 12.1 Implement precomputed DEM-based line-of-sight (LOS) grid computation in `backend/geosignal/los.py`
+- [x] 12. Recommendation_Engine — DEM line-of-sight precomputation and BallTree candidate search
+  - [x] 12.1 Implement precomputed DEM-based line-of-sight (LOS) grid computation in `backend/geosignal/los.py`
     - For every grid cell within candidate range of a potential BTS site, compute a LOS validation result (direct propagation path exists / blocked) using the harmonised SRTM DEM and land-cover/canopy-height layers from Tasks 4 and 7
     - Run this as an offline batch job, before demo time — this is the artifact that `los_validated` on every `BTSCandidate` depends on; a candidate is only ever emitted once its LOS result exists (Task 12.3)
     - Persist results to the `los_results` Supabase table (see Data Models in design.md) keyed by `(region_id, candidate_lat, candidate_lon, cell_lat, cell_lon)`, so `rank_bts_candidates` (12.3) can look up LOS results without live recomputation
     - _Requirements: 4.4_
-  - [ ] 12.2 Write unit test confirming `rank_bts_candidates` never emits a `BTSCandidate` for a coordinate lacking a precomputed LOS result from 12.1
+  - [x] 12.2 Write unit test confirming `rank_bts_candidates` never emits a `BTSCandidate` for a coordinate lacking a precomputed LOS result from 12.1
     - _Requirements: 4.4, 4.7_
-  - [ ] 12.3 Implement `rank_bts_candidates` in `backend/geosignal/candidates.py`
+  - [x] 12.3 Implement `rank_bts_candidates` in `backend/geosignal/candidates.py`
     - Accept `grid_cells` (N, 2), `coverage_scores` (N,), `land_cover_classes` (N,), `canopy_heights_m` (N,), `n_candidates`, `exclude_high_canopy`
     - Filter candidates using `is_high_canopy` (both arrays, not land_cover alone)
     - Use scikit-learn `BallTree` for spatial indexing and ranking by `expected_improvement` (mean delta Coverage Score in BTS signal radius)
@@ -273,7 +273,7 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Return `InsufficientCandidatesResult` when fewer than 2 candidates survive all filters; never fabricate candidates
     - Attach `confidence_tag` via `tag_confidence`; attach `shap_values` via `compute_shap`; attach `model_version` and `scoring_run_id`
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 9.2_
-  - [ ] 12.4 Write property test for BTS candidate list invariants (Property 9)
+  - [x] 12.4 Write property test for BTS candidate list invariants (Property 9)
     - **Property 9: BTS Candidate List Invariants**
     - **Validates: Requirements 4.1, 4.2, 4.3, 4.4, 4.7, 9.2**
     - Generate random grid arrays with varied land-cover + canopy-height combinations including all-excluded cases
@@ -283,84 +283,84 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert no element satisfies `is_high_canopy` (joint check)
     - Assert `InsufficientCandidatesResult` returned (not a list) when fewer than 2 survive
     - `# Feature: geosignal-ai, Property 9: BTS Candidate List Invariants`
-  - [ ] 12.5 Write unit tests for exactly 0 and exactly 1 surviving candidates
+  - [x] 12.5 Write unit tests for exactly 0 and exactly 1 surviving candidates
     - Construct a grid where all candidates are excluded by canopy/LOS filters; assert `InsufficientCandidatesResult(surviving_count=0, ...)` returned
     - Construct a grid where exactly 1 candidate survives; assert `InsufficientCandidatesResult(surviving_count=1, ...)` returned, not a one-element list
     - _Requirements: 4.7_
 
-- [ ] 13. Recommendation_Engine — spatial cross-validation and per-kecamatan reporting
-  - [ ] 13.1 Implement `spatial_cv` in `backend/geosignal/validation.py`
+- [x] 13. Recommendation_Engine — spatial cross-validation and per-kecamatan reporting
+  - [x] 13.1 Implement `spatial_cv` in `backend/geosignal/validation.py`
     - Hold out entire kecamatan units as test blocks; no random point split
     - Each fold: train-set kecamatan IDs and test-set kecamatan IDs are disjoint
     - Return `CVResult` with per-kecamatan accuracy entries for ALL kecamatan IDs in the dataset
     - _Requirements: 2.4, 9.4, 13.5_
-  - [ ] 13.2 Write property test for spatial CV kecamatan disjointness (Property 7)
+  - [x] 13.2 Write property test for spatial CV kecamatan disjointness (Property 7)
     - **Property 7: Spatial CV Kecamatan Disjointness**
     - **Validates: Requirements 2.4, 13.5**
     - Generate random kecamatan ID lists; run `spatial_cv`
     - Assert train-set ∩ test-set = {} for every fold
     - `# Feature: geosignal-ai, Property 7: Spatial CV Kecamatan Disjointness`
-  - [ ] 13.3 Write property test for per-kecamatan accuracy reporting (Property 18)
+  - [x] 13.3 Write property test for per-kecamatan accuracy reporting (Property 18)
     - **Property 18: Per-Kecamatan Accuracy Reporting**
     - **Validates: Requirements 9.4**
     - Generate random kecamatan sets of varying sizes; run `spatial_cv`
     - Assert `CVResult` contains one accuracy entry per kecamatan in the input dataset; no aggregate-only result
     - `# Feature: geosignal-ai, Property 18: Per-Kecamatan Accuracy Reporting`
 
-- [ ] 14. Recommendation_Engine — model versioning and scoring run audit log
-  - [ ] 14.1 Implement model version assignment in `backend/geosignal/versioning.py`
+- [x] 14. Recommendation_Engine — model versioning and scoring run audit log
+  - [x] 14.1 Implement model version assignment in `backend/geosignal/versioning.py`
     - Assign a unique semantic `version_id` to each model artifact before it produces any predictions
     - Store artifacts in `model_artifacts` table; never overwrite or delete prior artifacts
     - `artifact_path` points to Supabase Storage; `training_run_id` links to the training run
     - _Requirements: 11.1, 11.5_
-  - [ ] 14.2 Implement scoring run log writer — insert to `scoring_runs` table after every batch run
+  - [x] 14.2 Implement scoring run log writer — insert to `scoring_runs` table after every batch run
     - Log: `run_id`, `model_version`, `tier`, `region_kecamatans`, `resolution_m`, `input_checksums` (SHA-256 per source; also stores AHP regional baseline for SHAP reproducibility), `candidate_count`, `timestamp`, `retained_for_months=12`
     - _Requirements: 8.5, 11.2, 11.4_
-  - [ ] 14.2a Implement 12-month log retention enforcement
+  - [x] 14.2a Implement 12-month log retention enforcement
     - Add a Supabase Row Level Security policy (or a Postgres trigger) on the `scoring_runs` table that prevents `DELETE` on any row where `timestamp > NOW() - INTERVAL '12 months'`
     - Document the retention policy in `infra/migrations/` alongside the schema migration
     - Write a unit test asserting that an attempt to delete a `scoring_runs` row younger than 12 months raises a permission error; an attempt to delete a row older than 12 months succeeds
     - _Requirements: 11.4_
-  - [ ] 14.3 Write property test for model version assignment before use (Property 21)
+  - [x] 14.3 Write property test for model version assignment before use (Property 21)
     - **Property 21: Model Version Assignment Before Use**
     - **Validates: Requirements 11.1**
     - Assert any scoring run has a non-empty `version_id` assigned before the first `compute_coverage_score` call
     - `# Feature: geosignal-ai, Property 21: Model Version Assignment Before Use`
-  - [ ] 14.4 Write property test for scoring run log completeness (Property 16)
+  - [x] 14.4 Write property test for scoring run log completeness (Property 16)
     - **Property 16: Scoring Run Log Completeness**
     - **Validates: Requirements 8.5, 11.2**
     - Generate random scoring run parameters; assert all required fields are non-null in the persisted log entry
     - `# Feature: geosignal-ai, Property 16: Scoring Run Log Completeness`
-  - [ ] 14.5 Write property test for model artifact immutability (Property 20)
+  - [x] 14.5 Write property test for model artifact immutability (Property 20)
     - **Property 20: Model Artifact Immutability**
     - **Validates: Requirements 11.5**
     - Simulate sequential Tier 2 retraining operations; assert `model_artifacts` count increases by exactly 1 per retraining; assert all prior `version_id` entries remain present and unmodified
     - `# Feature: geosignal-ai, Property 20: Model Artifact Immutability`
 
-- [ ] 15. Checkpoint — Recommendation_Engine core tests pass
+- [x] 15. Checkpoint — Recommendation_Engine core tests pass
   - Ensure all feature engineering, scoring, SHAP, LOS, candidate ranking, CV, and audit log tests pass. Ask the user if questions arise.
 
-- [ ] 16. Ethical Risk Register
-  - [ ] 16.1 Implement `EthicalRiskRegister` in `backend/geosignal/ethics.py`
+- [x] 16. Ethical Risk Register
+  - [x] 16.1 Implement `EthicalRiskRegister` in `backend/geosignal/ethics.py`
     - Instantiate all five required `EthicalRiskEntry` objects: `digital_exclusion`, `deforestation`, `opencellid_sparsity_misread`, `low_confidence_funding_decisions`, `maup_resampling_mismatch`
     - Each entry has non-empty `risk_description`, `impact`, `mitigation`, `responsible_owner_role`
     - Write migration/seed to insert all five entries into the `ethical_risk_register` Supabase table
     - _Requirements: 9.6_
-  - [ ] 16.2 Write property test for Ethical Risk Register completeness (Property 19)
+  - [x] 16.2 Write property test for Ethical Risk Register completeness (Property 19)
     - **Property 19: Ethical Risk Register Completeness**
     - **Validates: Requirements 9.6**
     - Assert `EthicalRiskRegister` contains all five required risk IDs; each entry has all four non-empty fields
     - `# Feature: geosignal-ai, Property 19: Ethical Risk Register Completeness`
 
-- [ ] 17. Target area resolution
-  - [ ] 17.1 Implement `resolve_target_area` in `backend/geosignal/target_area.py`
+- [x] 17. Target area resolution
+  - [x] 17.1 Implement `resolve_target_area` in `backend/geosignal/target_area.py`
     - Accept `region_id`, `selection_method` (`drawn_polygon` or `kecamatan`), and `payload` (GeoJSON or `kecamatan_id`)
     - For `kecamatan` method: look up the GADM Level 2 boundary from `admin_boundaries` (Task 5.1); populate `kecamatan_id`; `TargetArea.boundary` equals that kecamatan's exact GADM geometry
     - For `drawn_polygon` method: accept polygon GeoJSON directly; `kecamatan_id` is `None`; reject self-intersecting polygons with a structured validation error (do NOT auto-repair user-drawn shapes)
     - Persist the resolved `TargetArea` to the `target_areas` table
     - Every `grid_cells` coordinate passed to subsequent calls must fall within `TargetArea.boundary`
     - _Requirements: 10.7, 10.8, 4.1, 5.1_
-  - [ ] 17.2 Write property test for target area resolution correctness (Property 25)
+  - [x] 17.2 Write property test for target area resolution correctness (Property 25)
     - **Property 25: Target Area Resolution Correctness**
     - **Validates: Requirements 10.7, 10.8, 4.1, 5.1**
     - Generate random valid `kecamatan_id` values; assert `TargetArea.boundary` equals the GADM geometry and `kecamatan_id` is set
@@ -368,56 +368,56 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert all `grid_cells` coordinates for a resolved `target_area_id` fall within `TargetArea.boundary`
     - `# Feature: geosignal-ai, Property 25: Target Area Resolution Correctness`
 
-- [ ] 18. Simulation_Engine — what-if grid precomputation
-  - [ ] 18.1 Implement the offline what-if grid precomputation batch job in `backend/geosignal/whatif_precompute.py`
+- [x] 18. Simulation_Engine — what-if grid precomputation
+  - [x] 18.1 Implement the offline what-if grid precomputation batch job in `backend/geosignal/whatif_precompute.py`
     - For each ranked `BTSCandidate` (from Task 12.3) and, separately, for a dense sample of manual-placement scenarios across each MVP/validation region, compute the expected Coverage Score delta across all grid cells within the BTS signal radius, using the precomputed LOS grid (Task 12.1)
     - Persist every result to the `whatif_grid` Supabase table keyed by `(region_id, scenario_id, grid_cell_id)`, populating `delta_coverage_score`, `pct_good_change`, `villages_newly_covered`, and `new_coverage_score`
     - This must run to completion, per region, before the Simulation_Engine (Task 19, 20) has anything to serve — Before/After and Drag-and-Drop both read exclusively from this table and never compute live
     - Run for all three regions (NTT Province MVP, NTB Province, Central Kalimantan Province) ahead of the demo
     - _Requirements: 5.1, 6.1_
-  - [ ] 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
+  - [x] 18.2 Write an integration test asserting `whatif_grid` is non-empty for all three regions before Simulation_Engine tests (Tasks 19–20) are run, and that every ranked `BTSCandidate` from Task 12.3 has a corresponding `whatif_grid` entry
     - _Requirements: 5.1, 5.4_
 
-- [ ] 19. Simulation_Engine — Before/After simulation
-  - [ ] 19.1 Implement `simulate_bts_placement` in `backend/geosignal/simulation.py`
+- [x] 19. Simulation_Engine — Before/After simulation
+  - [x] 19.1 Implement `simulate_bts_placement` in `backend/geosignal/simulation.py`
     - Look up precomputed what-if grid (populated by Task 18.1) in `whatif_grid` table by `(candidate_id, region_id)`
     - Return `UnavailableScenario` (with human-readable message) if no precomputed entry exists — never compute, interpolate, or extrapolate
     - Return `SimulationResult` with: `before_heatmap`, `after_heatmap`, `pct_good_change`, `villages_newly_covered`, `new_coverage_score`, `elapsed_ms`
     - `elapsed_ms` must be ≤ 3000 ms
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-  - [ ] 19.2 Write property test for simulation unavailability contract (Property 12)
+  - [x] 19.2 Write property test for simulation unavailability contract (Property 12)
     - **Property 12: Simulation Unavailability Contract**
     - **Validates: Requirements 5.4**
     - Generate random `(candidate_id, region_id)` pairs not present in the what-if grid
     - Assert `simulate_bts_placement` returns `UnavailableScenario` and does NOT call any DEM computation, interpolation, or extrapolation function
     - `# Feature: geosignal-ai, Property 12: Simulation Unavailability Contract`
-  - [ ] 19.3 Write property test for simulation metric completeness (Property 23)
+  - [x] 19.3 Write property test for simulation metric completeness (Property 23)
     - **Property 23: Simulation Metric Completeness**
     - **Validates: Requirements 5.3**
     - Generate random simulation inputs with valid precomputed entries
     - Assert `SimulationResult.pct_good_change`, `villages_newly_covered`, and `new_coverage_score` are all present and numerically finite (not `None`, `NaN`, or infinite)
     - `# Feature: geosignal-ai, Property 23: Simulation Metric Completeness`
 
-- [ ] 20. Simulation_Engine — Drag-and-Drop simulation
-  - [ ] 20.1 Implement `drag_drop_lookup` in `backend/geosignal/simulation.py`
+- [x] 20. Simulation_Engine — Drag-and-Drop simulation
+  - [x] 20.1 Implement `drag_drop_lookup` in `backend/geosignal/simulation.py`
     - Snap dropped coordinate to nearest `whatif_grid` cell (populated by Task 18.1) using `BallTree` index on grid centroids
     - Return `OutsideExtentError` (with region extent in payload) if coordinate is outside grid spatial extent — never extrapolate or interpolate
     - Return `DragDropResult` with: `snapped_coordinate`, `grid_resolution_m`, `coverage_score`, `confidence_tag`, `vs_top_candidate` (a `ComparisonPanel`), `elapsed_ms` ≤ 2000 ms
     - `ComparisonPanel` includes `manual_wins: bool`; set to `True` when `coverage_score > model_score`; never suppressed
     - `overlay_enabled` flag does NOT modify `coverage_score`
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7_
-  - [ ] 20.2 Write property test for drag-and-drop boundary and snap contracts (Property 13)
+  - [x] 20.2 Write property test for drag-and-drop boundary and snap contracts (Property 13)
     - **Property 13: Drag-and-Drop Boundary and Snap Contracts**
     - **Validates: Requirements 6.6, 6.7**
     - Generate coordinates outside the grid extent; assert `OutsideExtentError` returned (no `DragDropResult`)
     - Generate coordinates within extent; assert `snapped_coordinate` equals nearest grid cell centroid; assert `grid_resolution_m` is a positive integer
     - `# Feature: geosignal-ai, Property 13: Drag-and-Drop Boundary and Snap Contracts`
-  - [ ] 20.3 Write property test for power overlay non-interference (Property 14)
+  - [x] 20.3 Write property test for power overlay non-interference (Property 14)
     - **Property 14: Power Overlay Non-Interference**
     - **Validates: Requirements 6.5**
     - For any dropped coordinate and any `overlay_enabled` value, assert `drag_drop_lookup(..., overlay_enabled=True).coverage_score == drag_drop_lookup(..., overlay_enabled=False).coverage_score`
     - `# Feature: geosignal-ai, Property 14: Power Overlay Non-Interference`
-  - [ ] 20.4 Write property test for manual placement comparison correctness (Property 24)
+  - [x] 20.4 Write property test for manual placement comparison correctness (Property 24)
     - **Property 24: Manual Placement Comparison Correctness**
     - **Validates: Requirements 6.3, 6.4**
     - Generate `DragDropResult` scenarios where `coverage_score > vs_top_candidate.model_score`
