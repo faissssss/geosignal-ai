@@ -1,20 +1,24 @@
 """GeoSignal AI — Model adapter layer.
 
 Defines the ScoringAdapter protocol and all concrete implementations:
-  - AHPAdapter      (Tier 1 cold-start, equity-weighted)
-  - XGBoostAdapter  (Tier 2 trained against Ookla ground-truth labels)
-  - LightGBMAdapter (Tier 2 alternative to XGBoost)
-  - GNNAdapter      (Phase 3 stub)
+  - AHPAdapter                (Tier 1 cold-start, equity-weighted)
+  - XGBoostAdapter            (Tier 2 trained against Ookla ground-truth labels)
+  - LightGBMAdapter           (Tier 2 alternative to XGBoost)
+  - GNNAdapter                (Phase 3 stub)
+  - DistributedExecutorProtocol  (Phase 3 executor abstraction — framework-agnostic)
+  - DistributedScoringAdapter (Phase 3 distributed-compute stub)
 
 IMPORTANT:
   - Ookla is NOT a feature — it is the Tier 2 training label only.
   - Admin boundary identifiers are NOT inputs.
   - Import CONSOLIDATED_FEATURES from geosignal.models; never redefine here.
+  - DistributedScoringAdapter does NOT import pyspark, dask, or distributed.
+    It is a Phase 3 interface stub only — no distributed workload runs in the MVP.
 """
 from __future__ import annotations
 
 import os
-from typing import Protocol
+from typing import Any, Protocol, Sequence
 
 import numpy as np
 
@@ -294,3 +298,225 @@ class GNNAdapter:
 
     def shap_values(self, features: np.ndarray) -> np.ndarray:
         raise NotImplementedError("GNNAdapter is a Phase 3 placeholder.")
+
+
+# ── DistributedExecutorProtocol ───────────────────────────────────────────────
+
+class DistributedExecutorProtocol(Protocol):
+    """Minimal protocol for a distributed-compute executor.
+
+    Phase 3 interface — framework-agnostic.
+
+    Concrete implementations are NOT part of the MVP.  Future work will
+    provide implementations backed by Apache Spark, Dask, or another
+    distributed scheduler.  The protocol is intentionally narrow:
+    callers only need to be able to map a function over a sequence of
+    partitions and collect the results in order.
+
+    This protocol does NOT import pyspark, dask, or distributed.
+    It does NOT open any network connection.
+    It does NOT create any cluster or scheduler.
+    """
+
+    def map(
+        self,
+        fn: Any,
+        partitions: Sequence[np.ndarray],
+    ) -> Sequence[np.ndarray]:
+        """Apply *fn* to each partition and return results in the same order.
+
+        Contract:
+          - len(result) == len(partitions).
+          - result[i] corresponds to partitions[i].
+          - Row order within each partition is preserved.
+          - No partition is duplicated or dropped.
+
+        Phase 3 note:
+          A Spark implementation would serialise *fn* via cloudpickle and
+          distribute partitions across executors; a Dask implementation would
+          create a task graph.  Both are out of scope for the MVP.
+
+        Args:
+            fn:         A callable that accepts a single np.ndarray partition
+                        and returns a np.ndarray result.
+            partitions: An ordered sequence of np.ndarray chunks.
+
+        Returns:
+            A sequence of np.ndarray results in the same order as *partitions*.
+        """
+        ...
+
+
+# ── DistributedScoringAdapter ─────────────────────────────────────────────────
+
+class DistributedScoringAdapter:
+    """Phase 3 architectural stub for distributed-compute scoring.
+
+    PURPOSE
+    -------
+    This class defines the interface boundary that allows GeoSignal AI's
+    scoring pipeline to be extended to Apache Spark, Dask, or another
+    distributed compute framework in Phase 3 WITHOUT changing any calling
+    code (compute_coverage_score, rank_bts_candidates, spatial_cv).
+
+    WHAT THIS IS
+    ------------
+    - An architectural stub only.
+    - Wraps an existing ScoringAdapter as ``inner``.
+    - Accepts a ``DistributedExecutorProtocol`` as ``executor``.
+    - Satisfies the ScoringAdapter protocol (has predict + shap_values).
+    - Constructor stores references; it does NOT invoke the executor.
+
+    WHAT THIS IS NOT
+    ----------------
+    - NOT a production distributed implementation.
+    - Does NOT import pyspark, dask, distributed, or any scheduler.
+    - Does NOT open network connections.
+    - Does NOT create clusters, threads, or processes.
+    - Does NOT fall back silently to local execution.
+    - Does NOT return mock predictions.
+
+    MVP BEHAVIOUR
+    -------------
+    Both predict() and shap_values() raise NotImplementedError with a message
+    that clearly identifies this as a Phase 3 stub.  No predictions are
+    produced; no local execution occurs as a side-effect.
+
+    PHASE 3 DESIGN (for future implementors)
+    -----------------------------------------
+    When implemented, the distributed execution plan is:
+
+      predict(features):
+        1. Partition ``features`` (N, 8) into K chunks along axis 0.
+        2. Submit each chunk to executor.map(inner.predict, chunks).
+        3. Concatenate results in original row order → shape (N,).
+        4. Empty input (N=0) returns np.empty((0,), dtype=float64).
+
+      shap_values(features):
+        1. Partition ``features`` (N, 8) into K chunks.
+        2. Submit each chunk to executor.map(inner.shap_values, chunks).
+        3. Concatenate results in original row order → shape (N, 8).
+        4. Empty input (N=0) returns np.empty((0, 8), dtype=float64).
+
+    Invariants that the implementation must preserve:
+      - Output row count == input row count (no duplication or loss).
+      - Output row order == input row order.
+      - inner is the sole source of scoring logic; this wrapper adds only
+        the partitioning envelope.
+      - overlay_enabled and kecamatan IDs are never passed to inner.predict.
+      - Preprocessing (normalisation) is applied before this adapter is
+        invoked; the adapter itself does not normalise.
+
+    CALLING CODE COMPATIBILITY
+    --------------------------
+    The following callers work with any ScoringAdapter and require NO changes
+    to support DistributedScoringAdapter:
+
+      - compute_coverage_score(features, adapter)   — scoring.py
+      - rank_bts_candidates(...)                     — uses compute_coverage_score
+      - spatial_cv(...)                              — validation.py
+
+    None of these functions import Spark, Dask, or this class by name.
+    They accept any object that satisfies the ScoringAdapter protocol.
+    """
+
+    def __init__(
+        self,
+        inner: ScoringAdapter,
+        executor: DistributedExecutorProtocol,
+    ) -> None:
+        """Store inner adapter and executor without invoking either.
+
+        Args:
+            inner:    Any ScoringAdapter (AHPAdapter, XGBoostAdapter, etc.).
+                      Must already be initialised and ready to use.
+            executor: Any object satisfying DistributedExecutorProtocol.
+                      The constructor does NOT call executor.map().
+
+        Raises:
+            TypeError: if inner does not have predict and shap_values methods.
+            TypeError: if executor does not have a map method.
+        """
+        if not (callable(getattr(inner, "predict", None))
+                and callable(getattr(inner, "shap_values", None))):
+            raise TypeError(
+                "inner must be a ScoringAdapter with callable predict() and "
+                f"shap_values() methods. Got: {type(inner)!r}"
+            )
+        if not callable(getattr(executor, "map", None)):
+            raise TypeError(
+                "executor must satisfy DistributedExecutorProtocol with a "
+                f"callable map() method. Got: {type(executor)!r}"
+            )
+        self._inner = inner
+        self._executor = executor
+
+    # ------------------------------------------------------------------
+    # ScoringAdapter interface — Phase 3 stubs
+    # ------------------------------------------------------------------
+
+    def predict(self, features: np.ndarray) -> np.ndarray:
+        """[Phase 3 stub] Distribute predict() across executor partitions.
+
+        In the MVP this method raises NotImplementedError.
+        Distributed execution is a Phase 3 capability and is not implemented
+        in the MVP.
+
+        Phase 3 contract (not yet active):
+          - Partitions features (N, 8) along axis 0.
+          - Maps inner.predict over partitions via executor.map().
+          - Concatenates results preserving row order.
+          - Returns (N,) float64 array in [0, 100].
+
+        Args:
+            features: (N, 8) float64 array in CONSOLIDATED_FEATURES order.
+
+        Raises:
+            NotImplementedError: always, in the MVP.
+        """
+        raise NotImplementedError(
+            "DistributedScoringAdapter.predict() is a Phase 3 stub. "
+            "Distributed execution is a Phase 3 capability and is not "
+            "implemented in the MVP. Use a local adapter (AHPAdapter, "
+            "XGBoostAdapter, LightGBMAdapter) for MVP scoring."
+        )
+
+    def shap_values(self, features: np.ndarray) -> np.ndarray:
+        """[Phase 3 stub] Distribute shap_values() across executor partitions.
+
+        In the MVP this method raises NotImplementedError.
+        Distributed execution is a Phase 3 capability and is not implemented
+        in the MVP.
+
+        Phase 3 contract (not yet active):
+          - Partitions features (N, 8) along axis 0.
+          - Maps inner.shap_values over partitions via executor.map().
+          - Concatenates results preserving row order.
+          - Returns (N, 8) float64 array.
+
+        Args:
+            features: (N, 8) float64 array in CONSOLIDATED_FEATURES order.
+
+        Raises:
+            NotImplementedError: always, in the MVP.
+        """
+        raise NotImplementedError(
+            "DistributedScoringAdapter.shap_values() is a Phase 3 stub. "
+            "Distributed execution is a Phase 3 capability and is not "
+            "implemented in the MVP. Use a local adapter (AHPAdapter, "
+            "XGBoostAdapter, LightGBMAdapter) for MVP SHAP values."
+        )
+
+    # ------------------------------------------------------------------
+    # Inspection helpers (do not trigger distributed work)
+    # ------------------------------------------------------------------
+
+    @property
+    def inner(self) -> ScoringAdapter:
+        """Return the wrapped inner adapter (read-only, no execution)."""
+        return self._inner
+
+    @property
+    def executor(self) -> DistributedExecutorProtocol:
+        """Return the registered executor (read-only, no execution)."""
+        return self._executor
