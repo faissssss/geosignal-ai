@@ -333,6 +333,9 @@ def _validate_coordinates(
     return array
 
 
+_transformer_cache: dict[str, Transformer] = {}
+
+
 def _coordinate_to_row_col(
     coordinate: tuple[float, float],
     transform: Affine,
@@ -340,11 +343,15 @@ def _coordinate_to_row_col(
 ) -> tuple[int, int]:
     latitude, longitude = coordinate
 
-    transformer = Transformer.from_crs(
-        "EPSG:4326",
-        raster_crs,
-        always_xy=True,
-    )
+    key = str(raster_crs)
+    transformer = _transformer_cache.get(key)
+    if transformer is None:
+        transformer = Transformer.from_crs(
+            "EPSG:4326",
+            raster_crs,
+            always_xy=True,
+        )
+        _transformer_cache[key] = transformer
 
     x, y = transformer.transform(longitude, latitude)
     row, col = rowcol(transform, x, y)

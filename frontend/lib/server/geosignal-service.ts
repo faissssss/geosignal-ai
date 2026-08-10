@@ -30,7 +30,13 @@ import type {
   RegionId,
   SelectionMethod,
   InsufficientCandidatesResult,
+  LandCoverTileSet,
+  ContourFeature,
+  VillageFeature,
+  BTSLocation,
+  DataSourceKind,
 } from '@/lib/api-types'
+import type { AdminBoundary } from '@/lib/types'
 
 // ---------------------------------------------------------------------------
 // ServiceError — structured error thrown by service functions
@@ -59,16 +65,81 @@ export class ServiceError extends Error {
 // ---------------------------------------------------------------------------
 
 interface WhatIfGridSimRow {
-  before_heatmap:         unknown
-  after_heatmap:          unknown
   pct_good_change:        number
   villages_newly_covered: number
   new_coverage_score:     number
-  elapsed_ms:             number | null
+  delta_coverage_score:   number | null
+  snapped_lat:            number
+  snapped_lon:            number
+  grid_resolution_m:      number
 }
 
 interface AdminBoundaryRow {
+  kecamatan_id: string
+  kecamatan_name: string
+  region_id: string
   boundary_geojson: object
+}
+
+// ---------------------------------------------------------------------------
+// Helper: Derive region_id from GADM NAME_1 property
+// ---------------------------------------------------------------------------
+
+/**
+ * Map GADM Level 1 province name to project region_id.
+ * Reverses the REGION_PROVINCE_FILTERS mapping from backend.
+ */
+function deriveRegionIdFromGADM(name1: string): RegionId {
+  const normalized = name1.toLowerCase().replace(/\s/g, '')
+  
+  if (normalized.includes('nusatenggaratimur')) return 'ntt'
+  if (normalized.includes('nusatenggarabarat')) return 'ntb'
+  if (normalized.includes('kalimantantengah')) return 'central_kalimantan'
+  
+  // Should never happen if database is correctly populated by backend parser
+  throw new ServiceError(
+    'SERVICE_ERROR',
+    `Unknown GADM province: ${name1}. Admin boundaries may not be loaded for this region.`
+  )
+}
+
+// ---------------------------------------------------------------------------
+// fetchAdminBoundaries — Load admin boundaries for a region
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch admin boundaries (kecamatan polygons) for the given region from Supabase.
+ * Used by TargetAreaSelector to populate the kecamatan dropdown.
+ * Returns empty array if no boundaries exist for the region.
+ */
+export async function fetchAdminBoundaries(
+  region_id: RegionId,
+): Promise<AdminBoundary[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('admin_boundaries')
+    .select('kecamatan_id, kecamatan_name, region_id, boundary_geojson')
+    .eq('region_id', region_id)
+    .order('kecamatan_name', { ascending: true })
+
+  if (error) {
+    throw new ServiceError(
+      'SERVICE_ERROR',
+      `Database error fetching admin boundaries: ${error.message}`
+    )
+  }
+
+  const rows = ((data as unknown as AdminBoundaryRow[]) ?? [])
+
+  // Map to AdminBoundary interface using correct GADM property mapping
+  return rows.map(row => ({
+    boundary_id: row.kecamatan_id,      // GID_2 from backend parse
+    kecamatan_id: row.kecamatan_id,     // GID_2 from backend parse
+    kecamatan_name: row.kecamatan_name, // NAME_2 from backend parse
+    region_id: row.region_id,           // region_id from backend parse
+    boundary_geojson: row.boundary_geojson,
+  }))
 }
 
 // ---------------------------------------------------------------------------
@@ -79,21 +150,37 @@ interface AdminBoundaryRow {
  * Fetch ranked BTS candidates for a target area from Supabase.
  * Returns the full candidate list or an InsufficientCandidatesResult.
  * Never fabricates candidates.
+ * 
+ * Special case: If target_area_id starts with "region:", queries by region_id instead.
+ * This supports initial load before a specific target area is selected.
  */
 export async function getRankedCandidates(
   target_area_id: string,
 ): Promise<BTSCandidate[] | InsufficientCandidatesResult> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  // Check if this is a region-wide query (e.g., "region:ntt")
+  const isRegionQuery = target_area_id.startsWith('region:')
+  const region_id = isRegionQuery ? target_area_id.replace('region:', '') as RegionId : null
+
+  let query = supabase
     .from('bts_candidates')
     .select(
       'candidate_id, region_id, target_area_id, rank, lat, lon, ' +
       'expected_improvement, los_validated, confidence_tag, shap_values, ' +
       'model_version, scoring_run_id, excluded_by_canopy',
     )
-    .eq('target_area_id', target_area_id)
-    .order('rank', { ascending: true })
+
+  // Apply filter based on query type
+  if (isRegionQuery && region_id) {
+    query = query.eq('region_id', region_id)
+  } else {
+    query = query.eq('target_area_id', target_area_id)
+  }
+
+  query = query.order('rank', { ascending: true})
+
+  const { data, error } = await query
 
   if (error) {
     throw new ServiceError('SERVICE_ERROR', `Database error fetching candidates: ${error.message}`)
@@ -101,7 +188,12 @@ export async function getRankedCandidates(
 
   const rows = (data as unknown as BTSCandidate[]) ?? []
 
-  // Fewer than 2 candidates → InsufficientCandidatesResult (Req 4.7)
+  // For region-wide queries, return all candidates (no minimum count requirement)
+  if (isRegionQuery) {
+    return rows
+  }
+
+  // For specific target area queries, enforce minimum 2 candidates (Req 4.7)
   if (rows.length < 2) {
     return {
       insufficient_candidates: true,
@@ -135,8 +227,8 @@ export async function simulateBTSPlacement(
   const { data, error } = await supabase
     .from('whatif_grid')
     .select(
-      'before_heatmap, after_heatmap, pct_good_change, ' +
-      'villages_newly_covered, new_coverage_score, elapsed_ms',
+      'pct_good_change, villages_newly_covered, new_coverage_score, ' +
+      'delta_coverage_score, snapped_lat, snapped_lon, grid_resolution_m',
     )
     .eq('candidate_id', candidate_id)
     .eq('region_id', region_id)
@@ -158,13 +250,16 @@ export async function simulateBTSPlacement(
 
   const row = data as unknown as WhatIfGridSimRow
 
+  // before_heatmap / after_heatmap are derived by the Python backend from the
+  // precomputed grid row; the thin service cannot recompute cell-level heatmaps
+  // (Req 5.4). Expose the stored metrics and an empty delta for the snapshots.
   return {
-    before_heatmap:         row.before_heatmap         ?? {},
-    after_heatmap:          row.after_heatmap           ?? {},
+    before_heatmap:         {},
+    after_heatmap:          {},
     pct_good_change:        row.pct_good_change,
     villages_newly_covered: row.villages_newly_covered,
     new_coverage_score:     row.new_coverage_score,
-    elapsed_ms:             row.elapsed_ms              ?? 0,
+    elapsed_ms:             0,
   } satisfies SimulationResult
 }
 
@@ -311,4 +406,190 @@ export async function getGridCells(
   }
 
   return ((data as unknown as GridCellResponse[]) ?? [])
+}
+
+// ---------------------------------------------------------------------------
+// Data Production — Supporting layer lookups (Phase 4/5)
+//
+// These are thin pass-through reads for the layer feeds the map overlays:
+// land cover tile sets, contours, villages, and BTS towers. Every row is
+// region-scoped and carries an explicit data_source; an empty or status-less
+// result is returned as-is so the UI reports unavailable rather than
+// fabricating features (data-production/expected-outcomes.md Phase 4).
+// ---------------------------------------------------------------------------
+
+/**
+ * Normalise the DB `data_source_kind` enum into the domain union. Anything
+ * unrecognised maps to 'demo' so we never invent a missing status.
+ */
+function toDataSourceKind(status: string | undefined | null): DataSourceKind {
+  if (status === 'real' || status === 'derived' || status === 'unavailable') return status
+  return 'demo'
+}
+
+interface LandCoverTileSetRow {
+  set_id:       string
+  region_id:    string
+  layer_id:     string
+  tiles_url:    string | null
+  attribution:  string | null
+  status:       string
+  created_at:   string
+}
+
+export async function getLandCoverTileSets(
+  region_id: RegionId,
+): Promise<LandCoverTileSet[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('landcover_tile_sets')
+    .select('set_id, region_id, layer_id, tiles_url, attribution, status, created_at')
+    .eq('region_id', region_id)
+    .order('created_at', { ascending: true })
+
+  if (error) {
+    throw new ServiceError('SERVICE_ERROR', `Database error fetching land cover tiles: ${error.message}`)
+  }
+
+  const rows = ((data as unknown as LandCoverTileSetRow[]) ?? [])
+  return rows.map(row => {
+    const source = toDataSourceKind(row.status)
+    return {
+      set_id:      row.set_id,
+      region_id:   row.region_id,
+      layer_id:    row.layer_id,
+      tiles_url:   row.tiles_url,
+      attribution: row.attribution,
+      status:      source,
+      data_source: source,
+      created_at:  row.created_at,
+    } satisfies LandCoverTileSet
+  })
+}
+
+interface ContourFeatureRow {
+  feature_id:    string
+  region_id:     string
+  kecamatan_id:  string | null
+  elevation_m:   number
+  status:        string
+  geom_geojson:  object
+}
+
+export async function getContourFeatures(
+  region_id: RegionId,
+  kecamatan_id?: string,
+): Promise<ContourFeature[]> {
+  const supabase = await createClient()
+  let query = supabase
+    .from('contour_features')
+    .select('feature_id, region_id, kecamatan_id, elevation_m, status, geom_geojson')
+    .eq('region_id', region_id)
+
+  if (kecamatan_id) query = query.eq('kecamatan_id', kecamatan_id)
+
+  const { data, error } = await query
+  if (error) {
+    throw new ServiceError('SERVICE_ERROR', `Database error fetching contour features: ${error.message}`)
+  }
+
+  const rows = ((data as unknown as ContourFeatureRow[]) ?? [])
+  return rows.map(row => {
+    const source = toDataSourceKind(row.status)
+    return {
+      feature_id:     row.feature_id,
+      region_id:      row.region_id,
+      kecamatan_id:   row.kecamatan_id,
+      elevation_m:    row.elevation_m,
+      geom_geojson:   row.geom_geojson,
+      status:         source,
+      data_source:    source,
+    } satisfies ContourFeature
+  })
+}
+
+interface VillageFeatureRow {
+  feature_id:    string
+  region_id:     string
+  kecamatan_id:  string | null
+  village_name:  string | null
+  attribution:   string | null
+  status:        string
+  geom_geojson:  object
+}
+
+export async function getVillageFeatures(
+  region_id: RegionId,
+  kecamatan_id?: string,
+): Promise<VillageFeature[]> {
+  const supabase = await createClient()
+  let query = supabase
+    .from('village_features')
+    .select('feature_id, region_id, kecamatan_id, village_name, attribution, status, geom_geojson')
+    .eq('region_id', region_id)
+
+  if (kecamatan_id) query = query.eq('kecamatan_id', kecamatan_id)
+
+  const { data, error } = await query
+  if (error) {
+    throw new ServiceError('SERVICE_ERROR', `Database error fetching village features: ${error.message}`)
+  }
+
+  const rows = ((data as unknown as VillageFeatureRow[]) ?? [])
+  return rows.map(row => {
+    const source = toDataSourceKind(row.status)
+    return {
+      feature_id:     row.feature_id,
+      region_id:      row.region_id,
+      kecamatan_id:   row.kecamatan_id,
+      village_name:   row.village_name,
+      attribution:    row.attribution,
+      geom_geojson:   row.geom_geojson,
+      status:         source,
+      data_source:    source,
+    } satisfies VillageFeature
+  })
+}
+
+interface BTSLocationRow {
+  tower_id:   string
+  region_id:  string
+  lat:        number
+  lon:        number
+  mcc:        number | null
+  mnc:        number | null
+  lac:        number | null
+  cell_id:    number | null
+  status:     string
+}
+
+export async function getBTSLocations(
+  region_id: RegionId,
+): Promise<BTSLocation[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('bts_locations')
+    .select('tower_id, region_id, lat, lon, mcc, mnc, lac, cell_id, status')
+    .eq('region_id', region_id)
+
+  if (error) {
+    throw new ServiceError('SERVICE_ERROR', `Database error fetching BTS locations: ${error.message}`)
+  }
+
+  const rows = ((data as unknown as BTSLocationRow[]) ?? [])
+  return rows.map(row => {
+    const source = toDataSourceKind(row.status)
+    return {
+      tower_id:    row.tower_id,
+      region_id:   row.region_id,
+      lat:         row.lat,
+      lon:         row.lon,
+      mcc:         row.mcc,
+      mnc:         row.mnc,
+      lac:         row.lac,
+      cell:        row.cell_id,
+      status:      source,
+      data_source: source,
+    } satisfies BTSLocation
+  })
 }

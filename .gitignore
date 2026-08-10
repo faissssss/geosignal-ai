@@ -79,3 +79,10 @@ test-results/
 frontend/playwright-report/
 frontend/test-results/
 *.zip
+
+# ==============================================================================
+# Large raw data downloads (regenerable; never commit)
+# ==============================================================================
+data/ookla/
+data/opencellid/
+*.err

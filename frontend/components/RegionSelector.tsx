@@ -15,6 +15,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import type { GridCell, BTSCandidate, RegionId } from '@/lib/types'
 import { REGIONS } from '@/lib/types'
+import { validateRegionDataCoverage, type DataCoverageStatus } from '@/lib/validation/data-coverage'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -98,6 +99,7 @@ export default function RegionSelector({
   const [activeRegion, setActiveRegion] = useState<RegionId>(initialRegion)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [coverage, setCoverage] = useState<DataCoverageStatus | null>(null)
 
   // AbortController for the in-flight request
   const abortRef = useRef<AbortController | null>(null)
@@ -156,6 +158,14 @@ export default function RegionSelector({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // run once on mount
 
+  useEffect(() => {
+    let active = true
+    validateRegionDataCoverage(activeRegion)
+      .then((status) => { if (active) setCoverage(status) })
+      .catch(() => { if (active) setCoverage(null) })
+    return () => { active = false }
+  }, [activeRegion])
+
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
@@ -204,6 +214,22 @@ export default function RegionSelector({
           </option>
         ))}
       </select>
+
+      {coverage && (
+        <span
+          data-testid="region-coverage-status"
+          title={coverage.hasData
+            ? `Heatmap data available in all ${coverage.totalKecamatan} kecamatan`
+            : `${coverage.coveredKecamatan} of ${coverage.totalKecamatan} kecamatan have heatmap data${coverage.missingKecamatan.length ? `; missing: ${coverage.missingKecamatan.join(', ')}` : ''}`}
+          style={{
+            color: coverage.hasData ? '#15803d' : coverage.coveredKecamatan === 0 ? '#dc2626' : '#b45309',
+            fontSize: '0.78rem', fontWeight: 600, whiteSpace: 'nowrap',
+          }}
+          aria-label={`Heatmap coverage: ${coverage.coveredKecamatan} of ${coverage.totalKecamatan} kecamatan`}
+        >
+          {coverage.hasData ? 'Complete' : coverage.coveredKecamatan === 0 ? 'No data' : 'Partial'} {coverage.coveredKecamatan}/{coverage.totalKecamatan}
+        </span>
+      )}
 
       {loading && (
         <span

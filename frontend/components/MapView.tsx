@@ -31,7 +31,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl'
-import type { GridCell, BTSCandidate, AdminBoundary, RegionId, TargetArea } from '@/lib/types'
+import type { GridCell, BTSCandidate, AdminBoundary, RegionId, TargetArea, LandCoverTileSet, ContourFeature, VillageFeature, BTSLocation } from '@/lib/types'
 import { detectWebGL } from '@/lib/webgl'
 import CoverageHeatmap, { type CoverageCell } from './CoverageHeatmap'
 import SidePanel, { type SidePanelSelection } from './SidePanel'
@@ -41,6 +41,7 @@ import SimulationPanel from './SimulationPanel'
 import DragDropMarker, { type DragDropResponse } from './DragDropMarker'
 import PowerOverlay, { type PowerFeasibilityData } from './PowerOverlay'
 import ConfidenceGate from './ConfidenceGate'
+import { filterCellsByTargetArea } from '@/lib/validation/filterCellsByTargetArea'
 
 // ---------------------------------------------------------------------------
 // Layer ID constants
@@ -170,9 +171,10 @@ function WebGLFallback() {
 interface LayerToggleBarProps {
   visibility: LayerVisibility
   onChange: (layer: keyof LayerVisibility, value: boolean) => void
+  landCoverError?: string | null
 }
 
-function LayerToggleBar({ visibility, onChange }: LayerToggleBarProps) {
+function LayerToggleBar({ visibility, onChange, landCoverError }: LayerToggleBarProps) {
   const layers: Array<{ key: keyof LayerVisibility; label: string }> = [
     { key: 'heatmap',    label: 'Heatmap' },
     { key: 'landcover',  label: 'Land Cover' },
@@ -217,6 +219,20 @@ function LayerToggleBar({ visibility, onChange }: LayerToggleBarProps) {
             data-testid={`checkbox-${key}`}
           />
           {label}
+          {key === 'landcover' && landCoverError && (
+            <span 
+              style={{ 
+                marginLeft: 4, 
+                fontSize: '0.7rem', 
+                color: '#dc2626',
+                fontWeight: 400 
+              }}
+              title={landCoverError}
+              data-testid="landcover-error-indicator"
+            >
+              ⚠
+            </span>
+          )}
         </label>
       ))}
     </div>
@@ -251,6 +267,20 @@ export default function MapView({
   const [candidates, setCandidates] = useState<BTSCandidate[]>([])
   const [activeRegion, setActiveRegion] = useState<RegionId>(initialRegion)
   const [targetArea, setTargetArea] = useState<TargetArea | null>(null)
+  const [adminBoundariesLocal, setAdminBoundariesLocal] = useState<AdminBoundary[]>([])
+  const [boundariesReady, setBoundariesReady] = useState(false)
+
+  // ── Data Production layer state (region-scoped, source-backed) ──────────
+  const [landCoverTiles, setLandCoverTiles] = useState<LandCoverTileSet[]>([])
+  const [contourFeatures, setContourFeatures] = useState<ContourFeature[]>([])
+  const [villageFeatures, setVillageFeatures] = useState<VillageFeature[]>([])
+  const [btsTowers, setBtsTowers] = useState<BTSLocation[]>([])
+
+  // ── Land Cover error state ─────────────────────────────────────────────
+  const [landCoverError, setLandCoverError] = useState<string | null>(null)
+
+  // ── Boundary geometry error state ──────────────────────────────────────
+  const [boundaryGeometryError, setBoundaryGeometryError] = useState<string | null>(null)
 
   // ── Side panel ─────────────────────────────────────────────────────────
   const [selection, setSelection] = useState<SidePanelSelection | null>(null)
@@ -346,6 +376,67 @@ export default function MapView({
     [],
   )
 
+  // ── Fetch admin boundaries when region changes ────────────────────────
+  useEffect(() => {
+    async function loadBoundaries() {
+      setBoundariesReady(false)
+      try {
+        const response = await fetch(`/api/admin-boundaries?region_id=${activeRegion}`)
+        if (response.ok) {
+          const boundaries = await response.json()
+          setAdminBoundariesLocal(Array.isArray(boundaries) ? boundaries : [])
+        } else {
+          console.error('Failed to load admin boundaries:', response.statusText)
+          setAdminBoundariesLocal([])
+        }
+      } catch (err) {
+        console.error('Failed to load admin boundaries:', err)
+        setAdminBoundariesLocal([])
+      } finally {
+        setBoundariesReady(true)
+      }
+    }
+    loadBoundaries()
+  }, [activeRegion])
+
+  // ── Fetch Data Production layers when region / target area changes ─────
+  // Every layer is region-scoped and carries an explicit data_source. An empty
+  // response means "no source coverage here" — never fabricated features
+  // (data-production/expected-outcomes.md Phase 4). Contours and villages are
+  // additionally scoped to the selected kecamatan when a target area is active;
+  // land cover and BTS towers are region-wide only.
+  const kecamatanParam = targetArea?.kecamatan_id ?? ''
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadLayerData() {
+      const contourQuery =
+        kecamatanParam
+          ? `region_id=${activeRegion}&kecamatan_id=${encodeURIComponent(kecamatanParam)}`
+          : `region_id=${activeRegion}`
+
+      const [lc, con, vil, bts] = await Promise.all([
+        fetch(`/api/land-cover?region_id=${activeRegion}`),
+        fetch(`/api/contours?${contourQuery}`),
+        fetch(`/api/villages?${contourQuery}`),
+        fetch(`/api/bts-locations?region_id=${activeRegion}`),
+      ])
+
+      if (cancelled) return
+
+      const asArray = async (r: Response) => (r.ok ? (await r.json()) : [])
+
+      setLandCoverTiles(await asArray(lc))
+      setContourFeatures(await asArray(con))
+      setVillageFeatures(await asArray(vil))
+      setBtsTowers(await asArray(bts))
+    }
+    loadLayerData()
+
+    return () => { cancelled = true }
+  }, [activeRegion, kecamatanParam])
+
   // ── Layer toggle handler ───────────────────────────────────────────────
   const handleVisibilityChange = useCallback(
     (layer: keyof LayerVisibility, value: boolean) => {
@@ -389,25 +480,46 @@ export default function MapView({
     if (!map || !mapReady) return
 
     // ── Land-cover overlay (ESA WorldCover tile stub) ──────────────────
-    if (!map.getSource(LC_SOURCE)) {
-      map.addSource(LC_SOURCE, {
-        type: 'raster',
-        tiles: [
-          // ESA WorldCover 2021 — public tile service
-          'https://services.terrascope.be/wmts/v2?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=WORLDCOVER_2021_MAP&STYLE=default&TILEMATRIXSET=EPSG:3857&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png',
-        ],
-        tileSize: 256,
-        attribution: 'ESA WorldCover 2021',
-      })
-    }
-    if (!map.getLayer(LC_LAYER)) {
-      map.addLayer({
-        id: LC_LAYER,
-        type: 'raster',
-        source: LC_SOURCE,
-        layout: { visibility: visibility.landcover ? 'visible' : 'none' },
-        paint: { 'raster-opacity': 0.55 },
-      })
+    try {
+      if (!map.getSource(LC_SOURCE)) {
+        map.addSource(LC_SOURCE, {
+          type: 'raster',
+          tiles: [
+            // ESA WorldCover 2021 — public tile service
+            'https://services.terrascope.be/wmts/v2?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=WORLDCOVER_2021_MAP&STYLE=default&TILEMATRIXSET=EPSG:3857&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png',
+          ],
+          tileSize: 256,
+          attribution: 'ESA WorldCover 2021',
+        })
+      }
+      if (!map.getLayer(LC_LAYER)) {
+        map.addLayer({
+          id: LC_LAYER,
+          type: 'raster',
+          source: LC_SOURCE,
+          layout: { visibility: visibility.landcover ? 'visible' : 'none' },
+          paint: { 'raster-opacity': 0.55 },
+        })
+      }
+
+      // Monitor tile loading errors
+      const handleError = (e: any) => {
+        if (e.error?.message?.includes('terrascope') || 
+            e.error?.message?.includes('WorldCover') ||
+            e.sourceId === LC_SOURCE) {
+          setLandCoverError('Land Cover tiles unavailable (ESA service error)')
+          console.warn('ESA WorldCover tile service error:', e.error)
+          // Do NOT remove layer — just show warning
+        }
+      }
+      map.on('error', handleError)
+
+      return () => {
+        map.off('error', handleError)
+      }
+    } catch (err) {
+      console.error('Failed to initialize Land Cover layer:', err)
+      setLandCoverError('Land Cover layer initialization failed')
     }
 
     // ── Terrain contours (placeholder circle layer — real data in Task 27) ─
@@ -513,6 +625,87 @@ export default function MapView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [candidates, mapReady])
 
+  // ── Feed contour features into the contour source ────────────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    const source = map.getSource(CONTOUR_SOURCE) as GeoJSONSource | undefined
+    if (!source) return
+    source.setData({
+      type: 'FeatureCollection',
+      features: contourFeatures.map((f) => ({
+        type: 'Feature',
+        id: f.feature_id,
+        geometry: f.geom_geojson as GeoJSON.Geometry,
+        properties: {
+          elevation_m: f.elevation_m,
+          kecamatan_id: f.kecamatan_id,
+          data_source: f.data_source,
+        },
+      })),
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contourFeatures, mapReady])
+
+  // ── Feed village features into the village source ─────────────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    const source = map.getSource(VILLAGE_SOURCE) as GeoJSONSource | undefined
+    if (!source) return
+    source.setData({
+      type: 'FeatureCollection',
+      features: villageFeatures.map((v) => ({
+        type: 'Feature',
+        id: v.feature_id,
+        geometry: v.geom_geojson as GeoJSON.Geometry,
+        properties: {
+          village_name: v.village_name,
+          kecamatan_id: v.kecamatan_id,
+          attribution: v.attribution,
+          data_source: v.data_source,
+        },
+      })),
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [villageFeatures, mapReady])
+
+  // ── Feed BTS towers into the OpenCellID source ────────────────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    const source = map.getSource(OCID_SOURCE) as GeoJSONSource | undefined
+    if (!source) return
+    source.setData({
+      type: 'FeatureCollection',
+      features: btsTowers.map((t) => ({
+        type: 'Feature',
+        id: t.tower_id,
+        geometry: { type: 'Point', coordinates: [t.lon, t.lat] } as GeoJSON.Geometry,
+        properties: {
+          mcc: t.mcc,
+          mnc: t.mnc,
+          cell: t.cell,
+          data_source: t.data_source,
+        },
+      })),
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [btsTowers, mapReady])
+
+  // ── Point land-cover source at the source-backed tile set when present ─
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return
+    const source = map.getSource(LC_SOURCE)
+    if (!source || source.type !== 'raster') return
+    const tilesUrl = landCoverTiles.find((s) => s.tiles_url)?.tiles_url
+    if (tilesUrl && typeof (source as unknown as { setTiles: Function }).setTiles === 'function') {
+      ;(source as unknown as { setTiles: (tiles: string[]) => void }).setTiles([tilesUrl])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [landCoverTiles, mapReady])
+
   // ── CoverageHeatmap cell click handler ────────────────────────────────
   useEffect(() => {
     const map = mapRef.current
@@ -558,7 +751,10 @@ export default function MapView({
   // ConfidenceGate wraps the button-click — no separate imperative trigger needed.
 
   // ── Cells → CoverageCell[] ─────────────────────────────────────────────
-  const coverageCells: CoverageCell[] = cells.map((c) => ({
+  // Task 3.3: Apply spatial filtering before mapping to CoverageCell[]
+  // When targetArea is selected, filter cells to only those within boundary
+  const filteredCells = filterCellsByTargetArea(cells, targetArea, setBoundaryGeometryError)
+  const coverageCells: CoverageCell[] = filteredCells.map((c) => ({
     cell_id: c.cell_id,
     coverage_score: c.coverage_score,
     confidence_tag: c.confidence_tag,
@@ -619,16 +815,79 @@ export default function MapView({
         <LayerToggleBar
           visibility={visibility}
           onChange={handleVisibilityChange}
+          landCoverError={landCoverError}
         />
 
         {/* Target area selector */}
         <TargetAreaSelector
           map={mapRef.current}
           regionId={activeRegion}
-          adminBoundaries={adminBoundaries}
+          adminBoundaries={boundariesReady ? (adminBoundaries.length > 0 ? adminBoundaries : adminBoundariesLocal) : []}
           onResolved={handleTargetAreaResolved}
           onReset={handleTargetAreaReset}
         />
+
+        {/* Empty results warning banner */}
+        {targetArea && coverageCells.length === 0 && !boundaryGeometryError && (
+          <div
+            data-testid="no-cells-warning"
+            style={{
+              background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+              border: '2px solid #f59e0b',
+              borderRadius: 8,
+              padding: '12px 16px',
+              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)',
+              fontFamily: 'sans-serif',
+              fontSize: '0.875rem',
+              color: '#92400e',
+              lineHeight: 1.5,
+              maxWidth: 320,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>⚠️</span>
+              <div>
+                <div style={{ fontWeight: 600, marginBottom: 4 }}>
+                  No Heatmap Data Available
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#78350f' }}>
+                  No heatmap data available for selected area. Data may not be processed yet for this kecamatan.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Boundary geometry error banner */}
+        {boundaryGeometryError && (
+          <div
+            data-testid="boundary-geometry-error"
+            style={{
+              background: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
+              border: '2px solid #ef4444',
+              borderRadius: 8,
+              padding: '12px 16px',
+              boxShadow: '0 4px 12px rgba(239, 68, 68, 0.25)',
+              fontFamily: 'sans-serif',
+              fontSize: '0.875rem',
+              color: '#991b1b',
+              lineHeight: 1.5,
+              maxWidth: 320,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>🚫</span>
+              <div>
+                <div style={{ fontWeight: 600, marginBottom: 4 }}>
+                  Invalid Boundary Data
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#7f1d1d' }}>
+                  {boundaryGeometryError}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Side panel */}

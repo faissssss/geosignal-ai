@@ -100,7 +100,7 @@ def download_gadm_boundaries(
         f
         for f in all_features
         if province_filter
-        in (f.get("properties", {}).get("NAME_1") or "").lower()
+        in (f.get("properties", {}).get("NAME_1") or "").replace(" ", "").lower()
     ]
 
     logger.info(

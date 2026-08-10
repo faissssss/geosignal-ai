@@ -1,0 +1,6742 @@
+{
+  "promotion_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+  "promoted_at": "2026-08-10T18:21:56.347902+00:00",
+  "promoted_source_runs": 36,
+  "deleted_demo_grid_cells": 222,
+  "deleted_demo_bts_candidates": 10,
+  "restore_instructions": "To roll back, re-insert the demo rows below with their original IDs and set source_runs.promoted_run_id = NULL for the affected runs.",
+  "demo_grid_cells": [
+    {
+      "cell_id": "f4eff77e-290f-4d48-afda-f92d13e2e0ae",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.97,
+      "coverage_score": 68.7413328334642,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "3de2f254-eda2-49d5-b01d-f3ee63fd83bc",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.57,
+      "coverage_score": 67.9570098843413,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "8c3d0014-31a5-4661-86ff-a3e313914287",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.67,
+      "coverage_score": 21.8758066417,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ddf778bd-0282-4f15-b7c3-1ce0f90b2830",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.77,
+      "coverage_score": 40.6271988776839,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "58029ab4-6cff-4d47-9912-db2f6d127277",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.87,
+      "coverage_score": 36.7408053611617,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0124d131-a287-48d4-8b06-7320378f3b3e",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.97,
+      "coverage_score": 75.2353410623009,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5dbce842-b7b4-4d9d-bdaf-2f0075db09a7",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.57,
+      "coverage_score": 70.7524615567183,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0e76002b-37e6-4e4d-8c97-26810ef5b2a6",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.67,
+      "coverage_score": 86.9134675778634,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ce45c9db-e761-4a12-a917-7e7753b9c33b",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.77,
+      "coverage_score": 26.5204124472062,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "b03e06e3-0985-4ad8-8e53-85f74662fc18",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.87,
+      "coverage_score": 51.6441364763953,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9eea2e29-352b-4a92-9247-1e7fb843e73c",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.97,
+      "coverage_score": 22.2347914578553,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "67c02fd2-17d3-4a4d-a186-65ba132a4f9e",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.57,
+      "coverage_score": 36.3978481102703,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c20825c0-fd3d-4684-80e1-a7f2b54916f1",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.67,
+      "coverage_score": 57.9016466077522,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d147edf5-db4c-448b-9f72-eb91ea34abfe",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.77,
+      "coverage_score": 21.9901977262898,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "38e10c13-f7aa-4760-aa61-4e092e0d7eb7",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.87,
+      "coverage_score": 34.9128238014986,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a4ac4618-8759-46d5-99e0-debb492492c9",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.57,
+      "coverage_score": 60.8706110452412,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9aec04dc-510b-417e-b8bd-f012fb9b674f",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.67,
+      "coverage_score": 36.5330466530523,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "010bb82b-4e0c-4bff-970e-d4fbba17a2e6",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.77,
+      "coverage_score": 64.1949262906932,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "48406e68-0b24-4597-b3bc-67a7f341b0a7",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.87,
+      "coverage_score": 80.707284250837,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "6aef2bcd-6390-43f8-b296-a2ea8526f017",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.97,
+      "coverage_score": 20.4874069758546,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "08745a0f-5b49-4e05-83c9-713c2eb02e26",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.57,
+      "coverage_score": 80.4364438874606,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d7e10edb-76f4-4797-ba1b-3c49f04d348c",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.67,
+      "coverage_score": 72.360454624117,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1b2a138b-90b9-48e4-9426-45808f3d8d4f",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.77,
+      "coverage_score": 45.5187887388494,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0261687d-ced7-41e1-81c9-5f1b43a6f6ec",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.87,
+      "coverage_score": 31.6609624858836,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1cdcd109-d28d-4901-95e7-8fe30babd960",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.97,
+      "coverage_score": 91.7909804155086,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "4dae7211-6f94-4615-b006-c25f4d1ec470",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.57,
+      "coverage_score": 67.9570098843413,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "adabb750-229c-421c-8d26-7906c7ee8497",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.67,
+      "coverage_score": 21.8758066417,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "8b342533-09a8-4626-93c6-f19149e52230",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.77,
+      "coverage_score": 40.6271988776839,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5acefd98-23d8-40e7-b917-4e1c0f55fee2",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.87,
+      "coverage_score": 36.7408053611617,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "59d29f08-ab1a-4983-891f-25374d706058",
+      "region_id": "ntt",
+      "lat": -10.17,
+      "lon": 123.97,
+      "coverage_score": 75.2353410623009,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d6cf7c7d-d2e5-43d7-a238-4646eb4696cd",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.57,
+      "coverage_score": 70.7524615567183,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e393aa67-ce21-4b4e-a406-bde87a21ea37",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.67,
+      "coverage_score": 86.9134675778634,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "35734eb9-91f9-4490-9634-28120caff710",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.77,
+      "coverage_score": 26.5204124472062,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5e523b2b-a1e4-4eee-8dcf-1786f6c024cf",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.87,
+      "coverage_score": 51.6441364763953,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "19a1afe8-2650-4200-989e-069e9b31c807",
+      "region_id": "ntt",
+      "lat": -10.07,
+      "lon": 123.97,
+      "coverage_score": 22.2347914578553,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "371f1cec-e2c8-4c90-97a7-700ee9eff216",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.57,
+      "coverage_score": 36.3978481102703,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "42afcfd1-405d-43ef-841a-ae05f0a550cc",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.67,
+      "coverage_score": 57.9016466077522,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0b736af3-af95-409e-b4a2-39fccdc2da46",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.77,
+      "coverage_score": 21.9901977262898,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "b2b09ecb-4917-4274-b2d2-b27a63fb9b76",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.87,
+      "coverage_score": 34.9128238014986,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "91efbb73-1db1-494b-adfd-8640f86faa34",
+      "region_id": "ntt",
+      "lat": -9.97,
+      "lon": 123.97,
+      "coverage_score": 68.7413328334642,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5ab63a6c-0c37-49f0-8626-9e48ccec3b78",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.57,
+      "coverage_score": 60.8706110452412,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5e2ce8d8-d07e-4960-b51b-7e50c54ea9a7",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.67,
+      "coverage_score": 36.5330466530523,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "91f40b50-65e3-431d-963c-8d96003577e0",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.77,
+      "coverage_score": 64.1949262906932,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "647edac5-50eb-4408-8a4f-6b8626af120d",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.87,
+      "coverage_score": 80.707284250837,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "32fd19c4-a546-4456-b863-1ac7cbd7e1de",
+      "region_id": "ntt",
+      "lat": -9.87,
+      "lon": 123.97,
+      "coverage_score": 20.4874069758546,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7c655424-5927-4255-ace1-e2845e2c68d7",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.57,
+      "coverage_score": 80.4364438874606,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "aaa22aec-9da0-4854-a9e7-99ea4e07fa18",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.67,
+      "coverage_score": 72.360454624117,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "fdbc9ed3-76c7-4646-a45c-8cdc992d00e2",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.77,
+      "coverage_score": 45.5187887388494,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "be19e4f4-fe69-46b2-86e6-f66a67535111",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.87,
+      "coverage_score": 31.6609624858836,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "981c9a35-8748-448e-8f68-75327dba5bdd",
+      "region_id": "ntt",
+      "lat": -9.77,
+      "lon": 123.97,
+      "coverage_score": 91.7909804155086,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "direction": "negative",
+          "feature_name": "Elevation"
+        },
+        {
+          "direction": "positive",
+          "feature_name": "Population Density"
+        }
+      ],
+      "model_version": "demo-v0.1.0",
+      "scoring_run_id": "bb61dc00-2bd9-40f1-9ecb-782a45472aef",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "302c4fa0-f310-4a2b-a9ba-22bbe81743f2",
+      "region_id": "central_kalimantan",
+      "lat": -1.96315,
+      "lon": 114.7958489,
+      "coverage_score": 19.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.209,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.335,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.286,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "22a54b0c-c19a-4683-8caa-2dbcabd8ec3f",
+      "region_id": "central_kalimantan",
+      "lat": -1.6983745,
+      "lon": 114.9769794,
+      "coverage_score": 56.0,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.168,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.258,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.092,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "6a370b71-a192-44eb-95e8-b4829753180f",
+      "region_id": "central_kalimantan",
+      "lat": -1.8450596,
+      "lon": 114.8344721,
+      "coverage_score": 88.2,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.253,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.272,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.21,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "18576841-c7e8-49c2-b924-e58d4be49442",
+      "region_id": "central_kalimantan",
+      "lat": -1.7433009,
+      "lon": 114.967384,
+      "coverage_score": 30.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.207,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.105,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.087,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0303c939-79d0-4aa7-b78b-7b6b20a5540b",
+      "region_id": "central_kalimantan",
+      "lat": -2.01435,
+      "lon": 115.159564,
+      "coverage_score": 21.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.305,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.201,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.111,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "aa8aaa91-9bc6-424e-9e3a-4efc2aafdb46",
+      "region_id": "central_kalimantan",
+      "lat": -1.9352677,
+      "lon": 115.3727418,
+      "coverage_score": 68.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.372,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.156,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.212,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "07ee48e8-45ef-4bad-bd10-81dd2356637e",
+      "region_id": "central_kalimantan",
+      "lat": -1.8294201,
+      "lon": 115.2057496,
+      "coverage_score": 71.4,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.252,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.221,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.164,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1da32d46-b648-4a0c-ab50-5d64c9dcef64",
+      "region_id": "central_kalimantan",
+      "lat": -2.3543344,
+      "lon": 115.0066104,
+      "coverage_score": 19.7,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.471,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.35,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.212,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e29ce230-0c6b-42c1-bc49-6a69275b1367",
+      "region_id": "central_kalimantan",
+      "lat": -0.7212,
+      "lon": 115.1292639,
+      "coverage_score": 24.1,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.295,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.325,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.13,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "b4647dd0-f308-4509-bdb6-1421f7509131",
+      "region_id": "central_kalimantan",
+      "lat": -0.8921265,
+      "lon": 114.7760912,
+      "coverage_score": 43.7,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.233,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.191,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.285,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "22bcf686-3ff1-47a7-8caf-cbcecbae2141",
+      "region_id": "central_kalimantan",
+      "lat": -0.6928041,
+      "lon": 114.983379,
+      "coverage_score": 86.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.497,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.134,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.292,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5229728d-0c89-4018-a61e-f18446844b67",
+      "region_id": "central_kalimantan",
+      "lat": -1.1469544,
+      "lon": 114.8497451,
+      "coverage_score": 36.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.458,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.185,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.186,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a03da012-f867-4174-bbd1-98949a02d558",
+      "region_id": "central_kalimantan",
+      "lat": -0.9845,
+      "lon": 113.506402,
+      "coverage_score": 26.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.402,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.283,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.155,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "94d030c2-046d-4689-96ca-7a2910f8812d",
+      "region_id": "central_kalimantan",
+      "lat": -1.3042938,
+      "lon": 113.7741313,
+      "coverage_score": 59.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.427,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.215,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.144,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "4ef4279d-0f90-47b6-8468-b675196ff166",
+      "region_id": "central_kalimantan",
+      "lat": -0.9604289,
+      "lon": 113.6429191,
+      "coverage_score": 88.1,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.234,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.185,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.132,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "f5a87fe7-801b-4784-a41b-afc57ce511bd",
+      "region_id": "central_kalimantan",
+      "lat": -0.98649,
+      "lon": 113.7825388,
+      "coverage_score": 27.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.374,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.239,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.263,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a4760092-68c8-44f1-9413-01ab80827f4a",
+      "region_id": "central_kalimantan",
+      "lat": -1.91975,
+      "lon": 114.3235726,
+      "coverage_score": 35.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.229,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.302,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.193,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "2e8cfa98-3e56-4e45-8bf6-f192b1fa1e9a",
+      "region_id": "central_kalimantan",
+      "lat": -1.8277197,
+      "lon": 114.6104131,
+      "coverage_score": 62.5,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.351,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.214,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.193,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "6da68243-43c6-416d-9dac-ce79018873ee",
+      "region_id": "central_kalimantan",
+      "lat": -0.9451272,
+      "lon": 114.3031809,
+      "coverage_score": 88.3,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.29,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.188,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.165,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "21ec7a57-bf2d-453f-9d42-11a7c8375fdd",
+      "region_id": "central_kalimantan",
+      "lat": -1.9983554,
+      "lon": 114.6396318,
+      "coverage_score": 38.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.203,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.167,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.116,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "abb8c815-bf01-4979-aa79-a5cc9c70d04a",
+      "region_id": "central_kalimantan",
+      "lat": -1.85935,
+      "lon": 113.3699812,
+      "coverage_score": 28.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.35,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.217,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.098,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "52996e5f-7ac2-4165-b43a-1e9f4aa3f348",
+      "region_id": "central_kalimantan",
+      "lat": -1.8219861,
+      "lon": 113.1462318,
+      "coverage_score": 49.5,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.16,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.164,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.166,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "68e5a319-7e5b-4d92-bf73-d4a2d9763112",
+      "region_id": "central_kalimantan",
+      "lat": -3.1970916,
+      "lon": 113.3024208,
+      "coverage_score": 71.3,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.228,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.225,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.103,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a25a7b3e-7870-4772-938e-bef747d28d38",
+      "region_id": "central_kalimantan",
+      "lat": -0.7176769,
+      "lon": 112.8596963,
+      "coverage_score": 29.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.18,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.294,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.192,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d641702e-bcd6-4471-b2c4-c0d4d843cf64",
+      "region_id": "central_kalimantan",
+      "lat": -2.5614,
+      "lon": 111.647601,
+      "coverage_score": 22.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.184,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.345,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.294,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "261e8e84-dc2a-455a-9993-322c0b6de816",
+      "region_id": "central_kalimantan",
+      "lat": -2.5181817,
+      "lon": 111.645622,
+      "coverage_score": 46.5,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.238,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.102,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.223,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "65e06d01-6f31-463a-a4e4-ffe88f93128d",
+      "region_id": "central_kalimantan",
+      "lat": -3.0521203,
+      "lon": 112.005727,
+      "coverage_score": 87.4,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.348,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.255,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.152,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "359158c9-495a-4f87-8792-fdeea9391303",
+      "region_id": "central_kalimantan",
+      "lat": -2.7611964,
+      "lon": 111.8235818,
+      "coverage_score": 21.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.475,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.233,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.235,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e59937aa-b116-49b5-a535-8352a66888ff",
+      "region_id": "central_kalimantan",
+      "lat": -2.2257,
+      "lon": 112.7955954,
+      "coverage_score": 22.1,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.328,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.135,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.105,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c3802e65-0b5c-4af8-99fb-a18da44358ee",
+      "region_id": "central_kalimantan",
+      "lat": -2.1114992,
+      "lon": 112.5769508,
+      "coverage_score": 50.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.18,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.117,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.142,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "16d37c5c-c297-4366-8318-a7d75e41795f",
+      "region_id": "central_kalimantan",
+      "lat": -2.0865066,
+      "lon": 113.1260358,
+      "coverage_score": 89.0,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.374,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.315,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.123,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "aeda6f75-8cce-4861-83b0-1dc38a40549d",
+      "region_id": "central_kalimantan",
+      "lat": -2.4155252,
+      "lon": 112.8478706,
+      "coverage_score": 24.8,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.324,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.247,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.293,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7040da0e-80d5-498b-8cb6-684dcc9dfac4",
+      "region_id": "central_kalimantan",
+      "lat": -1.80985,
+      "lon": 111.4091242,
+      "coverage_score": 24.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.286,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.151,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.15,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "f6f8af50-057f-4990-ae6c-c1e49b9bae69",
+      "region_id": "central_kalimantan",
+      "lat": -1.6074803,
+      "lon": 111.2751629,
+      "coverage_score": 54.6,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.395,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.181,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.16,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "f0bba5eb-8855-45d2-83cd-3e973dfa8500",
+      "region_id": "central_kalimantan",
+      "lat": -1.4690856,
+      "lon": 111.5959201,
+      "coverage_score": 70.1,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.395,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.239,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.126,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "08aedfe1-ae28-4679-8382-460a2a9696c1",
+      "region_id": "central_kalimantan",
+      "lat": -1.6687554,
+      "lon": 111.3720868,
+      "coverage_score": 20.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.239,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.292,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.173,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1746766c-8b25-475b-b9b1-b3112ad0428e",
+      "region_id": "central_kalimantan",
+      "lat": -0.03825,
+      "lon": 114.1583819,
+      "coverage_score": 26.7,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.463,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.236,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.194,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "fed95cf1-5464-4dbc-93b0-a0c6d1d76b25",
+      "region_id": "central_kalimantan",
+      "lat": 0.1228047,
+      "lon": 113.4755737,
+      "coverage_score": 64.6,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.297,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.289,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.159,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "16785456-3055-4678-857d-4bcf453a881e",
+      "region_id": "central_kalimantan",
+      "lat": -0.5142338,
+      "lon": 115.0292807,
+      "coverage_score": 83.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.224,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.331,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.255,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ea5c5549-024a-40c1-8b11-27b28c726386",
+      "region_id": "central_kalimantan",
+      "lat": -0.1924764,
+      "lon": 114.2331639,
+      "coverage_score": 36.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.424,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.223,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.159,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d77f3de1-5f22-475c-804b-31ad52ecaccf",
+      "region_id": "central_kalimantan",
+      "lat": -2.0103,
+      "lon": 113.7356821,
+      "coverage_score": 20.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.169,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.212,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.158,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c342063b-5a1d-4f09-925b-7f281a487594",
+      "region_id": "central_kalimantan",
+      "lat": -2.2047796,
+      "lon": 114.0983868,
+      "coverage_score": 64.6,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.444,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.123,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.159,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "3c4e6300-af39-42ca-8b48-009ca9a1bc06",
+      "region_id": "central_kalimantan",
+      "lat": -2.2830891,
+      "lon": 113.8672405,
+      "coverage_score": 70.8,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.299,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.222,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.124,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "b1f7ba5b-831f-4c38-888c-24222a97ee6b",
+      "region_id": "central_kalimantan",
+      "lat": -2.2409886,
+      "lon": 113.8770018,
+      "coverage_score": 25.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.38,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.245,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.097,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "049fa93e-7819-4bf8-9a2c-71504ed4f959",
+      "region_id": "central_kalimantan",
+      "lat": -2.5063,
+      "lon": 114.0095633,
+      "coverage_score": 27.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.19,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.196,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.088,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "b2d6828a-9ff9-460f-ad21-8cf154aae1a8",
+      "region_id": "central_kalimantan",
+      "lat": -2.5359279,
+      "lon": 113.7860735,
+      "coverage_score": 49.5,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.228,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.225,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.085,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1aba1f34-e82d-47ce-a87d-83309ec84dcf",
+      "region_id": "central_kalimantan",
+      "lat": -3.1314001,
+      "lon": 113.8133639,
+      "coverage_score": 71.2,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.404,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.206,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.156,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "2be4eeb9-49c7-4dd9-b080-c15f1b275462",
+      "region_id": "central_kalimantan",
+      "lat": -3.2274089,
+      "lon": 113.8310937,
+      "coverage_score": 22.7,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.256,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.102,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.276,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "289a58c7-e090-4a2b-b076-9c88bfadc3f5",
+      "region_id": "central_kalimantan",
+      "lat": -2.11275,
+      "lon": 112.1541806,
+      "coverage_score": 36.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.306,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.31,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.201,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "934a4efa-b5c6-41f0-aaf2-67bda32bbbeb",
+      "region_id": "central_kalimantan",
+      "lat": -2.9435842,
+      "lon": 112.3635855,
+      "coverage_score": 58.4,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.411,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.115,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.186,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "bb5d6ec4-5f70-4f0e-b683-5f4b206b1d26",
+      "region_id": "central_kalimantan",
+      "lat": -3.1837511,
+      "lon": 112.7768222,
+      "coverage_score": 74.2,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.469,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.254,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.274,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9cdd963a-8fa5-4171-86a1-2b0866fe041c",
+      "region_id": "central_kalimantan",
+      "lat": -2.044168,
+      "lon": 112.1642086,
+      "coverage_score": 32.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.447,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.296,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.232,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "69063c3f-d2b6-49d0-b97a-ac4bcffe68b3",
+      "region_id": "central_kalimantan",
+      "lat": -2.5614,
+      "lon": 111.2033755,
+      "coverage_score": 20.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.409,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.341,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.095,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9084317b-da94-4e83-8f92-6be93b46c860",
+      "region_id": "central_kalimantan",
+      "lat": -2.9601579,
+      "lon": 110.9517713,
+      "coverage_score": 45.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.423,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.286,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.22,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0efe8a29-4cb2-41ba-9e11-e8bfd60bee68",
+      "region_id": "central_kalimantan",
+      "lat": -2.7280631,
+      "lon": 111.2251039,
+      "coverage_score": 88.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.488,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.225,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.208,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "cd379282-8f45-4ebd-a865-f4ac937b28e8",
+      "region_id": "central_kalimantan",
+      "lat": -2.1710665,
+      "lon": 111.1958473,
+      "coverage_score": 32.1,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.304,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.327,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.248,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "181a5d59-2aed-4f79-a712-c2c9fa16b51d",
+      "region_id": "ntb",
+      "lat": -8.56465,
+      "lon": 118.7612941,
+      "coverage_score": 34.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.284,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.325,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.114,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "aac3ee48-b12d-451c-aac1-010f3e9b31b7",
+      "region_id": "ntb",
+      "lat": -8.3853759,
+      "lon": 118.1314492,
+      "coverage_score": 65.3,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.362,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.201,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.261,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c6863ac4-86a3-4ef2-8931-1ebe8c7777b6",
+      "region_id": "ntb",
+      "lat": -8.6880031,
+      "lon": 118.5996634,
+      "coverage_score": 84.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.404,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.301,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.128,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "824fa69e-fd16-4126-b039-1596c16a6271",
+      "region_id": "ntb",
+      "lat": -8.6342349,
+      "lon": 119.0262605,
+      "coverage_score": 37.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.322,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.288,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.257,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "6b728bc1-75a0-48bc-aa60-05b49cc7d375",
+      "region_id": "ntb",
+      "lat": -8.5173,
+      "lon": 118.3311516,
+      "coverage_score": 20.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.28,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.29,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.11,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c936f5fc-e4c8-42c7-92cc-d5fdaaf8e5f8",
+      "region_id": "ntb",
+      "lat": -8.2556574,
+      "lon": 117.7307178,
+      "coverage_score": 65.0,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.46,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.264,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.24,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "223b1655-c626-4267-ad2c-9bfd09155be3",
+      "region_id": "ntb",
+      "lat": -8.4210091,
+      "lon": 118.327228,
+      "coverage_score": 88.0,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.375,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.261,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.128,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "13ee98d4-95ca-4330-8cc7-d9a8a554930a",
+      "region_id": "ntb",
+      "lat": -8.4347852,
+      "lon": 118.3287943,
+      "coverage_score": 28.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.272,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.214,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.267,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ca0011fc-caa1-45ce-b9a0-6e55986dc44a",
+      "region_id": "ntb",
+      "lat": -8.44005,
+      "lon": 118.7960713,
+      "coverage_score": 20.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.27,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.252,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.128,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "21d62e24-153c-4556-b6b1-ba10427b3e42",
+      "region_id": "ntb",
+      "lat": -8.4188484,
+      "lon": 118.8210535,
+      "coverage_score": 40.5,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.295,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.147,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.131,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ace206a4-688c-4de2-96c2-9564660c5038",
+      "region_id": "ntb",
+      "lat": -8.4673216,
+      "lon": 118.8565379,
+      "coverage_score": 75.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.246,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.317,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.186,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "512339bc-6d95-4407-ad5a-19e9514ecfd4",
+      "region_id": "ntb",
+      "lat": -8.4759884,
+      "lon": 118.7172208,
+      "coverage_score": 34.8,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.458,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.121,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.185,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7f2c4ad1-4cdb-4824-9ac2-b21b49828055",
+      "region_id": "ntb",
+      "lat": -8.6606,
+      "lon": 116.1314452,
+      "coverage_score": 38.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.235,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.104,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.227,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e503be36-7eab-43d3-800f-5a38e47d8e64",
+      "region_id": "ntb",
+      "lat": -8.8040562,
+      "lon": 115.9413339,
+      "coverage_score": 50.8,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.426,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.35,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.25,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "af55f0a1-6176-4576-aaf3-a8c0b3e7c759",
+      "region_id": "ntb",
+      "lat": -8.7065556,
+      "lon": 116.0742648,
+      "coverage_score": 75.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.272,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.258,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.189,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "348628df-e4f1-49ff-8611-5a1ac761fe42",
+      "region_id": "ntb",
+      "lat": -8.6911223,
+      "lon": 116.1282155,
+      "coverage_score": 29.8,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.228,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.158,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.3,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d9f00bf7-7bd7-4577-9d24-c3c75c09db67",
+      "region_id": "ntb",
+      "lat": -8.6825,
+      "lon": 116.2814509,
+      "coverage_score": 26.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.269,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.273,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.094,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e9cb4009-b1ae-4d76-ab71-996627a4d3ee",
+      "region_id": "ntb",
+      "lat": -8.7768704,
+      "lon": 116.1402193,
+      "coverage_score": 50.2,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.383,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.343,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.146,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5577b391-4624-4f6e-afb1-d824f5fc53f7",
+      "region_id": "ntb",
+      "lat": -8.4777122,
+      "lon": 116.3870873,
+      "coverage_score": 88.4,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.17,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.246,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.243,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e0bd2466-c63b-420f-8bb1-bbb824eec1f5",
+      "region_id": "ntb",
+      "lat": -8.5367963,
+      "lon": 116.3484108,
+      "coverage_score": 31.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.416,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.177,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.141,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d7b841af-158e-4646-8a4b-d27de413a73d",
+      "region_id": "ntb",
+      "lat": -8.5831,
+      "lon": 116.5114968,
+      "coverage_score": 35.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.154,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.158,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.136,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "f8f13c6f-c680-428f-b969-20b55532d589",
+      "region_id": "ntb",
+      "lat": -8.6866481,
+      "lon": 116.5598045,
+      "coverage_score": 63.5,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.225,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.285,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.167,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "2938a549-bbe5-460b-b8dd-0315f3b320ca",
+      "region_id": "ntb",
+      "lat": -8.5223166,
+      "lon": 116.5365805,
+      "coverage_score": 85.6,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.175,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.138,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.148,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "00334d28-24e0-43d6-80a6-d8c7e0759490",
+      "region_id": "ntb",
+      "lat": -8.5326536,
+      "lon": 116.4584898,
+      "coverage_score": 33.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.38,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.151,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.151,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "625b2e7c-6b33-42db-a527-c6ea5a577245",
+      "region_id": "ntb",
+      "lat": -8.34665,
+      "lon": 116.3019994,
+      "coverage_score": 20.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.494,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.305,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.236,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "31315ac2-3981-4b1a-8462-e54ed7d1d62f",
+      "region_id": "ntb",
+      "lat": -8.4181168,
+      "lon": 116.2533083,
+      "coverage_score": 60.3,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.202,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.245,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.122,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "27c71a38-7404-4204-a829-2ca38b5e8a11",
+      "region_id": "ntb",
+      "lat": -8.4465322,
+      "lon": 116.0702431,
+      "coverage_score": 87.0,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.17,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.22,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.281,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0dc48940-c629-4887-9c93-b25b1e38b553",
+      "region_id": "ntb",
+      "lat": -8.3369933,
+      "lon": 116.2592507,
+      "coverage_score": 19.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.473,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.107,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.148,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "52f00b46-008c-4837-b2fb-f6ff47451b5d",
+      "region_id": "ntb",
+      "lat": -8.5875,
+      "lon": 116.1160877,
+      "coverage_score": 30.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.402,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.143,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.191,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d0fd1810-1b44-40d6-8d97-f5b5a9b911e1",
+      "region_id": "ntb",
+      "lat": -8.5931413,
+      "lon": 116.1189623,
+      "coverage_score": 52.2,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.285,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.28,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.171,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "423944d1-3dd0-4c4f-b2d4-42e61347ee2f",
+      "region_id": "ntb",
+      "lat": -8.5890881,
+      "lon": 116.0937416,
+      "coverage_score": 75.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.4,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.111,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.247,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "4fa8777e-90a1-4f7b-bc70-5108cc9b94d0",
+      "region_id": "ntb",
+      "lat": -8.6104373,
+      "lon": 116.1205527,
+      "coverage_score": 26.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.446,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.141,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.273,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "aa8e5927-f193-412b-a956-a6d1fb393fc3",
+      "region_id": "ntb",
+      "lat": -8.73455,
+      "lon": 117.4959876,
+      "coverage_score": 38.8,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.172,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.343,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.22,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "8818b53e-66b2-4e18-bb0b-772b15d2b229",
+      "region_id": "ntb",
+      "lat": -8.7920692,
+      "lon": 117.7218904,
+      "coverage_score": 59.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.379,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.196,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.152,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "04aefec1-65ea-4649-844d-736a73cf1132",
+      "region_id": "ntb",
+      "lat": -8.8918903,
+      "lon": 117.7033892,
+      "coverage_score": 78.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.247,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.242,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.25,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a19c2da4-4df4-4abf-b320-21b1dd001ad9",
+      "region_id": "ntb",
+      "lat": -8.6055265,
+      "lon": 117.4396756,
+      "coverage_score": 33.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.287,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.193,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.204,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "bae1deae-769f-4ae0-9f57-f0415cf94d81",
+      "region_id": "ntb",
+      "lat": -8.8119,
+      "lon": 116.9415245,
+      "coverage_score": 23.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.384,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.209,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.21,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d27fd680-4da2-447e-a67c-b1875c0e6e13",
+      "region_id": "ntb",
+      "lat": -8.7611819,
+      "lon": 117.026522,
+      "coverage_score": 47.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.168,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.263,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.102,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "2ec0e9ee-e746-4cbd-bfe2-4fdae06a9819",
+      "region_id": "ntb",
+      "lat": -9.0233078,
+      "lon": 117.0647325,
+      "coverage_score": 90.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.162,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.216,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.12,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "4e01a028-6099-42b7-9c1f-29c36b4d1130",
+      "region_id": "ntb",
+      "lat": -8.6149028,
+      "lon": 116.8446055,
+      "coverage_score": 19.7,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.173,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.128,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.274,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "30ff7587-0f39-4e59-81bb-db403dae03bb",
+      "region_id": "ntt",
+      "lat": -8.29165,
+      "lon": 124.7765673,
+      "coverage_score": 32.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.35,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.198,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.119,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "8732f659-68e6-497c-9866-a97fe86255a5",
+      "region_id": "ntt",
+      "lat": -8.3343005,
+      "lon": 124.827231,
+      "coverage_score": 65.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.214,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.213,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.267,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "08dd7db0-627f-4ae9-af30-f16915898a05",
+      "region_id": "ntt",
+      "lat": -8.3775311,
+      "lon": 124.7085358,
+      "coverage_score": 90.0,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.381,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.172,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.198,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "6e331ea6-a526-4d7d-8ba7-c804df230a52",
+      "region_id": "ntt",
+      "lat": -8.2682885,
+      "lon": 124.4883229,
+      "coverage_score": 21.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.158,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.187,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.287,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "39f2fe56-e62b-4772-afad-e0c30e2c105c",
+      "region_id": "ntt",
+      "lat": -9.37645,
+      "lon": 124.9360058,
+      "coverage_score": 25.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.384,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.18,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.238,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c141f050-81ec-4dcc-a65e-bad72df634a1",
+      "region_id": "ntt",
+      "lat": -9.5981263,
+      "lon": 124.9718617,
+      "coverage_score": 52.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.38,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.119,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.255,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "14f25de1-8e5b-4d46-83ca-da91b257ef50",
+      "region_id": "ntt",
+      "lat": -9.0226474,
+      "lon": 125.1150326,
+      "coverage_score": 85.4,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.336,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.167,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.223,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "bc9bbd69-3ae9-4d97-9eed-4a3e21a5cc74",
+      "region_id": "ntt",
+      "lat": -9.4414732,
+      "lon": 124.8815904,
+      "coverage_score": 24.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.396,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.213,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.08,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a72dd925-c8e1-44bf-becb-f0c10e591870",
+      "region_id": "ntt",
+      "lat": -8.6743,
+      "lon": 121.6913402,
+      "coverage_score": 22.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.156,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.194,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.101,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9a000042-9178-4814-9ce6-97336435beaa",
+      "region_id": "ntt",
+      "lat": -8.7128884,
+      "lon": 121.4390392,
+      "coverage_score": 42.8,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.197,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.233,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.294,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9f5ed68b-4039-473c-849f-5c2f9ad5ae4a",
+      "region_id": "ntt",
+      "lat": -8.628536,
+      "lon": 121.7513807,
+      "coverage_score": 74.8,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.369,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.27,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.294,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7661fbad-3ce7-41c8-a107-46c4173b59da",
+      "region_id": "ntt",
+      "lat": -8.780208,
+      "lon": 121.7147116,
+      "coverage_score": 38.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.383,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.28,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.144,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "53a2f6d9-aa7a-485e-9f9f-19110526c277",
+      "region_id": "ntt",
+      "lat": -8.3157,
+      "lon": 123.1659618,
+      "coverage_score": 28.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.218,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.239,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.214,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7c5efd4d-7e1f-442b-80bb-a6738ae3516f",
+      "region_id": "ntt",
+      "lat": -8.4819117,
+      "lon": 122.7192422,
+      "coverage_score": 59.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.317,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.284,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.225,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7a14ee05-82b2-4c74-b275-8ad1eddd1b76",
+      "region_id": "ntt",
+      "lat": -8.2881262,
+      "lon": 123.1218723,
+      "coverage_score": 90.6,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.427,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.279,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.141,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "8b0d735f-58f3-49e4-a5fe-74e6cd6ac637",
+      "region_id": "ntt",
+      "lat": -8.2962101,
+      "lon": 123.2775772,
+      "coverage_score": 34.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.203,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.129,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.269,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "3b956b45-f26f-4df2-9f05-6962669b9292",
+      "region_id": "ntt",
+      "lat": -8.3736,
+      "lon": 123.5464769,
+      "coverage_score": 23.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.421,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.174,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.236,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "bee49500-7e23-4055-bd5c-dc667249a467",
+      "region_id": "ntt",
+      "lat": -8.3678821,
+      "lon": 123.4441304,
+      "coverage_score": 42.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.228,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.186,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.168,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7bdca658-4ffe-4c3f-9c53-ed27d19ad702",
+      "region_id": "ntt",
+      "lat": -8.3612308,
+      "lon": 123.7053635,
+      "coverage_score": 72.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.2,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.19,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.182,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "880db571-0951-498d-9913-8ecaf5c27096",
+      "region_id": "ntt",
+      "lat": -8.3898971,
+      "lon": 123.5908604,
+      "coverage_score": 26.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.274,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.203,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.246,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a3534704-1fe6-41fd-8093-333e169c5091",
+      "region_id": "ntt",
+      "lat": -8.5506,
+      "lon": 120.4381688,
+      "coverage_score": 30.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.343,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.325,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.086,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "758914c5-d4c6-4a70-815e-21b1e07cb954",
+      "region_id": "ntt",
+      "lat": -8.8188971,
+      "lon": 120.2627064,
+      "coverage_score": 60.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.457,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.282,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.246,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5468db8c-0bbd-426d-b26d-f09efb2318cf",
+      "region_id": "ntt",
+      "lat": -8.4861173,
+      "lon": 120.4179416,
+      "coverage_score": 75.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.175,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.316,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.273,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "58a28aec-76f4-4b6c-9815-f2760e694e5e",
+      "region_id": "ntt",
+      "lat": -8.7552666,
+      "lon": 120.301441,
+      "coverage_score": 36.7,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.463,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.142,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.144,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a3ed391e-eb0f-4921-99a9-4665df8ed0f7",
+      "region_id": "ntt",
+      "lat": -8.57595,
+      "lon": 120.0610193,
+      "coverage_score": 38.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.49,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.318,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.096,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7dce576e-860d-4dec-9d1f-58194e13180b",
+      "region_id": "ntt",
+      "lat": -8.6004298,
+      "lon": 120.0842492,
+      "coverage_score": 44.6,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.38,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.28,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.122,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "19eb9565-2e78-43be-ac07-0649f43353e3",
+      "region_id": "ntt",
+      "lat": -8.4859944,
+      "lon": 119.478996,
+      "coverage_score": 81.6,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.425,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.245,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.242,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "70a72ff1-ab6c-4602-af60-9ede09790839",
+      "region_id": "ntt",
+      "lat": -8.6472005,
+      "lon": 119.7951804,
+      "coverage_score": 30.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.195,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.343,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.26,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d7f2b070-3355-4a89-9e3e-e5120732e1e0",
+      "region_id": "ntt",
+      "lat": -8.5748,
+      "lon": 120.6867326,
+      "coverage_score": 32.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.363,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.181,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.247,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "eed27f1e-c2fb-4f86-ad96-ca8e5029c3de",
+      "region_id": "ntt",
+      "lat": -8.6291058,
+      "lon": 120.6226998,
+      "coverage_score": 50.7,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.475,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.138,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.246,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "bf239172-1299-4017-bbaf-f432b0e25917",
+      "region_id": "ntt",
+      "lat": -8.4894029,
+      "lon": 120.7260352,
+      "coverage_score": 91.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.443,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.189,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.286,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ad6ba91d-2cbc-4e21-b6ff-89c8a7c13606",
+      "region_id": "ntt",
+      "lat": -8.3627612,
+      "lon": 120.534616,
+      "coverage_score": 23.6,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.152,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.317,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.252,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "c35f0d1a-ca22-4393-bfea-e534c556e0a1",
+      "region_id": "ntt",
+      "lat": -8.67555,
+      "lon": 121.2696656,
+      "coverage_score": 33.8,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.299,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.273,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.202,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "60136278-8865-4159-9a74-2e92fe73ad3d",
+      "region_id": "ntt",
+      "lat": -8.6820721,
+      "lon": 121.3272306,
+      "coverage_score": 48.7,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.469,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.268,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.252,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5bac93a8-884c-4fdc-9aa6-691e7c0afde6",
+      "region_id": "ntt",
+      "lat": -8.8754085,
+      "lon": 121.1679971,
+      "coverage_score": 73.3,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.161,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.28,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.268,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "34b4ec90-e2c6-42ee-812e-91aefc4f96dd",
+      "region_id": "ntt",
+      "lat": -8.8409233,
+      "lon": 121.2315191,
+      "coverage_score": 19.1,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.33,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.219,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.29,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a829754b-4a2d-486c-9958-8c8505496d5c",
+      "region_id": "ntt",
+      "lat": -8.64875,
+      "lon": 120.9848125,
+      "coverage_score": 30.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.233,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.156,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.134,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "188e8f61-0aff-4cd3-96d1-ac3b3f53aed3",
+      "region_id": "ntt",
+      "lat": -8.804119,
+      "lon": 120.9585256,
+      "coverage_score": 66.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.414,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.294,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.14,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "97e222d5-e1d5-4ec5-b5c0-8bce6bca0c8e",
+      "region_id": "ntt",
+      "lat": -8.4157962,
+      "lon": 121.0446433,
+      "coverage_score": 79.9,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.339,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.31,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.086,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "f166d48e-5c37-4e63-8e8d-8bcf3f4720e8",
+      "region_id": "ntt",
+      "lat": -8.692607,
+      "lon": 120.9675361,
+      "coverage_score": 23.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.399,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.235,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.233,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "9aab3975-c71e-418a-84de-6a03747395f8",
+      "region_id": "ntt",
+      "lat": -10.68705,
+      "lon": 123.2084237,
+      "coverage_score": 29.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.32,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.287,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.082,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a79c99e1-f698-4111-864c-a76199e74e24",
+      "region_id": "ntt",
+      "lat": -10.6846981,
+      "lon": 123.2187081,
+      "coverage_score": 52.7,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.24,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.192,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.224,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ab161f46-4cfa-4d92-8f5d-ba32da7be980",
+      "region_id": "ntt",
+      "lat": -10.8479799,
+      "lon": 122.9450925,
+      "coverage_score": 84.3,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.384,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.163,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.198,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "2219095f-f0f8-4ae9-882b-bea540ee5476",
+      "region_id": "ntt",
+      "lat": -10.7018293,
+      "lon": 123.0813726,
+      "coverage_score": 25.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.283,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.146,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.283,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "40d9d91e-8455-4631-9429-38dd6a65e23c",
+      "region_id": "ntt",
+      "lat": -10.5201,
+      "lon": 121.8891781,
+      "coverage_score": 20.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.192,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.101,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.271,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "999430ec-ca1d-45f8-a3b4-404f9165196b",
+      "region_id": "ntt",
+      "lat": -10.5504479,
+      "lon": 121.9542085,
+      "coverage_score": 68.1,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.496,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.214,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.265,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "5f29ab83-191c-4aab-adb4-181684e5140f",
+      "region_id": "ntt",
+      "lat": -10.5389656,
+      "lon": 121.846545,
+      "coverage_score": 74.1,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.408,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.313,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.169,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "cce6c5f1-8360-40c0-9429-1f18debf1351",
+      "region_id": "ntt",
+      "lat": -10.4605777,
+      "lon": 121.854455,
+      "coverage_score": 19.7,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.396,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.297,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.141,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "38107343-fdf7-4e23-8d06-502fea47ffaf",
+      "region_id": "ntt",
+      "lat": -8.595,
+      "lon": 122.0898123,
+      "coverage_score": 37.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.357,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.252,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.141,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "53ff7bae-cb73-4ab9-ab24-e359bcb8a19b",
+      "region_id": "ntt",
+      "lat": -8.58302,
+      "lon": 122.5434492,
+      "coverage_score": 55.0,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.236,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.167,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.213,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "992d5c61-b764-4091-9757-46b29339302b",
+      "region_id": "ntt",
+      "lat": -8.4686887,
+      "lon": 122.3709114,
+      "coverage_score": 71.4,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.184,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.164,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.154,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "3f66f83c-3e8f-4a61-99a3-bedc816d46b5",
+      "region_id": "ntt",
+      "lat": -8.4358925,
+      "lon": 122.583176,
+      "coverage_score": 24.8,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.346,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.309,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.254,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "fd3219d1-3eaa-4ca2-b34c-796501745c51",
+      "region_id": "ntt",
+      "lat": -9.582,
+      "lon": 119.4478956,
+      "coverage_score": 28.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.29,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.28,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.125,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1056c895-0aa5-4fe6-bba0-0610837cea13",
+      "region_id": "ntt",
+      "lat": -9.7137432,
+      "lon": 119.3688743,
+      "coverage_score": 54.8,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.469,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.188,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.094,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e7fa84f8-80db-4399-ac47-1687f533622d",
+      "region_id": "ntt",
+      "lat": -9.7145792,
+      "lon": 119.187109,
+      "coverage_score": 77.4,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.29,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.268,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.23,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "d0e20488-34e8-4d0f-a48c-3349cdee1f9f",
+      "region_id": "ntt",
+      "lat": -9.7207433,
+      "lon": 119.2946184,
+      "coverage_score": 29.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.283,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.18,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.207,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e545822e-fdd2-4348-88fc-7120aebfdc53",
+      "region_id": "ntt",
+      "lat": -9.5433,
+      "lon": 119.1623486,
+      "coverage_score": 37.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.43,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.272,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.18,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "ade5cb35-e873-4beb-91d2-6452845b799d",
+      "region_id": "ntt",
+      "lat": -9.500657,
+      "lon": 119.0198219,
+      "coverage_score": 53.6,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.407,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.126,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.158,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "36cd9e12-3c5e-43c4-8ae6-1a61c5db216e",
+      "region_id": "ntt",
+      "lat": -9.5068495,
+      "lon": 119.1576388,
+      "coverage_score": 88.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.335,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.156,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.177,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "380e95f9-5d0c-41ea-8e13-113f8b3a2505",
+      "region_id": "ntt",
+      "lat": -9.4674245,
+      "lon": 119.0131992,
+      "coverage_score": 34.5,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.2,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.29,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.129,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "a586da6b-85cc-42e8-a6a2-82f46694f43b",
+      "region_id": "ntt",
+      "lat": -9.5917,
+      "lon": 119.6669458,
+      "coverage_score": 20.1,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.16,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.29,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.092,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "105c254a-8a89-4128-90ae-6da423cd67e7",
+      "region_id": "ntt",
+      "lat": -9.4105637,
+      "lon": 119.615939,
+      "coverage_score": 60.8,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.416,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.165,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.115,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "cf9a1e1f-5635-45a3-bbdc-02da8fe456e2",
+      "region_id": "ntt",
+      "lat": -9.6792473,
+      "lon": 119.6069585,
+      "coverage_score": 71.0,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.275,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.238,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.103,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "7c7e23e5-3f71-4513-ac37-796d198c3daf",
+      "region_id": "ntt",
+      "lat": -9.6068295,
+      "lon": 119.5943773,
+      "coverage_score": 20.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.226,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.295,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.189,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1a39aa9a-c28f-4f9d-a724-3208631b5f7a",
+      "region_id": "ntt",
+      "lat": -9.80165,
+      "lon": 120.181486,
+      "coverage_score": 32.3,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.442,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.324,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.269,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "0661e5cc-95e0-4dd3-8bf5-fe4cf26597d9",
+      "region_id": "ntt",
+      "lat": -9.7739305,
+      "lon": 120.0187157,
+      "coverage_score": 55.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.332,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.218,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.204,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e3b1ca9d-816f-4b2d-9df8-443c28c31a94",
+      "region_id": "ntt",
+      "lat": -10.0637005,
+      "lon": 120.3370317,
+      "coverage_score": 74.5,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.425,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.203,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.155,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "6788523d-6461-4019-a219-78fec2690163",
+      "region_id": "ntt",
+      "lat": -10.094367,
+      "lon": 120.5807327,
+      "coverage_score": 25.0,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.216,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.136,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.083,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "e8b824b8-4b29-4f4a-99ef-402ba66a1a3c",
+      "region_id": "ntt",
+      "lat": -9.8244,
+      "lon": 124.4355172,
+      "coverage_score": 18.4,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.296,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.227,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.164,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "49ef3319-cf99-45d8-a55f-5183b69a1e4b",
+      "region_id": "ntt",
+      "lat": -9.6735514,
+      "lon": 124.2961947,
+      "coverage_score": 67.6,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.277,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.23,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.286,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "54419c21-1f00-47d2-a3c2-754bbe5d6e55",
+      "region_id": "ntt",
+      "lat": -9.773594,
+      "lon": 124.461468,
+      "coverage_score": 80.0,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.298,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.293,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.291,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "4efba56a-e3c2-43fd-901c-40745835d6b6",
+      "region_id": "ntt",
+      "lat": -9.8650005,
+      "lon": 124.1718329,
+      "coverage_score": 32.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.496,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.293,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.28,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "31cd1e71-c208-44eb-9c46-bee55b74b4f4",
+      "region_id": "ntt",
+      "lat": -9.34145,
+      "lon": 124.6100284,
+      "coverage_score": 27.9,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.252,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.107,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.166,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "347f4dd3-81b4-459e-ab6c-40855981ada1",
+      "region_id": "ntt",
+      "lat": -9.4575803,
+      "lon": 124.19694,
+      "coverage_score": 52.9,
+      "confidence_tag": "Med",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.348,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.142,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.165,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "1265454b-b4e3-4436-9f46-3f0de279793b",
+      "region_id": "ntt",
+      "lat": -9.5082645,
+      "lon": 124.6656026,
+      "coverage_score": 86.7,
+      "confidence_tag": "High",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.452,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.343,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.208,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "cell_id": "b759c11a-3310-4678-9534-64f66b49db06",
+      "region_id": "ntt",
+      "lat": -9.1267185,
+      "lon": 124.737365,
+      "coverage_score": 36.2,
+      "confidence_tag": "Low",
+      "tier_used": "1",
+      "shap_top3": [
+        {
+          "value": 0.363,
+          "direction": "negative",
+          "feature_name": "Distance to BTS"
+        },
+        {
+          "value": 0.326,
+          "direction": "positive",
+          "feature_name": "Terrain accessibility"
+        },
+        {
+          "value": 0.266,
+          "direction": "positive",
+          "feature_name": "Population proximity"
+        }
+      ],
+      "model_version": "coverage-demo-v1",
+      "scoring_run_id": "c59efb1e-4478-4f09-acff-f809f2ef00d8",
+      "kecamatan_id": null,
+      "source_run_id": null
+    }
+  ],
+  "demo_bts_candidates": [
+    {
+      "candidate_id": "67dd3a39-29fd-4f0a-a62d-23657c24c2dc",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 1,
+      "lat": -8.18,
+      "lon": 124.515,
+      "expected_improvement": 18.5,
+      "los_validated": true,
+      "confidence_tag": "High",
+      "shap_values": {
+        "terrain": 0.29,
+        "land_cover": 0.19,
+        "population": 0.38,
+        "distance_to_grid": 0.1
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "7cb60f2d-7f2e-4d0a-b5d6-5c9942708580",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 2,
+      "lat": -8.16,
+      "lon": 124.53,
+      "expected_improvement": 17.0,
+      "los_validated": true,
+      "confidence_tag": "High",
+      "shap_values": {
+        "terrain": 0.28,
+        "land_cover": 0.18,
+        "population": 0.36,
+        "distance_to_grid": 0.09
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "0177d8db-f007-4121-9a22-f80739d4190a",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 3,
+      "lat": -8.14,
+      "lon": 124.545,
+      "expected_improvement": 15.5,
+      "los_validated": true,
+      "confidence_tag": "High",
+      "shap_values": {
+        "terrain": 0.27,
+        "land_cover": 0.17,
+        "population": 0.34,
+        "distance_to_grid": 0.09
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "fc6f8a42-6b7e-4025-b8f5-2dba6459df48",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 4,
+      "lat": -8.12,
+      "lon": 124.56,
+      "expected_improvement": 14.0,
+      "los_validated": true,
+      "confidence_tag": "High",
+      "shap_values": {
+        "terrain": 0.26,
+        "land_cover": 0.16,
+        "population": 0.32,
+        "distance_to_grid": 0.08
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "84197ed1-7d9e-449d-9dc9-23237bb9ada5",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 5,
+      "lat": -8.1,
+      "lon": 124.575,
+      "expected_improvement": 12.5,
+      "los_validated": true,
+      "confidence_tag": "Med",
+      "shap_values": {
+        "terrain": 0.25,
+        "land_cover": 0.15,
+        "population": 0.3,
+        "distance_to_grid": 0.08
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "5c190da2-3c08-4478-a4ff-b4031d768f2c",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 6,
+      "lat": -8.08,
+      "lon": 124.59,
+      "expected_improvement": 11.0,
+      "los_validated": true,
+      "confidence_tag": "Med",
+      "shap_values": {
+        "terrain": 0.24,
+        "land_cover": 0.14,
+        "population": 0.28,
+        "distance_to_grid": 0.07
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "af600ed5-9c51-4f0e-956f-99992cf922c9",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 7,
+      "lat": -8.06,
+      "lon": 124.605,
+      "expected_improvement": 9.5,
+      "los_validated": true,
+      "confidence_tag": "Med",
+      "shap_values": {
+        "terrain": 0.23,
+        "land_cover": 0.13,
+        "population": 0.26,
+        "distance_to_grid": 0.07
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "b5ba35b2-e1f4-4f39-b6d4-02a50019ae9d",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 8,
+      "lat": -8.04,
+      "lon": 124.62,
+      "expected_improvement": 8.0,
+      "los_validated": false,
+      "confidence_tag": "Low",
+      "shap_values": {
+        "terrain": 0.22,
+        "land_cover": 0.12,
+        "population": 0.24,
+        "distance_to_grid": 0.06
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "875e127a-0fa4-46eb-82d2-c447b49554e8",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 9,
+      "lat": -8.02,
+      "lon": 124.635,
+      "expected_improvement": 6.5,
+      "los_validated": false,
+      "confidence_tag": "Low",
+      "shap_values": {
+        "terrain": 0.21,
+        "land_cover": 0.11,
+        "population": 0.22,
+        "distance_to_grid": 0.06
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    },
+    {
+      "candidate_id": "4399341b-9056-4ef8-a3f7-28234294fcc2",
+      "region_id": "ntt",
+      "target_area_id": "2450b385-b713-4e2a-befe-09d20db21d8f",
+      "rank": 10,
+      "lat": -8.0,
+      "lon": 124.65,
+      "expected_improvement": 5.0,
+      "los_validated": false,
+      "confidence_tag": "Low",
+      "shap_values": {
+        "terrain": 0.2,
+        "land_cover": 0.1,
+        "population": 0.2,
+        "distance_to_grid": 0.05
+      },
+      "model_version": "v1.0",
+      "scoring_run_id": "8eb8c959-393d-40a9-a014-33c56e036757",
+      "excluded_by_canopy": false,
+      "kecamatan_id": null,
+      "source_run_id": null
+    }
+  ]
+}

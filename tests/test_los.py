@@ -179,6 +179,10 @@ class FakeInsertQuery:
         self.client.inserted_rows.extend(rows)
         return self
 
+    def upsert(self, rows: list[dict], on_conflict: str | None = None) -> "FakeInsertQuery":
+        self.client.inserted_rows.extend(rows)
+        return self
+
     def execute(self) -> dict:
         return {"data": self.client.inserted_rows}
 

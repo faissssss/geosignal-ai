@@ -3,6 +3,7 @@
 export type ConfidenceLevel = 'Low' | 'Med' | 'High'
 export type ModelTier = '1' | '2'
 export type SelectionMethod = 'drawn_polygon' | 'kecamatan'
+export type DataSourceKind = 'demo' | 'real' | 'derived' | 'unavailable'
 
 export interface ShapEntry {
   feature_name: string
@@ -101,6 +102,61 @@ export interface OutsideExtentError {
   dropped_lon: number
   region_id: string
   message: string
+}
+
+// ---------------------------------------------------------------------------
+// Data Production — supporting map layers (Phase 4/5, data-production/plan.md)
+// Each row is region-scoped and carries an explicit data_source so the UI can
+// distinguish real / derived / demo / unavailable without inventing values.
+// ---------------------------------------------------------------------------
+
+/** browser-efficient GEE-published land-cover tile set metadata */
+export interface LandCoverTileSet {
+  set_id: string
+  region_id: string
+  layer_id: string
+  tiles_url: string | null
+  attribution: string | null
+  status: DataSourceKind
+  data_source: DataSourceKind
+  created_at: string
+}
+
+/** SRTM-derived contour LineString feature */
+export interface ContourFeature {
+  feature_id: string
+  region_id: string
+  kecamatan_id: string | null
+  elevation_m: number
+  geom_geojson: object
+  status: DataSourceKind
+  data_source: DataSourceKind
+}
+
+/** approved OSM / government village Polygon feature */
+export interface VillageFeature {
+  feature_id: string
+  region_id: string
+  kecamatan_id: string | null
+  village_name: string | null
+  attribution: string | null
+  geom_geojson: object
+  status: DataSourceKind
+  data_source: DataSourceKind
+}
+
+/** OpenCellID BTS tower point */
+export interface BTSLocation {
+  tower_id: string
+  region_id: string
+  lat: number
+  lon: number
+  mcc: number | null
+  mnc: number | null
+  lac: number | null
+  cell: number | null
+  status: DataSourceKind
+  data_source: DataSourceKind
 }
 
 // Region IDs for the three MVP/validation regions

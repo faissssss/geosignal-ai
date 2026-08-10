@@ -22,6 +22,11 @@ import type {
   ConfidenceLevel,
   ShapEntry,
   ComparisonPanel,
+  LandCoverTileSet,
+  ContourFeature,
+  VillageFeature,
+  BTSLocation,
+  DataSourceKind,
 } from '@/lib/types'
 
 // ---------------------------------------------------------------------------
@@ -148,8 +153,16 @@ export interface GridCellResponse {
 }
 
 // ---------------------------------------------------------------------------
-// Re-export backend model types so routes import from one place
+// Data Production — Supporting layer responses (Phase 4/5)
 // ---------------------------------------------------------------------------
+
+export interface LayerQuery {
+  region_id: RegionId
+  /** Optional kecamatan scoping. When absent, the whole region is returned. */
+  kecamatan_id?: string
+}
+
+export type { LandCoverTileSet, ContourFeature, VillageFeature, BTSLocation, DataSourceKind }
 
 export type {
   BTSCandidate,
