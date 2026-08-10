@@ -300,9 +300,9 @@ export async function getGridCells(
     .eq('region_id', region_id)
     .eq('resolution_m', resolution_m)
 
-  if (target_area_id) {
-    query = query.eq('target_area_id', target_area_id)
-  }
+  // Note: target_area_id filtering is not yet implemented in grid_cells schema
+  // For now, we filter by region_id and resolution_m only
+  // TODO: Add target_area_id column to grid_cells if spatial filtering is needed
 
   const { data, error } = await query
 

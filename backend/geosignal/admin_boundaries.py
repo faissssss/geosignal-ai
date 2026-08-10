@@ -26,9 +26,9 @@ logger = logging.getLogger(__name__)
 # Maps the project's region_id strings to the GADM NAME_1 (province) value used
 # in the Indonesia Level 2 GeoJSON.  Matching is case-insensitive substring.
 REGION_PROVINCE_FILTERS: dict[str, str] = {
-    "ntt": "nusa tenggara timur",
-    "ntb": "nusa tenggara barat",
-    "central_kalimantan": "kalimantan tengah",
+    "ntt": "nusatenggaratimur",
+    "ntb": "nusatenggarabarat",
+    "central_kalimantan": "kalimantantengah",
 }
 
 # GADM 4.1 Level 2 Indonesia — full province-level file (~50 MB).

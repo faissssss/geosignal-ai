@@ -424,156 +424,156 @@ The implementation language is Python (backend) and TypeScript/Next.js (frontend
     - Assert `vs_top_candidate.manual_wins is True` in all such cases; never suppressed
     - `# Feature: geosignal-ai, Property 24: Manual Placement Comparison Correctness`
 
-- [ ] 21. Checkpoint — Simulation_Engine tests pass
+- [x] 21. Checkpoint — Simulation_Engine tests pass
   - Ensure what-if grid precomputation, Before/After simulation, drag-and-drop, and target area tests all pass. Ask the user if questions arise.
 
-- [ ] 22. Interactive_Map — heatmap layer and colour tier
-  - [ ] 22.1 Implement `colour_tier` utility in `frontend/lib/heatmap.ts`
+- [x] 22. Interactive_Map — heatmap layer and colour tier
+  - [x] 22.1 Implement `colour_tier` utility in `frontend/lib/heatmap.ts`
     - Return `Green` if score ≥ 70, `Yellow` if 40 ≤ score < 70, `Red` if score < 40
     - Three cases are exhaustive, mutually exclusive, and boundary-inclusive as specified
     - _Requirements: 3.1_
-  - [ ] 22.2 Write property test for colour tier correctness (Property 11)
+  - [x] 22.2 Write property test for colour tier correctness (Property 11)
     - **Property 11: Colour Tier Correctness**
     - **Validates: Requirements 3.1**
     - Use `st.floats(min_value=0.0, max_value=100.0)` for score
     - Assert `colour_tier(score)` returns `Green` iff score ≥ 70, `Yellow` iff 40 ≤ score < 70, `Red` iff score < 40
     - `# Feature: geosignal-ai, Property 11: Colour Tier Correctness`
-  - [ ] 22.3 Write unit tests for colour tier boundary values
+  - [x] 22.3 Write unit tests for colour tier boundary values
     - Test 39.99 → Red, 40.0 → Yellow, 40.01 → Yellow, 69.99 → Yellow, 70.0 → Green, 70.01 → Green
     - _Requirements: 3.1_
-  - [ ] 22.4 Implement MapLibre Coverage Gap Heatmap layer in `frontend/components/CoverageHeatmap.tsx`
+  - [x] 22.4 Implement MapLibre Coverage Gap Heatmap layer in `frontend/components/CoverageHeatmap.tsx`
     - Render heatmap tiles using `colour_tier` output for each cell's Coverage Score
     - Apply secondary confidence visual indicator (hatching/opacity/border) independently of colour, so confidence is not conflated with score
     - Toggle on/off within 2 seconds without page reload (client-side layer visibility on pre-fetched tiles)
     - _Requirements: 3.1, 3.2, 3.5_
 
-- [ ] 23. Interactive_Map — layer stack, side panel, region selector, and target area selector
-  - [ ] 23.1 Implement the full layer stack in `frontend/components/MapView.tsx`
+- [x] 23. Interactive_Map — layer stack, side panel, region selector, and target area selector
+  - [x] 23.1 Implement the full layer stack in `frontend/components/MapView.tsx`
     - Render simultaneously: base terrain, ESA WorldCover land-cover, SRTM terrain contours, village boundaries, Coverage Gap Heatmap, confidence overlay, OpenCellID BTS markers, ranked BTS candidate markers (draggable)
     - All layer toggles update within 2 seconds; no page reload
     - _Requirements: 3.3, 10.2, 10.3_
-  - [ ] 23.2 Implement side panel in `frontend/components/SidePanel.tsx`
+  - [x] 23.2 Implement side panel in `frontend/components/SidePanel.tsx`
     - Show on cell click or candidate click: Coverage Score (0–100), Confidence Tag (Low/Med/High), model version, scoring run timestamp, rank (candidates only), SHAP top-3 in plain language with direction
     - SHAP panel co-located with Coverage Score and Confidence Tag — no separate page navigation required
     - _Requirements: 3.4, 4.6, 8.2, 8.4, 10.4, 11.3_
-  - [ ] 23.3 Implement region selector in `frontend/components/RegionSelector.tsx`
+  - [x] 23.3 Implement region selector in `frontend/components/RegionSelector.tsx`
     - Switch between NTT Province (MVP), NTB Province (validation), Central Kalimantan Province (validation) without application reload
     - Switching fires a new Supabase query filtered by `region_id`; heatmap and candidate markers update accordingly
     - _Requirements: 10.5_
-  - [ ] 23.4 Implement WebGL fallback
+  - [x] 23.4 Implement WebGL fallback
     - Detect WebGL support on mount; if unavailable, render a static error page with browser requirements and recommended alternatives (Chrome, Firefox, Edge)
     - _Requirements: 10.6_
-  - [ ] 23.5 Implement target area selector in `frontend/components/TargetAreaSelector.tsx`
+  - [x] 23.5 Implement target area selector in `frontend/components/TargetAreaSelector.tsx`
     - Allow Planner to draw a bounding polygon directly on the map OR select a kecamatan from a dropdown scoped to the active region (sourced from `admin_boundaries`, Task 5.1)
     - Highlight the selected boundary on the map before the Planner requests recommendations (visual confirmation step)
     - On submission, call `resolve_target_area` API with the chosen `selection_method` and payload
     - _Requirements: 10.7, 10.8_
-  - [ ] 23.6 Write unit tests for target area selector state management
+  - [x] 23.6 Write unit tests for target area selector state management
     - Assert switching the active region (Task 23.3) resets any in-progress target-area selection
     - Assert requesting recommendations or a simulation is blocked client-side until a `TargetArea` has been resolved and its boundary highlighted
     - _Requirements: 10.7, 10.8_
 
-- [ ] 24. Interactive_Map — simulation controls and low-confidence gate
-  - [ ] 24.1 Implement "Simulate New BTS" button and Before/After panel in `frontend/components/SimulationPanel.tsx`
+- [x] 24. Interactive_Map — simulation controls and low-confidence gate
+  - [x] 24.1 Implement "Simulate New BTS" button and Before/After panel in `frontend/components/SimulationPanel.tsx`
     - On click, call `/api/simulate` with the selected candidate; display side-by-side or overlay before/after heatmap
     - Show quantified metrics: % Good cells change, villages newly covered, updated Coverage Score
     - Display `UnavailableScenario` message when scenario is missing — no fallback estimate shown
     - Complete within 3 seconds under normal browser conditions
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-  - [ ] 24.2 Implement Drag-and-Drop BTS marker in `frontend/components/DragDropMarker.tsx`
+  - [x] 24.2 Implement Drag-and-Drop BTS marker in `frontend/components/DragDropMarker.tsx`
     - On drop, call `/api/drag-drop` with coordinate; display coverage ring, Coverage Score panel, and Confidence Tag within 2 seconds
     - Show side-by-side comparison vs. model's top candidate; clearly indicate when manual placement wins
     - Display grid resolution label alongside the Coverage Score panel (e.g., "results shown for nearest ~100m grid cell")
     - Display `OutsideExtentError` message when dropped outside grid extent — no fallback shown
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.6, 6.7_
-  - [ ] 24.3 Implement optional power/energy feasibility overlay toggle in `frontend/components/PowerOverlay.tsx`
+  - [x] 24.3 Implement optional power/energy feasibility overlay toggle in `frontend/components/PowerOverlay.tsx`
     - Toggle shows/hides proximity indicator to nearest power grid node or solar potential rating at the dropped coordinate
     - Overlay does NOT trigger a Coverage Score recomputation; Coverage Score remains unchanged when overlay is toggled
     - _Requirements: 6.5_
-  - [ ] 24.4 Implement low-confidence acknowledgement gate in `frontend/components/ConfidenceGate.tsx`
+  - [x] 24.4 Implement low-confidence acknowledgement gate in `frontend/components/ConfidenceGate.tsx`
     - When a Planner attempts to act on a Low-confidence recommendation, display a modal that must be explicitly dismissed
     - Gate is non-bypassable: the action cannot proceed until the modal is acknowledged
     - Log a warning if the gate is bypassed programmatically; re-display gate on next interaction
     - All UI outputs carry "GeoAI-assisted estimate" label (visible, not just in documentation)
     - _Requirements: 7.4, 7.5, 9.3, 9.5_
 
-- [ ] 25. Next.js API routes
-  - [ ] 25.1 Implement `POST /api/recommendations` — accept `target_area_id`, call `rank_bts_candidates`, return ranked candidates with Coverage Score, Confidence Tag, SHAP top-3, model version, scoring run ID
+- [x] 25. Next.js API routes
+  - [x] 25.1 Implement `POST /api/recommendations` — accept `target_area_id`, call `rank_bts_candidates`, return ranked candidates with Coverage Score, Confidence Tag, SHAP top-3, model version, scoring run ID
     - _Requirements: 4.1, 4.6, 4.7, 8.4, 11.3_
-  - [ ] 25.2 Implement `POST /api/simulate` — accept `candidate_id`, `region_id`; call `simulate_bts_placement`; return `SimulationResult` or `UnavailableScenario` message
+  - [x] 25.2 Implement `POST /api/simulate` — accept `candidate_id`, `region_id`; call `simulate_bts_placement`; return `SimulationResult` or `UnavailableScenario` message
     - _Requirements: 5.1, 5.4_
-  - [ ] 25.3 Implement `POST /api/drag-drop` — accept `lat`, `lon`, `region_id`, `overlay_enabled`; call `drag_drop_lookup`; return `DragDropResult` or `OutsideExtentError` message
+  - [x] 25.3 Implement `POST /api/drag-drop` — accept `lat`, `lon`, `region_id`, `overlay_enabled`; call `drag_drop_lookup`; return `DragDropResult` or `OutsideExtentError` message
     - _Requirements: 6.1, 6.6, 6.7_
-  - [ ] 25.4 Implement `POST /api/target-area` — accept `region_id`, `selection_method`, `payload`; call `resolve_target_area`; return resolved `TargetArea` with highlighted boundary GeoJSON
+  - [x] 25.4 Implement `POST /api/target-area` — accept `region_id`, `selection_method`, `payload`; call `resolve_target_area`; return resolved `TargetArea` with highlighted boundary GeoJSON
     - _Requirements: 10.7, 10.8_
-  - [ ] 25.5 Implement `GET /api/grid-cells` — accept `region_id`, `resolution_m`; return Coverage Score cells for heatmap rendering; filtered to `target_area_id` when provided
+  - [x] 25.5 Implement `GET /api/grid-cells` — accept `region_id`, `resolution_m`; return Coverage Score cells for heatmap rendering; filtered to `target_area_id` when provided
     - _Requirements: 3.1, 10.2_
 
-- [ ] 26. Checkpoint — Interactive_Map and API routes functional
+- [x] 26. Checkpoint — Interactive_Map and API routes functional
   - Smoke-test all map layers, side panel, region selector, target area selector, simulation controls, and low-confidence gate against MVP region (NTT Province) data. Ask the user if questions arise.
 
-- [ ] 27. Integration and E2E tests
-  - [ ] 27.1 Write integration test: GEE export → Supabase Storage write → Data_Pipeline read-back (round-trip data integrity)
+- [x] 27. Integration and E2E tests
+  - [x] 27.1 Write integration test: GEE export → Supabase Storage write → Data_Pipeline read-back (round-trip data integrity)
     - Assert exported raster tile checksums match `DataQualityReport.dataset_checksums` on read-back
     - _Requirements: 1.5, 11.2_
-  - [ ] 27.2 Write integration test: Recommendation_Engine → `scoring_runs` table insert → UI retrieval (audit log round-trip)
+  - [x] 27.2 Write integration test: Recommendation_Engine → `scoring_runs` table insert → UI retrieval (audit log round-trip)
     - Assert model version and scoring run timestamp returned by `/api/recommendations` match the persisted `scoring_runs` row
     - _Requirements: 8.5, 11.2, 11.3_
-  - [ ] 27.3 Write integration test: `whatif_grid` precomputed lookup → Simulation_Engine → MapLibre heatmap update (E2E simulation flow)
+  - [x] 27.3 Write integration test: `whatif_grid` precomputed lookup → Simulation_Engine → MapLibre heatmap update (E2E simulation flow)
     - Assert `SimulationResult` metrics are consistent with the precomputed `whatif_grid` row
     - _Requirements: 5.1, 5.3_
-  - [ ] 27.4 Write integration test: region selector change → API region filter → new `grid_cells` query → heatmap re-render
+  - [x] 27.4 Write integration test: region selector change → API region filter → new `grid_cells` query → heatmap re-render
     - Assert that switching regions produces heatmap tiles scoped to the new `region_id`
     - _Requirements: 10.5_
-  - [ ] 27.5 Write Playwright E2E test: full Planner journey on MVP region (NTT Province)
+  - [x] 27.5 Write Playwright E2E test: full Planner journey on MVP region (NTT Province)
     - Open map → toggle layers → click heatmap cell → view SHAP panel → select target area (draw or kecamatan) → request recommendations → view candidates → simulate BTS → verify before/after metrics update within 3 s
     - _Requirements: 3.1–3.5, 4.1–4.7, 5.1–5.5, 8.2, 8.4, 10.7, 10.8_
-  - [ ] 27.6 Write Playwright E2E test: low-confidence gate is non-bypassable
+  - [x] 27.6 Write Playwright E2E test: low-confidence gate is non-bypassable
     - Attempt to act on a Low-confidence recommendation without acknowledging the modal; assert action does not proceed
     - Acknowledge the modal; assert action proceeds
     - _Requirements: 9.5_
-  - [ ] 27.7 Write Playwright E2E test: drag-and-drop outside extent
+  - [x] 27.7 Write Playwright E2E test: drag-and-drop outside extent
     - Drop marker outside precomputed grid extent; assert `OutsideExtentError` message displayed; assert no Coverage Score shown
     - _Requirements: 6.7_
-  - [ ] 27.8 Write Playwright E2E test: target area selection — polygon draw and kecamatan dropdown
+  - [x] 27.8 Write Playwright E2E test: target area selection — polygon draw and kecamatan dropdown
     - Draw a polygon on the map; assert boundary highlighted before submission
     - Select a kecamatan from the dropdown; assert boundary highlighted before submission
     - Switch active region mid-selection; assert target-area selection resets (Task 23.6)
     - _Requirements: 10.7, 10.8_
 
-- [ ] 28. Spatial cross-validation acceptance gates
-  - [ ] 28.1 Run `spatial_cv` for NTT Province across all available kecamatan; assert train/test disjoint per fold; assert per-kecamatan accuracy entries present for all kecamatan
+- [x] 28. Spatial cross-validation acceptance gates
+  - [x] 28.1 Run `spatial_cv` for NTT Province across all available kecamatan; assert train/test disjoint per fold; assert per-kecamatan accuracy entries present for all kecamatan
     - _Requirements: 2.4, 9.4_
-  - [ ] 28.2 Run `spatial_cv` for Central Kalimantan Province (dense-canopy terrain); assert at least one dense-canopy kecamatan generalises to unseen terrain without hiding accuracy behind aggregate metric
+  - [x] 28.2 Run `spatial_cv` for Central Kalimantan Province (dense-canopy terrain); assert at least one dense-canopy kecamatan generalises to unseen terrain without hiding accuracy behind aggregate metric
     - _Requirements: 9.4, 13.5_
-  - [ ] 28.3 Confirm no kecamatan accuracy is suppressed in the aggregate — per-kecamatan breakdown must be surfaced in `CVResult`
+  - [x] 28.3 Confirm no kecamatan accuracy is suppressed in the aggregate — per-kecamatan breakdown must be surfaced in `CVResult`
     - _Requirements: 9.4_
 
-- [ ] 29. Phase 3 scalability stub — distributed compute adapter interface
-  - [ ] 29.1 Define (not fully implement) a `DistributedScoringAdapter` interface stub in `backend/geosignal/adapters.py`, documenting how `rank_bts_candidates` and `compute_coverage_score` would be distributed across Spark/Dask worker nodes for national-scale multi-province runs
+- [x] 29. Phase 3 scalability stub — distributed compute adapter interface
+  - [x] 29.1 Define (not fully implement) a `DistributedScoringAdapter` interface stub in `backend/geosignal/adapters.py`, documenting how `rank_bts_candidates` and `compute_coverage_score` would be distributed across Spark/Dask worker nodes for national-scale multi-province runs
     - This is explicitly out of MVP scope for the hackathon demo, but Requirement 13.2 requires the architecture to support it, so the interface boundary must exist even if the concrete distributed implementation does not run during the hackathon
     - Confirm the existing `ScoringAdapter` protocol (Task 9.3–9.4) requires no breaking changes to support a future distributed implementation behind this stub
     - _Requirements: 13.2_
 
-- [ ] 30. Pre-demo ethical safeguard checklist verification
-  - [ ] 30.1 Verify Ethical Risk Register contains all 5 required entries and each has all four non-empty fields
+- [x] 30. Pre-demo ethical safeguard checklist verification
+  - [x] 30.1 Verify Ethical Risk Register contains all 5 required entries and each has all four non-empty fields
     - _Requirements: 9.6_
-  - [ ] 30.2 Verify all UI outputs carry "GeoAI-assisted estimate" label visible to the Planner
+  - [x] 30.2 Verify all UI outputs carry "GeoAI-assisted estimate" label visible to the Planner
     - _Requirements: 9.3_
-  - [ ] 30.3 Verify low-confidence acknowledgement gate is non-bypassable (automated + manual test)
+  - [x] 30.3 Verify low-confidence acknowledgement gate is non-bypassable (automated + manual test)
     - _Requirements: 9.5_
-  - [ ] 30.4 Verify deforestation constraint is active by default (joint land-cover + canopy-height check)
+  - [x] 30.4 Verify deforestation constraint is active by default (joint land-cover + canopy-height check)
     - _Requirements: 4.3, 9.2_
-  - [ ] 30.5 Verify SHAP explanations display for both Tier 1 (AHP) and Tier 2 (XGBoost/LightGBM) outputs in the side panel
+  - [x] 30.5 Verify SHAP explanations display for both Tier 1 (AHP) and Tier 2 (XGBoost/LightGBM) outputs in the side panel
     - _Requirements: 8.3, 8.4_
-  - [ ] 30.6 Verify confidence thresholds are stored in `DataQualityReport`, not hard-coded in application logic
+  - [x] 30.6 Verify confidence thresholds are stored in `DataQualityReport`, not hard-coded in application logic
     - _Requirements: 7.1_
-  - [ ] 30.7 Verify model version and scoring run timestamp are displayed in the recommendation side panel for every recommendation
+  - [x] 30.7 Verify model version and scoring run timestamp are displayed in the recommendation side panel for every recommendation
     - _Requirements: 11.3_
-  - [ ] 30.8 Verify no Supabase table or exported payload contains PII (Property 26 re-check against final schema before demo)
+  - [x] 30.8 Verify no Supabase table or exported payload contains PII (Property 26 re-check against final schema before demo)
     - _Requirements: 12.1, 12.2, 12.3, 12.4_
 
-- [ ] 31. Final checkpoint — all tests pass, demo ready
+- [x] 31. Final checkpoint — all tests pass, demo ready
   - Run full test suite (Hypothesis PBT + unit + integration + Playwright E2E); confirm all pass
   - Confirm MVP demo region (NTT Province) data is loaded, GADM boundaries ingested, precomputed LOS grid and what-if grid are both populated, and simulation scenarios are available
   - Confirm secondary validation regions (NTB Province, Central Kalimantan Province) data loaded for region selector, including their own precomputed LOS/what-if grids
