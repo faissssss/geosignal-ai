@@ -167,3 +167,16 @@ export const REGIONS: { id: RegionId; label: string }[] = [
   { id: 'ntb', label: 'NTB Province (Validation)' },
   { id: 'central_kalimantan', label: 'Central Kalimantan (Validation)' },
 ]
+
+// ---------------------------------------------------------------------------
+// Layer visibility state (shared by LayerToggleBar and LayersButton)
+// ---------------------------------------------------------------------------
+
+export interface LayerVisibility {
+  heatmap:    boolean
+  landcover:  boolean
+  contours:   boolean
+  villages:   boolean
+  btsMarkers: boolean
+  candidates: boolean
+}

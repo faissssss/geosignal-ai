@@ -86,3 +86,8 @@ frontend/test-results/
 data/ookla/
 data/opencellid/
 *.err
+
+# ==============================================================================
+# Deepwork session state (git-local progress files)
+# ==============================================================================
+.slim/deepwork/

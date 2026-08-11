@@ -198,6 +198,9 @@ def main() -> int:
             print(f"[{region_id}] 0 towers (no records in extent)")
             continue
 
+        # Record the source_run BEFORE inserting so rows can carry provenance.
+        run_id = _record_source_run(client, region_id, len(sub), "ok", "bulk CSV filtered to extent")
+
         rows = []
         for _, r in sub.iterrows():
             rows.append(
@@ -210,14 +213,14 @@ def main() -> int:
                     "mnc": int(r["net"]),
                     "lac": int(r["area"]),
                     "cell_id": int(r["cell"]),
+                    "source_run_id": run_id,
                     "status": "real",
                 }
             )
         for i in range(0, len(rows), 500):
             client.table("bts_locations").insert(rows[i : i + 500]).execute()
 
-        _record_source_run(client, region_id, len(rows), "ok", "bulk CSV filtered to extent")
-        print(f"[{region_id}] inserted {len(rows)} towers")
+        print(f"[{region_id}] inserted {len(rows)} towers (source_run_id={run_id})")
 
     return 0
 

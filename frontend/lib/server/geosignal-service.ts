@@ -19,6 +19,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
+import type { PostgrestFilterBuilder } from '@supabase/postgrest-js'
 import type {
   BTSCandidate,
   GridCellResponse,
@@ -37,6 +38,44 @@ import type {
   DataSourceKind,
 } from '@/lib/api-types'
 import type { AdminBoundary } from '@/lib/types'
+
+// ---------------------------------------------------------------------------
+// Pagination helper
+//
+// Supabase/PostgREST caps a single SELECT at 1000 rows by default. The layer
+// queries below can legitimately exceed that (grid_cells: ~59k/region,
+// contour_features: ~38k for central_kalimantan, village_features: ~6k,
+// bts_locations: ~3.4k). Without paging, routes silently truncate — a partial
+// dataset looks like the real one. fetchAllPages walks every page with
+// `.range()` and returns the complete row set.
+// ---------------------------------------------------------------------------
+
+type AnyFilterBuilder = PostgrestFilterBuilder<any, any, any[], any, any>
+
+const DEFAULT_PAGE_SIZE = 1000
+// Contour geometries are large (9k+ coords per LineString). A 1000-row page
+// exceeds the anon-role statement timeout (~6s) for NTT/NTB; 100 rows stays
+// comfortably under it. Everything else pages at the default 1000.
+const CONTOUR_PAGE_SIZE = 100
+
+async function fetchAllPages<T>(
+  query: AnyFilterBuilder,
+  pageSize = DEFAULT_PAGE_SIZE,
+): Promise<T[]> {
+  const rows: T[] = []
+  let from = 0
+  for (;;) {
+    const { data, error } = await query.range(from, from + pageSize - 1)
+    if (error) {
+      throw new ServiceError('SERVICE_ERROR', `Database error: ${error.message}`)
+    }
+    const batch = (data as unknown as T[]) ?? []
+    rows.push(...batch)
+    if (batch.length < pageSize) break
+    from += pageSize
+  }
+  return rows
+}
 
 // ---------------------------------------------------------------------------
 // ServiceError — structured error thrown by service functions
@@ -399,13 +438,8 @@ export async function getGridCells(
   // For now, we filter by region_id and resolution_m only
   // TODO: Add target_area_id column to grid_cells if spatial filtering is needed
 
-  const { data, error } = await query
-
-  if (error) {
-    throw new ServiceError('SERVICE_ERROR', `Database error fetching grid cells: ${error.message}`)
-  }
-
-  return ((data as unknown as GridCellResponse[]) ?? [])
+  const cells = await fetchAllPages<GridCellResponse>(query)
+  return cells
 }
 
 // ---------------------------------------------------------------------------
@@ -488,12 +522,7 @@ export async function getContourFeatures(
 
   if (kecamatan_id) query = query.eq('kecamatan_id', kecamatan_id)
 
-  const { data, error } = await query
-  if (error) {
-    throw new ServiceError('SERVICE_ERROR', `Database error fetching contour features: ${error.message}`)
-  }
-
-  const rows = ((data as unknown as ContourFeatureRow[]) ?? [])
+  const rows = await fetchAllPages<ContourFeatureRow>(query, CONTOUR_PAGE_SIZE)
   return rows.map(row => {
     const source = toDataSourceKind(row.status)
     return {
@@ -530,12 +559,7 @@ export async function getVillageFeatures(
 
   if (kecamatan_id) query = query.eq('kecamatan_id', kecamatan_id)
 
-  const { data, error } = await query
-  if (error) {
-    throw new ServiceError('SERVICE_ERROR', `Database error fetching village features: ${error.message}`)
-  }
-
-  const rows = ((data as unknown as VillageFeatureRow[]) ?? [])
+  const rows = await fetchAllPages<VillageFeatureRow>(query)
   return rows.map(row => {
     const source = toDataSourceKind(row.status)
     return {
@@ -567,16 +591,12 @@ export async function getBTSLocations(
   region_id: RegionId,
 ): Promise<BTSLocation[]> {
   const supabase = await createClient()
-  const { data, error } = await supabase
+  const query = supabase
     .from('bts_locations')
     .select('tower_id, region_id, lat, lon, mcc, mnc, lac, cell_id, status')
     .eq('region_id', region_id)
 
-  if (error) {
-    throw new ServiceError('SERVICE_ERROR', `Database error fetching BTS locations: ${error.message}`)
-  }
-
-  const rows = ((data as unknown as BTSLocationRow[]) ?? [])
+  const rows = await fetchAllPages<BTSLocationRow>(query)
   return rows.map(row => {
     const source = toDataSourceKind(row.status)
     return {

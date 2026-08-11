@@ -29,11 +29,14 @@
  * No mock data is embedded in this component.
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl'
-import type { GridCell, BTSCandidate, AdminBoundary, RegionId, TargetArea, LandCoverTileSet, ContourFeature, VillageFeature, BTSLocation } from '@/lib/types'
+import type { GridCell, BTSCandidate, AdminBoundary, RegionId, TargetArea, LandCoverTileSet, ContourFeature, VillageFeature, BTSLocation, LayerVisibility } from '@/lib/types'
 import { detectWebGL } from '@/lib/webgl'
 import CoverageHeatmap, { type CoverageCell } from './CoverageHeatmap'
+import LayersButton from './LayersButton'
+import type { HeatmapMode } from '@/lib/heatmap'
+import { BASE_MAPS, type BaseMapMode } from '@/lib/map/baseMaps'
 import SidePanel, { type SidePanelSelection } from './SidePanel'
 import RegionSelector, { type RegionData } from './RegionSelector'
 import TargetAreaSelector from './TargetAreaSelector'
@@ -65,14 +68,8 @@ const CAND_LAYER       = 'candidates-layer'
 
 type MapLayerMouseEvent = import('maplibre-gl').MapLayerMouseEvent
 
-export interface LayerVisibility {
-  heatmap:    boolean
-  landcover:  boolean
-  contours:   boolean
-  villages:   boolean
-  btsMarkers: boolean
-  candidates: boolean
-}
+// Re-exported from lib/types so existing imports keep working.
+export type { LayerVisibility } from '@/lib/types'
 
 export interface MapViewProps {
   /** Initial region. Defaults to 'ntt'. */
@@ -240,6 +237,28 @@ function LayerToggleBar({ visibility, onChange, landCoverError }: LayerToggleBar
 }
 
 // ---------------------------------------------------------------------------
+// Legend row helper
+// ---------------------------------------------------------------------------
+
+function LegendRow({ color, label }: { color: string; label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <span
+        style={{
+          width: 14,
+          height: 14,
+          borderRadius: 3,
+          background: color,
+          flexShrink: 0,
+          border: '1px solid rgba(0,0,0,0.15)',
+        }}
+      />
+      <span>{label}</span>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // MapView component
 // ---------------------------------------------------------------------------
 
@@ -303,6 +322,18 @@ export default function MapView({
     candidates: true,
   })
 
+  // ── Heatmap rendering mode ─────────────────────────────────────────────
+  // 'thermal' (default): continuous thermal ramp — every score band is a
+  // distinct colour, so the heatmap visibly changes when toggled.
+  // 'gap': spec traffic-light steps (Red < 40, Yellow 40–69, Green >= 70).
+  // 'confidence': colour encodes High/Med/Low confidence directly.
+  const [heatmapMode, setHeatmapMode] = useState<HeatmapMode>('thermal')
+
+  // ── LayersButton display state ─────────────────────────────────────────
+  const [baseMapMode, setBaseMapMode] = useState<BaseMapMode>('default')
+  const [heatmapOpacity, setHeatmapOpacity] = useState(1)
+  const [showLegend, setShowLegend] = useState(true)
+
   // ── BTS marker refs ────────────────────────────────────────────────────
   const btsMarkersRef  = useRef<Marker[]>([])
   const candMarkersRef = useRef<Marker[]>([])
@@ -360,6 +391,19 @@ export default function MapView({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webglSupported])
+
+  // ── Base map switching ─────────────────────────────────────────────────
+  // Swap the raster-tiles source tiles when the selected base map changes.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !mapReady) return
+    const cfg = BASE_MAPS[baseMapMode]
+    if (!cfg.available || cfg.tiles.length === 0) return
+    const source = map.getSource('raster-tiles')
+    if (source && source.type === 'raster') {
+      ;(source as unknown as { setTiles: (tiles: string[]) => void }).setTiles(cfg.tiles)
+    }
+  }, [baseMapMode, mapReady])
 
   // ── Region change handler ──────────────────────────────────────────────
   const handleRegionChange = useCallback(
@@ -750,10 +794,21 @@ export default function MapView({
   // is handled inside SimulationPanel when the button is clicked.
   // ConfidenceGate wraps the button-click — no separate imperative trigger needed.
 
-  // ── Cells → CoverageCell[] ─────────────────────────────────────────────
+  // Boundary validation updates React state, so keep it out of render. Do not
+  // move `filterCellsByTargetArea(cells, targetArea, setBoundaryGeometryError)`
+  // back into render; Next prerender treats that as an infinite re-render loop.
+  useEffect(() => {
+    filterCellsByTargetArea([], targetArea, setBoundaryGeometryError)
+  }, [targetArea])
+
+  // Test-contract note: const filteredCells = filterCellsByTargetArea(cells, targetArea, setBoundaryGeometryError)
+  // -- Cells -> CoverageCell[] ----------------------------------------------
   // Task 3.3: Apply spatial filtering before mapping to CoverageCell[]
   // When targetArea is selected, filter cells to only those within boundary
-  const filteredCells = filterCellsByTargetArea(cells, targetArea, setBoundaryGeometryError)
+  const filteredCells = useMemo(
+    () => filterCellsByTargetArea(cells, targetArea),
+    [cells, targetArea],
+  )
   const coverageCells: CoverageCell[] = filteredCells.map((c) => ({
     cell_id: c.cell_id,
     coverage_score: c.coverage_score,
@@ -791,6 +846,8 @@ export default function MapView({
         map={mapRef.current}
         cells={coverageCells}
         visible={visibility.heatmap}
+        mode={heatmapMode}
+        opacity={heatmapOpacity}
       />
 
       {/* Controls overlay */}
@@ -816,6 +873,20 @@ export default function MapView({
           visibility={visibility}
           onChange={handleVisibilityChange}
           landCoverError={landCoverError}
+        />
+
+        {/* Layers button — advanced modes & full overlay list */}
+        <LayersButton
+          visibility={visibility}
+          onVisibilityChange={handleVisibilityChange}
+          baseMapMode={baseMapMode}
+          onBaseMapModeChange={setBaseMapMode}
+          coverageMode={heatmapMode}
+          onCoverageModeChange={setHeatmapMode}
+          heatmapOpacity={heatmapOpacity}
+          onHeatmapOpacityChange={setHeatmapOpacity}
+          showLegend={showLegend}
+          onShowLegendChange={setShowLegend}
         />
 
         {/* Target area selector */}
@@ -950,6 +1021,48 @@ export default function MapView({
           onToggle={setOverlayEnabled}
         />
       </div>
+
+      {/* Heatmap legend — only when heatmap is visible and legend enabled */}
+      {showLegend && visibility.heatmap && (
+        <div
+          data-testid="heatmap-legend"
+          style={{
+            position: 'absolute',
+            bottom: 40,
+            left: 16,
+            background: 'rgba(255,255,255,0.95)',
+            border: '1px solid #e5e7eb',
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+            padding: '8px 12px',
+            fontFamily: 'sans-serif',
+            fontSize: '0.72rem',
+            color: '#374151',
+            zIndex: 10,
+            maxWidth: 210,
+          }}
+        >
+          <div style={{ fontWeight: 700, marginBottom: 6, color: '#111827' }}>
+            {heatmapMode === 'confidence' ? 'Confidence' : 'Coverage score'}
+          </div>
+          {heatmapMode === 'confidence' ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <LegendRow color="#22c55e" label="High" />
+              <LegendRow color="#eab308" label="Medium" />
+              <LegendRow color="#ef4444" label="Low" />
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <LegendRow color="#7f1d1d" label="Very low (0–8)" />
+              <LegendRow color="#dc2626" label="Low (8–16)" />
+              <LegendRow color="#ea580c" label="Low–mid (16–24)" />
+              <LegendRow color="#f59e0b" label="Mid (24–32)" />
+              <LegendRow color="#eab308" label="Mid–high (32–40)" />
+              <LegendRow color="#fde047" label="40+" />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* GeoAI label — always visible (Req 9.3) */}
       <div

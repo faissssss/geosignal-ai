@@ -1,0 +1,1253 @@
+{
+  "generated_at": "2026-08-11T09:45:41.739491+00:00",
+  "checks": [
+    {
+      "name": "heatmap_45_45",
+      "passed": true,
+      "detail": "45/45 kecamatan have real cells"
+    },
+    {
+      "name": "contours_all_kecamatan",
+      "passed": true,
+      "detail": "45/45 kecamatan have contours"
+    },
+    {
+      "name": "villages_all_kecamatan",
+      "passed": true,
+      "detail": "45/45 kecamatan have villages"
+    },
+    {
+      "name": "landcover_tiles_all_regions",
+      "passed": true,
+      "detail": "regions with real tile sets: 3/3"
+    },
+    {
+      "name": "bts_towers_regions",
+      "passed": true,
+      "detail": "towers per region: {'ntb': 3390, 'ntt': 33, 'central_kalimantan': 318}"
+    },
+    {
+      "name": "candidates_all_target_areas",
+      "passed": true,
+      "detail": "23/23 target areas have derived candidates"
+    },
+    {
+      "name": "demo_segregation",
+      "passed": true,
+      "detail": "demo grid_cells=0, demo bts_candidates=0 (removed by promotion); invalid labels: grid=[] candidates=[]"
+    }
+  ],
+  "passed": true,
+  "kecamatan_counts": {
+    "IDN.14.10_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "MurungRaya",
+      "grid_cells_real": 2990,
+      "contours_real": 9255,
+      "villages_real": 134
+    },
+    "IDN.14.11_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "PalangkaRaya",
+      "grid_cells_real": 2962,
+      "contours_real": 203,
+      "villages_real": 30
+    },
+    "IDN.14.12_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "PulangPisau",
+      "grid_cells_real": 2984,
+      "contours_real": 744,
+      "villages_real": 98
+    },
+    "IDN.14.13_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "Seruyan",
+      "grid_cells_real": 2957,
+      "contours_real": 6942,
+      "villages_real": 102
+    },
+    "IDN.14.14_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "Sukamara",
+      "grid_cells_real": 2981,
+      "contours_real": 995,
+      "villages_real": 33
+    },
+    "IDN.14.1_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "BaritoSelatan",
+      "grid_cells_real": 2948,
+      "contours_real": 720,
+      "villages_real": 106
+    },
+    "IDN.14.2_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "BaritoTimur",
+      "grid_cells_real": 2993,
+      "contours_real": 349,
+      "villages_real": 127
+    },
+    "IDN.14.3_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "BaritoUtara",
+      "grid_cells_real": 2947,
+      "contours_real": 2354,
+      "villages_real": 106
+    },
+    "IDN.14.4_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "GunungMas",
+      "grid_cells_real": 2968,
+      "contours_real": 2628,
+      "villages_real": 131
+    },
+    "IDN.14.5_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "Kapuas",
+      "grid_cells_real": 2826,
+      "contours_real": 2319,
+      "villages_real": 233
+    },
+    "IDN.14.6_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "Katingan",
+      "grid_cells_real": 2959,
+      "contours_real": 6252,
+      "villages_real": 163
+    },
+    "IDN.14.7_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "KotawaringinBarat",
+      "grid_cells_real": 2993,
+      "contours_real": 1056,
+      "villages_real": 100
+    },
+    "IDN.14.8_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "KotawaringinTimur",
+      "grid_cells_real": 2970,
+      "contours_real": 1511,
+      "villages_real": 190
+    },
+    "IDN.14.9_1": {
+      "region_id": "central_kalimantan",
+      "kecamatan_name": "Lamandau",
+      "grid_cells_real": 2984,
+      "contours_real": 2256,
+      "villages_real": 90
+    },
+    "IDN.20.10_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "Sumbawa",
+      "grid_cells_real": 2985,
+      "contours_real": 14,
+      "villages_real": 198
+    },
+    "IDN.20.1_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "Bima",
+      "grid_cells_real": 2949,
+      "contours_real": 14,
+      "villages_real": 575
+    },
+    "IDN.20.2_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "Dompu",
+      "grid_cells_real": 2964,
+      "contours_real": 14,
+      "villages_real": 337
+    },
+    "IDN.20.3_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "KotaBima",
+      "grid_cells_real": 841,
+      "contours_real": 8,
+      "villages_real": 100
+    },
+    "IDN.20.4_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "LombokBarat",
+      "grid_cells_real": 2946,
+      "contours_real": 15,
+      "villages_real": 366
+    },
+    "IDN.20.5_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "LombokTengah",
+      "grid_cells_real": 2947,
+      "contours_real": 19,
+      "villages_real": 571
+    },
+    "IDN.20.6_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "LombokTimur",
+      "grid_cells_real": 2957,
+      "contours_real": 19,
+      "villages_real": 275
+    },
+    "IDN.20.7_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "LombokUtara",
+      "grid_cells_real": 2949,
+      "contours_real": 19,
+      "villages_real": 170
+    },
+    "IDN.20.8_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "Mataram",
+      "grid_cells_real": 212,
+      "contours_real": 5,
+      "villages_real": 450
+    },
+    "IDN.20.9_1": {
+      "region_id": "ntb",
+      "kecamatan_name": "SumbawaBarat",
+      "grid_cells_real": 2979,
+      "contours_real": 10,
+      "villages_real": 40
+    },
+    "IDN.21.10_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Manggarai",
+      "grid_cells_real": 2988,
+      "contours_real": 12,
+      "villages_real": 197
+    },
+    "IDN.21.11_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Nagekeo",
+      "grid_cells_real": 2998,
+      "contours_real": 11,
+      "villages_real": 90
+    },
+    "IDN.21.12_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Ngada",
+      "grid_cells_real": 2994,
+      "contours_real": 174,
+      "villages_real": 92
+    },
+    "IDN.21.13_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "RoteNdao",
+      "grid_cells_real": 2986,
+      "contours_real": 166,
+      "villages_real": 90
+    },
+    "IDN.21.14_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "SabuRaijua",
+      "grid_cells_real": 1843,
+      "contours_real": 2,
+      "villages_real": 63
+    },
+    "IDN.21.15_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Sikka",
+      "grid_cells_real": 2983,
+      "contours_real": 9,
+      "villages_real": 212
+    },
+    "IDN.21.16_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "SumbaBaratDaya",
+      "grid_cells_real": 2996,
+      "contours_real": 5,
+      "villages_real": 730
+    },
+    "IDN.21.17_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "SumbaBarat",
+      "grid_cells_real": 2844,
+      "contours_real": 5,
+      "villages_real": 179
+    },
+    "IDN.21.18_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "SumbaTengah",
+      "grid_cells_real": 2999,
+      "contours_real": 5,
+      "villages_real": 78
+    },
+    "IDN.21.19_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "SumbaTimur",
+      "grid_cells_real": 2992,
+      "contours_real": 7,
+      "villages_real": 326
+    },
+    "IDN.21.1_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Alor",
+      "grid_cells_real": 2939,
+      "contours_real": 9,
+      "villages_real": 319
+    },
+    "IDN.21.20_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "TimorTengahSelatan",
+      "grid_cells_real": 2994,
+      "contours_real": 12,
+      "villages_real": 241
+    },
+    "IDN.21.21_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "TimorTengahUtara",
+      "grid_cells_real": 2998,
+      "contours_real": 12,
+      "villages_real": 163
+    },
+    "IDN.21.2_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Belu",
+      "grid_cells_real": 2976,
+      "contours_real": 10,
+      "villages_real": 192
+    },
+    "IDN.21.3_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Ende",
+      "grid_cells_real": 2958,
+      "contours_real": 9,
+      "villages_real": 206
+    },
+    "IDN.21.4_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "FloresTimur",
+      "grid_cells_real": 2963,
+      "contours_real": 9,
+      "villages_real": 536
+    },
+    "IDN.21.5_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "KotaKupang",
+      "grid_cells_real": 621,
+      "contours_real": 3,
+      "villages_real": 49
+    },
+    "IDN.21.6_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Kupang",
+      "grid_cells_real": 2995,
+      "contours_real": 12,
+      "villages_real": 177
+    },
+    "IDN.21.7_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "Lembata",
+      "grid_cells_real": 2951,
+      "contours_real": 9,
+      "villages_real": 192
+    },
+    "IDN.21.8_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "ManggaraiBarat",
+      "grid_cells_real": 2944,
+      "contours_real": 12,
+      "villages_real": 393
+    },
+    "IDN.21.9_1": {
+      "region_id": "ntt",
+      "kecamatan_name": "ManggaraiTimur",
+      "grid_cells_real": 2983,
+      "contours_real": 12,
+      "villages_real": 112
+    }
+  },
+  "region_counts": {
+    "ntt": {
+      "grid_cells_real": 58945,
+      "contours_real": 505,
+      "villages_real": 4637,
+      "bts_towers_real": 33,
+      "landcover_tile_sets_real": 1
+    },
+    "ntb": {
+      "grid_cells_real": 24729,
+      "contours_real": 137,
+      "villages_real": 3082,
+      "bts_towers_real": 3390,
+      "landcover_tile_sets_real": 1
+    },
+    "central_kalimantan": {
+      "grid_cells_real": 41462,
+      "contours_real": 37584,
+      "villages_real": 1643,
+      "bts_towers_real": 318,
+      "landcover_tile_sets_real": 1
+    }
+  },
+  "target_area_candidates": {
+    "361622fe-5263-407e-b8b8-0a5e6af59c3f": {
+      "region_id": "ntb",
+      "kecamatan_id": "IDN.20.1_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "a14e37bc-afa1-4c83-886e-e3956dfe2f02": {
+      "region_id": "ntb",
+      "kecamatan_id": "IDN.20.2_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "58f5609f-1447-409b-b511-de5633a4a0e7": {
+      "region_id": "ntb",
+      "kecamatan_id": "IDN.20.4_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "2450b385-b713-4e2a-befe-09d20db21d8f": {
+      "region_id": "ntt",
+      "kecamatan_id": "IDN.21.4_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "319137aa-fd2f-403d-963f-fa7ae54a971e": {
+      "region_id": "ntb",
+      "kecamatan_id": "IDN.20.1_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "e9db7221-97b3-4396-9de3-6ae01ee8f84f": {
+      "region_id": "ntt",
+      "kecamatan_id": "IDN.21.1_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "6496855e-e686-4289-b648-c6cb12da1b96": {
+      "region_id": "ntt",
+      "kecamatan_id": "IDN.21.3_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "683600d5-7b5a-498c-ba3c-ac8115cc5a44": {
+      "region_id": "ntt",
+      "kecamatan_id": "IDN.21.3_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "80f19f28-3b56-4c6f-b7ba-c29d7bbc0e85": {
+      "region_id": "ntt",
+      "kecamatan_id": "IDN.21.3_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "e5683e82-2cac-4329-85cd-184ca5b8ec76": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.10_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "9e4981b2-9d90-46c0-bf6a-b731dc114a86": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.11_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "e651ba4d-44bf-42aa-9fe0-d93aa284f2cb": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.12_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "b4fdb9bd-f71a-4688-bde4-b6cd6020519f": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.13_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "743bf1f1-30c5-479d-9bd7-7a4fe1406129": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.14_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "92b67252-f01f-4df9-a90d-5fa4e9cee32d": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.1_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "2b730ed9-3e87-4038-b4e8-c7bd20d597ba": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.3_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "53d60b6a-4f21-4895-a2b1-d8b0f03924ca": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.5_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "032e5b0e-d791-4481-9d16-6d533ca6360b": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.2_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "1cee02f0-66f3-4a65-99f4-c536863adf04": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.4_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "30109990-db06-409d-a086-afeebb031758": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.6_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "e041ce50-2ab1-48f9-a449-eff0da0f1210": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.8_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "b0454f09-4ac1-4071-880f-2ba1cd0202a5": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.7_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    },
+    "56371675-84de-459a-9701-29047960a43d": {
+      "region_id": "central_kalimantan",
+      "kecamatan_id": "IDN.14.9_1",
+      "derived_candidates": 10,
+      "explicit_unavailable": false
+    }
+  },
+  "source_runs": [
+    {
+      "run_id": "d2e7fd2e-c9a0-4338-9fd3-a0fe6a254045",
+      "dataset": "opencellid_towers",
+      "region_id": "ntt",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "427aac8e-3696-41b2-b136-d5e7572ae882",
+      "dataset": "opencellid_towers",
+      "region_id": "ntb",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "b4eeaed9-ec6d-4972-9f40-8f198606afd3",
+      "dataset": "opencellid_towers",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "ae0cb693-c2c3-4bdc-9426-4a7d8a6a5736",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "2a8dcd89-eb82-42c4-85fc-e715318976b0",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "dce110e4-9c20-4071-9403-627501ef8ca1",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "d2bb1700-8f2d-42be-b9fa-e951448e80b9",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "6899a6ae-575d-444b-99f4-ab9e75bbfb97",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "252365b4-5ffe-4aac-be55-13476d925e97",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "b25d3e25-247c-4a80-97b1-ae9b1f39e7a8",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "8b043252-6881-43dc-af4f-7830e0a14f49",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "906740cf-c214-4a52-ba00-dca363a0e3c5",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "f1b9802b-b388-4bd2-a685-53ac475ca0e4",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "e5681c84-f5a9-4d7e-b6d2-1beab8f97e1c",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "bb15444d-d4fd-4db3-a04d-787a66c54849",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "ed40142d-e2fc-4fd4-9fea-81107672c883",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "48eee3c4-2a58-47b3-9e87-1825f38370a0",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "26079f74-e450-4a8a-97f9-e16555eb113b",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "dataset": "gee_raster_sample",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 41462,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "55b24014-6524-41e3-b30f-011c79e1d554",
+      "dataset": "gee_raster_sample",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 24729,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "5e89a4b1-2fff-409c-ae44-ef26e9ebd899",
+      "dataset": "gee_raster_sample",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 58945,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "33e78318-dd72-4dd4-9579-974408fe911a",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "c743f2d3-6e5a-4872-9a20-19bd8def7341",
+      "dataset": "srtm_contours",
+      "region_id": "ntt",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "b1623d3d-47ee-4106-8d85-1317bd290f50",
+      "dataset": "srtm_contours",
+      "region_id": "ntb",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "928c67ed-484f-46a6-acd2-8d57e724a099",
+      "dataset": "srtm_contours",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "800a85b9-8471-404b-8f18-315ef0e7afeb",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "76768595-7cef-43d1-b31e-65d0f56567be",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "5a52e4e8-56e7-4f09-b175-76576262ee85",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "1b70e75d-2d07-4699-bd65-6a4ca5ae0056",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "2a209364-6a69-42af-9ada-6dbab63b51e2",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "dbd2a4df-dd83-4d9b-80cf-7fb9e78f4a11",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "d93f9623-8d7f-467e-9815-762ac8111ab7",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "1dba5c5c-a8ca-438a-9ca5-2bbc6d810383",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "d48a0ca4-bb0b-41e5-8d6d-b0758a7dfd16",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "7f4378db-b651-45ac-bdb5-0692a3228937",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "4c137d7a-e2bd-4b42-96a2-4a9ad770205f",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "309b2f3c-8ee1-4b6c-86ae-b9c608d66c49",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "b8ac6d05-9671-406a-a979-cf63d33183a1",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "453282ff-39c3-4c1a-929a-6492374285e0",
+      "dataset": "opencellid_towers",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 33,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "31ae1757-3a5e-4472-bb92-837cb7c88ab1",
+      "dataset": "opencellid_towers",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 3390,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "9460297b-3f3f-495a-8fa6-a27073fa0bf1",
+      "dataset": "opencellid_towers",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 318,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "3db155d4-2f88-49bd-86b5-bf981ced33ad",
+      "dataset": "gee_landcover_tiles",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 1,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "5a97196e-ea1f-4278-8de1-21c1e873afce",
+      "dataset": "gee_landcover_tiles",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 1,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "4f00fe80-0491-489d-aeaf-f2f7cfc6dd7a",
+      "dataset": "gee_landcover_tiles",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 1,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "e01cd53a-9010-427f-b73b-1f8d48ea39f2",
+      "dataset": "srtm_contours",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 505,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "92f13532-60f1-48be-81f6-c016e11c501f",
+      "dataset": "srtm_contours",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 137,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "37ae189b-17f7-4593-a0f9-255741a01ab0",
+      "dataset": "srtm_contours",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 37584,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "aa601f6b-886d-4886-9414-772bd251a17c",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "ac776784-3dfe-4e29-8f4c-123d735917ec",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "abeacd3e-4fd6-42d0-8e9a-b91d2ec9af22",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "48f6a09b-ce58-41a7-9b64-a63116ed98f3",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "0aa6aa16-78be-401e-94a3-11cd3b167072",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "c2c6d4b0-e03d-439f-9ebe-b9df271d0c10",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "9f7f49b0-8a5c-44bd-ae82-bb950bb4bc16",
+      "dataset": "ookla_fixed",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 1342,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "6e2fcf84-d88b-4bf2-83de-7aaf4ec3b284",
+      "dataset": "ookla_fixed",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 3946,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "a3e9b195-9866-4523-b265-4ef4022ec696",
+      "dataset": "ookla_fixed",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 9382,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "16c69b77-5fab-4c6f-8ff5-5ff3ff12d53f",
+      "dataset": "ookla_mobile",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 3266,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "485ef504-4893-4853-b522-2e83da4f4aa1",
+      "dataset": "ookla_mobile",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 2988,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "613617a0-e1d8-430c-8c64-aaaf7e3b1083",
+      "dataset": "ookla_mobile",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 9505,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "376029b9-1b4f-4c95-ad45-2c4929449ece",
+      "dataset": "osm_villages",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 6183,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "b53f833f-27c2-439d-b041-abad8b9eea70",
+      "dataset": "osm_villages",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 3053,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "576b190e-b343-4444-8210-8829d21224c8",
+      "dataset": "osm_villages",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 5138,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "f64d5530-f4c2-4be0-961a-28208bc9c1a4",
+      "dataset": "gee_raster_sample",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 41462,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "1e85c0b4-1366-4e28-9920-7f1b4b5f5ac7",
+      "dataset": "gee_raster_sample",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 24729,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "e0eb5fb9-e6a4-4d99-af15-3f05bdfbfbe4",
+      "dataset": "gee_raster_sample",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 58945,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "11e001d7-5e5a-48db-aabc-66d0be84c422",
+      "dataset": "opencellid_towers",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 0,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "2e117b38-51cc-4d5f-9d1f-dc7d9dff97a9",
+      "dataset": "opencellid_towers",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 0,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "f0545c85-520f-472a-86c8-153fb2fe3dda",
+      "dataset": "opencellid_towers",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 0,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "fec4b203-5b5d-46dd-8e11-363a4be49611",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "ea30c719-0902-4725-82b4-3712f4ceb6f4",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "e855779a-58a4-4e19-b1fa-7dc6ad86f7fb",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "b741f9d8-fc2e-4175-a426-ddfbec528307",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "a160dd1c-5df4-4f4d-af2a-408abf0b4ca4",
+      "dataset": "bts_candidates",
+      "region_id": "ntb",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "e1425969-9738-4297-9c58-136989ea149e",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "a9bf86db-8f4c-42a9-918f-3801cdeb4611",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "b7bd4693-358c-4339-b72a-0bf699c2cf28",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "4d55384e-2176-490b-a1e9-53a1f839e419",
+      "dataset": "bts_candidates",
+      "region_id": "ntt",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": "fbd0603f-956b-4bd2-915e-d4289441a199",
+      "promoted_at": "2026-08-10T18:21:57.94099+00:00"
+    },
+    {
+      "run_id": "29397dee-5d0c-46e4-b8d9-0db75f445028",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "b44fdc5c-4cba-4a02-975e-6eb28cf53f94",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "unavailable",
+      "records_count": 0,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "8dcf9367-a599-4429-ae30-fd6dc1dc1477",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    },
+    {
+      "run_id": "8dfb3618-a6b4-4607-85a9-5cce20ff7002",
+      "dataset": "bts_candidates",
+      "region_id": "central_kalimantan",
+      "status": "ok",
+      "records_count": 10,
+      "promoted_run_id": null,
+      "promoted_at": null
+    }
+  ],
+  "rollback_id": null
+}

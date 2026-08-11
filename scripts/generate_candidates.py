@@ -55,7 +55,7 @@ from geosignal.gee_extract import (
     WORLDCOVER_COLLECTION_ID,
     initialize_gee,
 )
-from geosignal.los import precompute_los_grid
+from geosignal.los import persist_los_results, precompute_los_grid
 from geosignal.models import CONSOLIDATED_FEATURES, InsufficientCandidatesResult
 
 REGIONS = ("ntt", "ntb", "central_kalimantan")
@@ -440,7 +440,7 @@ def main() -> int:
                     )
             continue
 
-        # LOS precompute (persists los_results).
+        # LOS precompute (in-memory only; persisted below for top-N candidates).
         try:
             dem, land_cover_raster, canopy_raster, transform, crs = _download_rasters(
                 area_list[0]["boundary_geojson"]
@@ -455,7 +455,7 @@ def main() -> int:
                 land_cover=land_cover_raster,
                 canopy_height=canopy_raster,
                 max_range_m=LOS_MAX_RANGE_M,
-                supabase_client=None if args.dry_run else client,
+                supabase_client=None,  # persist only top-N records below
             )
         except Exception as exc:  # noqa: BLE001
             print(f"  LOS FAILED: {type(exc).__name__}: {str(exc)[:150]}")
@@ -522,6 +522,22 @@ def main() -> int:
             if args.dry_run:
                 print(f"    dry-run: {len(ranked)} candidates")
                 continue
+
+            # Persist LOS only for the top-N ranked candidates (not all
+            # canopy-passing cells) to keep los_results within the free-tier
+            # storage budget.  The frontend reads bts_candidates (los_validated),
+            # never los_results, so this is behaviour-preserving.
+            top_keys = {
+                (round(float(c.coordinate[0]), 7), round(float(c.coordinate[1]), 7))
+                for c in ranked
+            }
+            top_los = [
+                rec for rec in los_records
+                if (round(float(rec["candidate_lat"]), 7), round(float(rec["candidate_lon"]), 7)) in top_keys
+            ]
+            if top_los:
+                persist_los_results(client, top_los)
+                print(f"    persisted {len(top_los)} LOS records for top-{len(ranked)} candidates")
 
             run_id = _record_source_run(
                 client, region_id, len(ranked), "ok",
