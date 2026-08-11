@@ -6,10 +6,8 @@
  * Task 22.4 — Requirements 3.1, 3.2, 3.5
  *
  * Responsibilities:
- *  - Renders a fill layer coloured by Coverage Score (Green/Yellow/Red)
- *    using HEATMAP_PAINT_EXPRESSION from heatmap.ts.
- *  - Renders an independent fill-opacity layer driven by confidence_tag,
- *    so confidence is never conflated with score colour.
+ *  - Renders a native MapLibre heatmap layer from grid-cell centroids.
+ *  - Uses a Plotly-like Plasma density ramp: purple field, yellow hotspots.
  *  - Supports a `visible` prop: toggling calls map.setLayoutProperty()
  *    client-side — no page reload, no data refetch, no map recreation.
  *  - Safe lifecycle: only adds source/layer when map+style are ready;
@@ -17,19 +15,17 @@
  *  - No SSR window access: guarded by 'use client' + typeof window checks.
  *  - No mock data: accepts only data passed via props.
  *
- * Confidence visual strategy (Requirement 3.5):
- *   opacity is controlled by confidence_tag independently of fill-color.
- *   High → 0.85, Med → 0.55, Low → 0.30
- *   This satisfies "secondary visual indicator independent of heatmap colour".
+ * Point/cell interaction is preserved through an invisible circle hit layer.
  */
 
 import { useEffect, useRef, useCallback } from 'react'
-import type { Map as MapLibreMap } from 'maplibre-gl'
+import type { ExpressionSpecification, Map as MapLibreMap } from 'maplibre-gl'
 import type { Feature, FeatureCollection, Geometry } from 'geojson'
 import type { ConfidenceLevel } from '@/lib/types'
 import {
-  HEATMAP_PAINT_EXPRESSION,
-  CONFIDENCE_OPACITY_EXPRESSION,
+  HEATMAP_DENSITY_COLOR_EXPRESSION,
+  HEATMAP_WEIGHT_EXPRESSION,
+  type HeatmapMode,
 } from '@/lib/heatmap'
 
 // ---------------------------------------------------------------------------
@@ -60,6 +56,13 @@ export interface CoverageHeatmapProps {
    * Defaults to undefined (appended at the top).
    */
   beforeLayerId?: string
+  /**
+   * Legacy display mode prop accepted by the parent controls. The native GIS
+   * heatmap uses a fixed Plotly-like density ramp so the surface stays visually consistent.
+   */
+  mode?: HeatmapMode
+  /** Master opacity multiplier (0..1) for the native heatmap surface. */
+  opacity?: number
 }
 
 // ---------------------------------------------------------------------------
@@ -67,6 +70,7 @@ export interface CoverageHeatmapProps {
 // ---------------------------------------------------------------------------
 
 const SOURCE_ID   = 'coverage-heatmap-source'
+const HEATMAP_LAYER = 'coverage-heatmap-density'
 const FILL_LAYER  = 'coverage-heatmap-fill'
 const OUTLINE_LAYER = 'coverage-heatmap-outline'
 
@@ -106,12 +110,16 @@ export default function CoverageHeatmap({
   cells,
   visible,
   beforeLayerId,
+  opacity = 1,
 }: CoverageHeatmapProps) {
   // Track whether source+layers have been added to this map instance.
   const layersAddedRef = useRef(false)
   // Keep a stable ref to beforeLayerId to avoid re-triggering setup effect.
   const beforeLayerIdRef = useRef(beforeLayerId)
   beforeLayerIdRef.current = beforeLayerId
+  // Keep a stable ref to opacity so addLayersToMap reads the latest.
+  const opacityRef = useRef(opacity)
+  opacityRef.current = opacity
 
   // ------------------------------------------------------------------
   // Helper: safely add source + layers once map style is ready
@@ -129,48 +137,91 @@ export default function CoverageHeatmap({
         })
       }
 
-      // Fill layer — colour by coverage_score, opacity by confidence_tag
+      // Native GIS-style heatmap layer. This renders the blurred density field
+      // from point centroids; polygon fill layers cannot render point-only data.
+      if (!mapInstance.getLayer(HEATMAP_LAYER)) {
+        mapInstance.addLayer(
+          {
+            id:     HEATMAP_LAYER,
+            type:   'heatmap',
+            source: SOURCE_ID,
+            layout: {
+              visibility: visible ? 'visible' : 'none',
+            },
+            paint: {
+              'heatmap-weight': HEATMAP_WEIGHT_EXPRESSION as unknown as number,
+              'heatmap-intensity': [
+                'interpolate', ['linear'], ['zoom'],
+                4, 0.65,
+                8, 1.1,
+                12, 1.55,
+              ] as unknown as number,
+              'heatmap-radius': [
+                'interpolate', ['linear'], ['zoom'],
+                4, 9,
+                7, 20,
+                10, 34,
+                13, 54,
+              ] as unknown as number,
+              'heatmap-color': HEATMAP_DENSITY_COLOR_EXPRESSION as unknown as ExpressionSpecification,
+              'heatmap-opacity': opacityRef.current * 0.9,
+            },
+          },
+          beforeLayerIdRef.current,
+        )
+      }
+
+      // Quiet point layer for cell selection and score/confidence detail. Keeping
+      // this id preserves MapView's existing click handler contract.
       if (!mapInstance.getLayer(FILL_LAYER)) {
         mapInstance.addLayer(
           {
             id:     FILL_LAYER,
-            type:   'fill',
+            type:   'circle',
             source: SOURCE_ID,
             layout: {
               visibility: visible ? 'visible' : 'none',
             },
             paint: {
-              // Colour driven exclusively by coverage_score via HEATMAP_PAINT_EXPRESSION.
-              // Thresholds: Red(<40), Yellow(40–69), Green(>=70) — matches colourTier().
-              'fill-color':   HEATMAP_PAINT_EXPRESSION as unknown as string,
-              // Opacity driven exclusively by confidence_tag — independent of colour.
-              'fill-opacity': CONFIDENCE_OPACITY_EXPRESSION as unknown as number,
+              'circle-color': 'rgba(255, 255, 255, 0)',
+              'circle-radius': [
+                'interpolate', ['linear'], ['zoom'],
+                4, 6,
+                8, 10,
+                12, 15,
+              ] as unknown as number,
+              'circle-opacity': 0,
+              'circle-stroke-opacity': 0,
             },
           },
           beforeLayerIdRef.current,
         )
       }
 
-      // Outline layer — thin border for cell boundaries, also toggled with fill
+      // Larger transparent hit area so centroid points are still easy to click.
       if (!mapInstance.getLayer(OUTLINE_LAYER)) {
         mapInstance.addLayer(
           {
             id:     OUTLINE_LAYER,
-            type:   'line',
+            type:   'circle',
             source: SOURCE_ID,
             layout: {
               visibility: visible ? 'visible' : 'none',
             },
             paint: {
-              'line-color': '#ffffff',
-              'line-width': 0.4,
-              'line-opacity': 0.4,
+              'circle-radius': [
+                'interpolate', ['linear'], ['zoom'],
+                4, 6,
+                8, 9,
+                12, 13,
+              ] as unknown as number,
+              'circle-color': 'rgba(255, 255, 255, 0)',
+              'circle-opacity': 0,
             },
           },
           beforeLayerIdRef.current,
         )
       }
-
       layersAddedRef.current = true
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,6 +255,7 @@ export default function CoverageHeatmap({
       try {
         if (map.getLayer(OUTLINE_LAYER)) map.removeLayer(OUTLINE_LAYER)
         if (map.getLayer(FILL_LAYER))    map.removeLayer(FILL_LAYER)
+        if (map.getLayer(HEATMAP_LAYER)) map.removeLayer(HEATMAP_LAYER)
         if (map.getSource(SOURCE_ID))    map.removeSource(SOURCE_ID)
       } catch {
         // Map may have been destroyed — ignore cleanup errors
@@ -231,9 +283,29 @@ export default function CoverageHeatmap({
   useEffect(() => {
     if (!map || !map.isStyleLoaded()) return
     const visibility = visible ? 'visible' : 'none'
+    if (map.getLayer(HEATMAP_LAYER)) map.setLayoutProperty(HEATMAP_LAYER, 'visibility', visibility)
     if (map.getLayer(FILL_LAYER))    map.setLayoutProperty(FILL_LAYER,    'visibility', visibility)
     if (map.getLayer(OUTLINE_LAYER)) map.setLayoutProperty(OUTLINE_LAYER, 'visibility', visibility)
   }, [map, visible])
+
+  // ------------------------------------------------------------------
+  // Effect 4: Update heatmap paint when opacity changes. Uses
+  // setPaintProperty without layer recreation or data refetch.
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    if (!map || !map.isStyleLoaded()) return
+    if (typeof (map as { setPaintProperty?: unknown }).setPaintProperty !== 'function') return
+    const setPaint = (map as { setPaintProperty: (layer: string, prop: string, value: unknown) => void }).setPaintProperty
+    if (map.getLayer(HEATMAP_LAYER)) {
+      setPaint(HEATMAP_LAYER, 'heatmap-weight', HEATMAP_WEIGHT_EXPRESSION as unknown as number)
+      setPaint(HEATMAP_LAYER, 'heatmap-color', HEATMAP_DENSITY_COLOR_EXPRESSION as unknown as ExpressionSpecification)
+      setPaint(HEATMAP_LAYER, 'heatmap-opacity', opacity * 0.9)
+    }
+    if (map.getLayer(FILL_LAYER)) {
+      setPaint(FILL_LAYER, 'circle-color', 'rgba(255, 255, 255, 0)')
+      setPaint(FILL_LAYER, 'circle-opacity', 0)
+    }
+  }, [map, opacity])
 
   // This component manages MapLibre layers imperatively; no DOM output.
   return null
@@ -242,4 +314,4 @@ export default function CoverageHeatmap({
 // ---------------------------------------------------------------------------
 // Named exports for testing
 // ---------------------------------------------------------------------------
-export { SOURCE_ID, FILL_LAYER, OUTLINE_LAYER, cellsToGeoJSON }
+export { SOURCE_ID, HEATMAP_LAYER, FILL_LAYER, OUTLINE_LAYER, cellsToGeoJSON }

@@ -73,6 +73,105 @@ export const HEATMAP_PAINT_EXPRESSION = [
 ] as const
 
 /**
+ * Continuous thermal ramp for the Coverage Gap Heatmap.
+ *
+ * The spec's tiered step expression (HEATMAP_PAINT_EXPRESSION) collapses the
+ * entire score range below 40 into one red — so regions whose scores all fall
+ * in [0, 40) (the common case for NTT data, where every cell is < 35) render
+ * as a single flat colour with no visual variation.
+ *
+ * This interpolate ramp instead maps the observed score domain (0..40) onto a
+ * distinct colour gradient (dark red → red → orange → amber → yellow), so cells
+ * with different coverage scores are visibly distinguishable while the
+ * "lower score = hotter/worse" thermal semantics are preserved.
+ *
+ * Stops deliberately span 0..40: scores >= 40 sit at the pale end, and any
+ * score in the Yellow/Green tier keeps a sensible colour too.
+ */
+export const HEATMAP_GRADIENT_EXPRESSION = [
+  'interpolate',
+  ['linear'],
+  ['coalesce', ['get', 'coverage_score'], 0],
+  // [score, colour] stops
+  0,  '#7f1d1d', // very low score  — deep red
+  8,  '#dc2626', // low              — red
+  16, '#ea580c', // low-mid          — orange
+  24, '#f59e0b', // mid              — amber
+  32, '#eab308', // mid-high         — yellow
+  40, '#fde047', // >= 40            — pale yellow
+] as const
+
+/** Heatmap colour rendering modes. */
+export type HeatmapMode = 'thermal' | 'gap' | 'confidence'
+
+/**
+ * Confidence colour ramp — used by the 'confidence' heatmap mode.
+ * Encodes High/Med/Low as distinct colours so confidence is easy to read
+ * independently of score. (Score colouring stays in the other two modes.)
+ */
+export const CONFIDENCE_COLOR_EXPRESSION = [
+  'match',
+  ['coalesce', ['get', 'confidence_tag'], 'Low'],
+  'High', '#22c55e', // green — high confidence
+  'Med',  '#eab308', // yellow — medium
+  'Low',  '#ef4444', // red — low confidence
+  '#ef4444',         // fallback
+] as const
+
+/**
+ * Select the fill-color expression for a given heatmap mode.
+ *   - 'thermal'    → HEATMAP_GRADIENT_EXPRESSION (continuous ramp, default)
+ *   - 'gap'        → HEATMAP_PAINT_EXPRESSION    (spec traffic-light steps)
+ *   - 'confidence' → CONFIDENCE_COLOR_EXPRESSION (High/Med/Low colours)
+ */
+export function heatmapFillExpression(mode: HeatmapMode): readonly unknown[] {
+  switch (mode) {
+    case 'gap':        return HEATMAP_PAINT_EXPRESSION
+    case 'confidence': return CONFIDENCE_COLOR_EXPRESSION
+    case 'thermal':
+    default:           return HEATMAP_GRADIENT_EXPRESSION
+  }
+}
+
+/**
+ * Plotly-like density_mapbox colour ramp. MapLibre heatmap layers colour the
+ * computed kernel density, so this mirrors a Plasma-style scale: transparent
+ * dark purple at the edge, violet/magenta through the body, then orange/yellow
+ * at the hottest coverage-gap cores.
+ */
+export const HEATMAP_DENSITY_COLOR_EXPRESSION = [
+  'interpolate',
+  ['linear'],
+  ['heatmap-density'],
+  0,    'rgba(13, 8, 135, 0)',
+  0.08, 'rgba(13, 8, 135, 0.28)',
+  0.22, 'rgba(84, 3, 160, 0.45)',
+  0.38, 'rgba(139, 10, 165, 0.58)',
+  0.55, 'rgba(203, 71, 119, 0.72)',
+  0.72, 'rgba(248, 149, 64, 0.86)',
+  0.88, 'rgba(252, 221, 36, 0.95)',
+  1,    'rgba(240, 249, 33, 1)',
+] as const
+
+/**
+ * Weight expression for the native GIS-style heatmap layer.
+ * Lower coverage_score means a hotter coverage gap, so the score is inverted.
+ */
+export const HEATMAP_WEIGHT_EXPRESSION = [
+  'interpolate',
+  ['linear'],
+  ['coalesce', ['get', 'coverage_score'], 100],
+  0,   1,
+  8,   0.95,
+  16,  0.8,
+  24,  0.65,
+  32,  0.45,
+  40,  0.3,
+  70,  0.12,
+  100, 0.04,
+] as const
+
+/**
  * Opacity values for the confidence visual indicator.
  *
  * Confidence is shown via fill-opacity, independently of fill-color,

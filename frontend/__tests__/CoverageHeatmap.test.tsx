@@ -26,6 +26,7 @@ import { render, act } from '@testing-library/react'
 import CoverageHeatmap, {
   CoverageCell,
   SOURCE_ID,
+  HEATMAP_LAYER,
   FILL_LAYER,
   OUTLINE_LAYER,
   cellsToGeoJSON,
@@ -39,7 +40,7 @@ import type { ConfidenceLevel } from '../lib/types'
 
 function makeMapMock(styleLoaded = true) {
   const sources: Record<string, { type: string; data: unknown }> = {}
-  const layers: Record<string, { layout: Record<string, string>; paint: Record<string, unknown> }> = {}
+  const layers: Record<string, { type?: string; layout: Record<string, string>; paint: Record<string, unknown> }> = {}
   const listeners: Record<string, Array<() => void>> = {}
   let fetchCallCount = 0
 
@@ -59,8 +60,9 @@ function makeMapMock(styleLoaded = true) {
       sources[id] = { type: spec.type, data: spec.data }
     }),
     getLayer: vi.fn((id: string) => layers[id] ?? undefined),
-    addLayer: vi.fn((spec: { id: string; layout?: Record<string, string>; paint?: Record<string, unknown> }) => {
+    addLayer: vi.fn((spec: { id: string; type?: string; layout?: Record<string, string>; paint?: Record<string, unknown> }) => {
       layers[spec.id] = {
+        type: spec.type,
         layout: { ...(spec.layout ?? {}) },
         paint:  { ...(spec.paint ?? {}) },
       }
@@ -197,7 +199,18 @@ describe('Confidence visual — independent of colour', () => {
 // ---------------------------------------------------------------------------
 
 describe('CoverageHeatmap visibility', () => {
-  it('visible=false sets layout visibility to none on both layers', () => {
+  it('adds a native MapLibre heatmap layer for point-centroid data', () => {
+    const map = makeMapMock(true)
+    render(
+      <CoverageHeatmap map={map as unknown as any} cells={SAMPLE_CELLS} visible={true} />,
+    )
+    expect(map._layers[HEATMAP_LAYER].type).toBe('heatmap')
+    expect(map._layers[HEATMAP_LAYER].paint['heatmap-color']).toContain('rgba(13, 8, 135, 0)')
+    expect(map._layers[HEATMAP_LAYER].paint['heatmap-color']).toContain('rgba(240, 249, 33, 1)')
+    expect(map._layers[FILL_LAYER].type).toBe('circle')
+    expect(map._layers[FILL_LAYER].paint['circle-opacity']).toBe(0)
+  })
+  it('visible=false sets layout visibility to none on all owned layers', () => {
     const map = makeMapMock(true)
     const { rerender } = render(
       <CoverageHeatmap map={map as unknown as any} cells={SAMPLE_CELLS} visible={true} />,
@@ -206,15 +219,17 @@ describe('CoverageHeatmap visibility', () => {
     rerender(
       <CoverageHeatmap map={map as unknown as any} cells={SAMPLE_CELLS} visible={false} />,
     )
+    expect(map.setLayoutProperty).toHaveBeenCalledWith(HEATMAP_LAYER, 'visibility', 'none')
     expect(map.setLayoutProperty).toHaveBeenCalledWith(FILL_LAYER,    'visibility', 'none')
     expect(map.setLayoutProperty).toHaveBeenCalledWith(OUTLINE_LAYER, 'visibility', 'none')
   })
 
-  it('visible=true sets layout visibility to visible on both layers', () => {
+  it('visible=true sets layout visibility to visible on all owned layers', () => {
     const map = makeMapMock(true)
     render(
       <CoverageHeatmap map={map as unknown as any} cells={SAMPLE_CELLS} visible={true} />,
     )
+    expect(map.setLayoutProperty).toHaveBeenCalledWith(HEATMAP_LAYER, 'visibility', 'visible')
     expect(map.setLayoutProperty).toHaveBeenCalledWith(FILL_LAYER,    'visibility', 'visible')
     expect(map.setLayoutProperty).toHaveBeenCalledWith(OUTLINE_LAYER, 'visibility', 'visible')
   })
@@ -346,7 +361,7 @@ describe('Edge cases', () => {
     expect(map.addSource).toHaveBeenCalledTimes(1)
   })
 
-  it('addLayer called at most twice (fill + outline) even on re-render', () => {
+  it('addLayer called at most three times (heatmap + point + hit area) even on re-render', () => {
     const map = makeMapMock(true)
     const { rerender } = render(
       <CoverageHeatmap map={map as unknown as any} cells={SAMPLE_CELLS} visible={true} />,
@@ -355,7 +370,7 @@ describe('Edge cases', () => {
       <CoverageHeatmap map={map as unknown as any} cells={SAMPLE_CELLS} visible={true} />,
     )
     // Only the initial render should have added layers
-    expect(map.addLayer).toHaveBeenCalledTimes(2) // fill + outline
+    expect(map.addLayer).toHaveBeenCalledTimes(3) // heatmap + point + hit area
   })
 
   // ---------------------------------------------------------------------------
@@ -369,6 +384,7 @@ describe('Edge cases', () => {
     unmount()
     expect(map.removeLayer).toHaveBeenCalledWith(OUTLINE_LAYER)
     expect(map.removeLayer).toHaveBeenCalledWith(FILL_LAYER)
+    expect(map.removeLayer).toHaveBeenCalledWith(HEATMAP_LAYER)
     expect(map.removeSource).toHaveBeenCalledWith(SOURCE_ID)
   })
 
