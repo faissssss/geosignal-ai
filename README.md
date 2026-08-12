@@ -2,6 +2,8 @@
 
 **GeoAI-Assisted Coverage Gap Detection & BTS Placement Recommendation for Indonesia's 3T Regions**
 
+**Prototype:** [geosignal-ai.vercel.app](https://geosignal-ai.vercel.app/)
+
 > A decision-support system that helps telecom planners identify where people *can't actually receive a usable signal* — and recommends exactly where to build next.
 
 ---
